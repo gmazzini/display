@@ -5,7 +5,7 @@
 
 int main (){
   unsigned char F[32784];
-  unsigned char *a,r,g,b;
+  unsigned char *a,xx;
   FILE *fp,*fpR,*fpG,*fpB;
   int n;
 
@@ -57,4 +57,32 @@ int main (){
   fclose(fpR);
   fclose(fpG);
   fclose(fpB);
+
+  // save gm format
+  fp=fopen("gm4.gm","wb");
+  a=F+16;
+  for(n=0;n<2048;n++){
+    xx=(*a)>>4;
+    a+=8;
+    xx|=(*a);
+    a+=8;
+    fwrite(&xx,1,1,fp);
+  }
+  a=F+18;
+  for(n=0;n<2048;n++){
+    xx=(*a)>>4;
+    a+=8;
+    xx|=(*a);
+    a+=8;
+    fwrite(&xx,1,1,fp);
+  }
+  a=F+20;
+  for(n=0;n<2048;n++){
+    xx=(*a)>>4;
+    a+=8;
+    xx|=(*a);
+    a+=8;
+    fwrite(&xx,1,1,fp);
+  }
+  fclose(fp);
 }

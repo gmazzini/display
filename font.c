@@ -95,9 +95,9 @@ int main(){
     *(buf+12)='\0';
     x=atoi(buf);
     y=atoi(buf+3);
-    r=hextable[*(buf+6)]>>8|hextable[*(buf+7)];
-    g=hextable[*(buf+8)]>>8|hextable[*(buf+9)];
-    b=hextable[*(buf+10)]>>8|hextable[*(buf+11)];
+    r=hextable[*(buf+6)]>4|hextable[*(buf+7)];
+    g=hextable[*(buf+8)]>>4|hextable[*(buf+9)];
+    b=hextable[*(buf+10)]>>4|hextable[*(buf+11)];
     
     printf("%d %d %d %d %d\n",x,y,r,g,b);
   }

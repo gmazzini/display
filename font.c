@@ -1,3 +1,7 @@
+#include "stdio.h"
+#include "stdlib.h"
+#include "string.h"
+
 char fA[7]={0b00100000,0b01010000,0b10001000,0b00010000,0b11111000,0b10001000,0b10001000};
 char fB[7]={0b11110000,0b01001000,0b01001000,0b01110000,0b01001000,0b01001000,0b11110000};
 char fC[7]={0b01110000,0b10001000,0b10000000,0b10000000,0b10000000,0b10001000,0b01110000};
@@ -48,4 +52,24 @@ char *ff[128]={
 };
 
 int main(){
+  unsigned char F[32784],buf[100];
+  FILE *fp;
+
+  memcpy(F,"farbfeld",8);
+  memcpy(F+8,"\x00\x00\x00\x40",4);
+  memcpy(F+12,"\x00\x00\x00\x40",4);
+
+  // read descriptor file
+  fp=fopen("gm6.des","rb");
+  for(;;){
+    if(feof(fp))break;
+    fgets(buf,100,fp);
+    printf("%s\n",buf);
+  }
+  fclose(fp);
+
+  // write ff file
+  fp=fopen("gm6.ff","wb");
+  fwrite(F,32784,1,fp);
+  fclose(fp);
 }

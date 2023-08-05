@@ -66,7 +66,7 @@ char hextable[] = {
 };
 int main(){
   unsigned char F[32784],*a;
-  char buf[100],**c;
+  char buf[100],*c;
   FILE *fp;
   unsigned int x,y,n,m,r,g,b,l;
 

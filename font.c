@@ -65,7 +65,7 @@ char hextable[] = {
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 };
 int main(){
-  unsigned char F[32784],*a,**c;
+  unsigned char F[32784],*a,*c;
   char buf[100];
   FILE *fp;
   unsigned int x,y,n,m,r,g,b,l;

@@ -73,7 +73,7 @@ int main(){
     *(buf+12)='\0';
     x=atoi(buf);
     y=atoi(buf+3);
-    print("%d %d\n",x,y);
+    printf("%d %d\n",x,y);
   }
   fclose(fp);
 

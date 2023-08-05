@@ -124,7 +124,7 @@ int main(){
     r=hextable[*(buf+6)]<<4|hextable[*(buf+7)];
     g=hextable[*(buf+8)]<<4|hextable[*(buf+9)];
     b=hextable[*(buf+10)]<<4|hextable[*(buf+11)];
-    l=strlen(buf+13);
+    l=strlen(buf+13)-1;
     
     printf("%d %d %d %d %d %d\n",x,y,r,g,b,l);
     

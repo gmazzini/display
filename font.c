@@ -37,6 +37,6 @@ char f9[7]={0b01110000,0b10001000,0b10001000,0b01111000,0b00001000,0b00010000,0b
 char fSP[7]={0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000};
 
 char *ff[32]={
-  &fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,\
+  fSP,fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,\
   &fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP,&fSP
 };

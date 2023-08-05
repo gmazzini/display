@@ -52,7 +52,8 @@ char *ff[128]={
 };
 
 int main(){
-  unsigned char F[32784],buf[100];
+  unsigned char F[32784];
+  char buf[100];
   FILE *fp;
 
   memcpy(F,"farbfeld",8);

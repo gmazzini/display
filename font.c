@@ -65,16 +65,15 @@ char hextable[] = {
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 };
 int main(){
-  unsigned char F[32784],*a;
+  unsigned char F[32784],*a,**c;
   char buf[100];
   FILE *fp;
-  unsigned int x,y,n,r,g,b;
+  unsigned int x,y,n,m,r,g,b,l;
 
   memcpy(F,"farbfeld",8);
   memcpy(F+8,"\x00\x00\x00\x40",4);
   memcpy(F+12,"\x00\x00\x00\x40",4);
 
-  // basic setup
   a=F+16;
   for(n=0;n<4096;n++){
     *(a++)=0x00; *(a++)=0x00;
@@ -83,13 +82,11 @@ int main(){
     *(a++)=0xff; *(a++)=0xff;
   }
   
-  // read descriptor file
   fp=fopen("gm6.des","rb");
   for(;;){
     fgets(buf,100,fp);
     if(feof(fp))break;
   
-    printf("%s\n",buf);
     *(buf+2)='\0';
     *(buf+5)='\0';
     *(buf+12)='\0';
@@ -98,12 +95,26 @@ int main(){
     r=hextable[*(buf+6)]<<4|hextable[*(buf+7)];
     g=hextable[*(buf+8)]<<4|hextable[*(buf+9)];
     b=hextable[*(buf+10)]<<4|hextable[*(buf+11)];
+    l=strlen(buf+13);
     
-    printf("%d %d %d %d %d\n",x,y,r,g,b);
+    printf("%d %d %d %d %d %d\n",x,y,r,g,b,l);
+    
+// fare check non overbound
+    c=ff[*(buf+13)];
+    for(n=0;n<7;n++){
+      for(m=0;m<5;m++){
+        a=F+16+((y+n)<<6+(x+m))<<3;
+        *(a+0)=r;
+        *(a+2)=g;
+        *(a+4)=b;
+      }
+    }
+    
+
+    
   }
   fclose(fp);
 
-  // write ff file
   fp=fopen("gm6.ff","wb");
   fwrite(F,32784,1,fp);
   fclose(fp);

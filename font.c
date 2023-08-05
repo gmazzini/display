@@ -63,8 +63,8 @@ int main(){
   // read descriptor file
   fp=fopen("gm6.des","rb");
   for(;;){
-    if(feof(fp))break;
     fgets(buf,100,fp);
+    if(feof(fp))break;
     printf("%s\n",buf);
   }
   fclose(fp);

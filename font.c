@@ -55,6 +55,7 @@ int main(){
   unsigned char F[32784];
   char buf[100];
   FILE *fp;
+  int x,y;
 
   memcpy(F,"farbfeld",8);
   memcpy(F+8,"\x00\x00\x00\x40",4);
@@ -65,7 +66,14 @@ int main(){
   for(;;){
     fgets(buf,100,fp);
     if(feof(fp))break;
+  
     printf("%s\n",buf);
+    *(buf+2)='\0';
+    *(buf+5)='\0';
+    *(buf+12)='\0';
+    x=atoi(buf);
+    y=atoi(buf+3);
+    print("%d %d\n",x,y);
   }
   fclose(fp);
 

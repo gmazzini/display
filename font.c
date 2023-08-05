@@ -36,7 +36,16 @@ char f8[7]={0b01110000,0b10001000,0b10001000,0b01110000,0b10001000,0b10001000,0b
 char f9[7]={0b01110000,0b10001000,0b10001000,0b01111000,0b00001000,0b00010000,0b01100000};
 char fSP[7]={0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000};
 
-char *ff[32]={
+char *ff[128]={
   fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,\
-  fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP
+  fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,\
+  fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,\
+  f0,f1,f2,f3,f4,f5,f6,f7,f8,f9,fSP,fSP,fSP,fSP,fSP,fSP,\
+  fSP,fA,FB,fC,fD,fE,FF,fG,FH,FI,fJ,fK,fL,fM,fN,fO,\
+  fP,fQ,fR,fS,fT,fU,fV,fW,fX,fY,fZ,fSP,fSP,fSP,fSP,fSP,\
+  fSP,fA,FB,fC,fD,fE,FF,fG,FH,FI,fJ,fK,fL,fM,fN,fO,\
+  fP,fQ,fR,fS,fT,fU,fV,fW,fX,fY,fZ,fSP,fSP,fSP,fSP,fSP
 };
+
+int main(){
+}

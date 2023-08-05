@@ -68,7 +68,7 @@ int main(){
   unsigned char F[32784],*a;
   char buf[100],*c,cc;
   FILE *fp;
-  unsigned int x,y,n,m,r,g,b,l,k;
+  unsigned int x,y,n,m,r,g,b,l,k,v,w;
 
   memcpy(F,"farbfeld",8);
   memcpy(F+8,"\x00\x00\x00\x40",4);
@@ -106,10 +106,14 @@ int main(){
         cc=c[n];
         for(m=0;m<5;m++){
           if(cc&0x80){
-            a=F+16+((y+n)*64+(x+m+k*6))*8;
-            *(a+0)=r;
-            *(a+2)=g;
-            *(a+4)=b;
+            v=x+m+k*6;
+            w=y+n;
+            if(v<64&&w<64){
+              a=F+16+(w*64+v)*8;
+              *(a+0)=r;
+              *(a+2)=g;
+              *(a+4)=b;
+            }
           }
           cc<<=1;
         }

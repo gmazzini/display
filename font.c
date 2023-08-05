@@ -68,7 +68,7 @@ int main(){
   unsigned char F[32784],*a;
   char buf[100];
   FILE *fp;
-  int x,y,n;
+  unsigned int x,y,n,r,g,b;
 
   memcpy(F,"farbfeld",8);
   memcpy(F+8,"\x00\x00\x00\x40",4);

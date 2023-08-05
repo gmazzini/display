@@ -41,9 +41,9 @@ char *ff[128]={
   fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,\
   fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,fSP,\
   f0,f1,f2,f3,f4,f5,f6,f7,f8,f9,fSP,fSP,fSP,fSP,fSP,fSP,\
-  fSP,fA,FB,fC,fD,fE,FF,fG,FH,FI,fJ,fK,fL,fM,fN,fO,\
+  fSP,fA,fB,fC,fD,fE,fF,fG,fH,fI,fJ,fK,fL,fM,fN,fO,\
   fP,fQ,fR,fS,fT,fU,fV,fW,fX,fY,fZ,fSP,fSP,fSP,fSP,fSP,\
-  fSP,fA,FB,fC,fD,fE,FF,fG,FH,FI,fJ,fK,fL,fM,fN,fO,\
+  fSP,fA,fB,fC,fD,fE,fF,fG,fH,fI,fJ,fK,fL,fM,fN,fO,\
   fP,fQ,fR,fS,fT,fU,fV,fW,fX,fY,fZ,fSP,fSP,fSP,fSP,fSP
 };
 

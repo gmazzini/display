@@ -66,7 +66,7 @@ char hextable[] = {
 };
 int main(){
   unsigned char F[32784],*a;
-  char buf[100],*c;
+  char buf[100],*c,cc;
   FILE *fp;
   unsigned int x,y,n,m,r,g,b,l;
 
@@ -102,11 +102,15 @@ int main(){
 // fare check non overbound
     c=ff[*(buf+13)];
     for(n=0;n<7;n++){
+      cc=c[n];
       for(m=0;m<5;m++){
-        a=F+16+((((y+n)<<6)+(x+m))<<3);
-        *(a+0)=r;
-        *(a+2)=g;
-        *(a+4)=b;
+        if(cc&0x80){
+          a=F+16+((((y+n)<<6)+(x+m))<<3);
+          *(a+0)=r;
+          *(a+2)=g;
+          *(a+4)=b;
+        }
+        cc<<=1;
       }
     }
     

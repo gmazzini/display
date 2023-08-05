@@ -51,7 +51,7 @@ char *ff[128]={
   fP,fQ,fR,fS,fT,fU,fV,fW,fX,fY,fZ,fSP,fSP,fSP,fSP,fSP
 };
 
-int hextable[] = { 
+char hextable[] = { 
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
     -1,-1, 0,1,2,3,4,5,6,7,8,9,-1,-1,-1,-1,-1,-1,-1,10,11,12,13,14,15,-1,
@@ -95,7 +95,7 @@ int main(){
     *(buf+12)='\0';
     x=atoi(buf);
     y=atoi(buf+3);
-    r=hextable[*(buf+6)]>4|hextable[*(buf+7)];
+    r=hextable[*(buf+6)]>>4|hextable[*(buf+7)];
     g=hextable[*(buf+8)]>>4|hextable[*(buf+9)];
     b=hextable[*(buf+10)]>>4|hextable[*(buf+11)];
     

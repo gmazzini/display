@@ -52,15 +52,24 @@ char *ff[128]={
 };
 
 int main(){
-  unsigned char F[32784];
+  unsigned char F[32784],*a;
   char buf[100];
   FILE *fp;
-  int x,y;
+  int x,y,n;
 
   memcpy(F,"farbfeld",8);
   memcpy(F+8,"\x00\x00\x00\x40",4);
   memcpy(F+12,"\x00\x00\x00\x40",4);
 
+  // basic setup
+  a=F+16;
+  for(n=0;n<4096;n++){
+    *(a++)=0x00; *(a++)=0x00;
+    *(a++)=0x00; *(a++)=0x00;
+    *(a++)=0x00; *(a++)=0x00;
+    *(a++)=0xff; *(a++)=0xff;
+  }
+  
   // read descriptor file
   fp=fopen("gm6.des","rb");
   for(;;){

@@ -101,22 +101,20 @@ int main(){
     
 // fare check non overbound
     for(k=0;k<l;k++){
-    c=ff[*(buf+13+k)];
-    for(n=0;n<7;n++){
-      cc=c[n];
-      for(m=0;m<5;m++){
-        if(cc&0x80){
-          a=F+16+((((y+n)<<6)+(x+m+k*6))<<3);
-          *(a+0)=r;
-          *(a+2)=g;
-          *(a+4)=b;
+      c=ff[*(buf+13+k)];
+      for(n=0;n<7;n++){
+        cc=c[n];
+        for(m=0;m<5;m++){
+          if(cc&0x80){
+            a=F+16+((y+n)*6+(x+m+k*6))*8;
+            *(a+0)=r;
+            *(a+2)=g;
+            *(a+4)=b;
+          }
+          cc<<=1;
         }
-        cc<<=1;
       }
     }
-    }
-
-    
   }
   fclose(fp);
 

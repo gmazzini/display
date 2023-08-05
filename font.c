@@ -68,7 +68,7 @@ int main(){
   unsigned char F[32784],*a;
   char buf[100],*c,cc;
   FILE *fp;
-  unsigned int x,y,n,m,r,g,b,l;
+  unsigned int x,y,n,m,r,g,b,l,k;
 
   memcpy(F,"farbfeld",8);
   memcpy(F+8,"\x00\x00\x00\x40",4);
@@ -100,7 +100,8 @@ int main(){
     printf("%d %d %d %d %d %d\n",x,y,r,g,b,l);
     
 // fare check non overbound
-    c=ff[*(buf+13)];
+    for(k=0;k<l;k++){
+    c=ff[*(buf+13+k)];
     for(n=0;n<7;n++){
       cc=c[n];
       for(m=0;m<5;m++){
@@ -113,7 +114,7 @@ int main(){
         cc<<=1;
       }
     }
-    
+    }
 
     
   }

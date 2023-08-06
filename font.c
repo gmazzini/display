@@ -102,11 +102,11 @@ char f126[7]={0b00000000,0b00000000,0b00000000,0b01101000,0b10010000,0b00000000,
 char *mf[128]={
   f32,f32,f32,f32,f32,f32,f32,f32,f32,f32,f32,f32,f32,f32,f32,f32,
   f32,f32,f32,f32,f32,f32,f32,f32,f32,f32,f32,f32,f32,f32,f32,f32,
-  f32,f33,f34,f35,f36,f37,f38,f39,f40,f41,f42,f43,f44,f45,f46,f37,\
-  f0,f1,f2,f3,f4,f5,f6,f7,f8,f9,f58,f59,f60,f61,f62,f63,\
-  f64,fA,fB,fC,fD,fE,fF,fG,fH,fI,fJ,fK,fL,fM,fN,fO,\
-  fP,fQ,fR,fS,fT,fU,fV,fW,fX,fY,fZ,f91,f92,f93,f94,f95,\
-  f96,fa,fb,fc,fd,fe,ff,fg,fh,fi,fj,fk,fl,fm,fn,fo,\
+  f32,f33,f34,f35,f36,f37,f38,f39,f40,f41,f42,f43,f44,f45,f46,f37,
+  f0,f1,f2,f3,f4,f5,f6,f7,f8,f9,f58,f59,f60,f61,f62,f63,
+  f64,fA,fB,fC,fD,fE,fF,fG,fH,fI,fJ,fK,fL,fM,fN,fO,
+  fP,fQ,fR,fS,fT,fU,fV,fW,fX,fY,fZ,f91,f92,f93,f94,f95,
+  f96,fa,fb,fc,fd,fe,ff,fg,fh,fi,fj,fk,fl,fm,fn,fo,
   fp,fq,fr,fs,ft,fu,fv,fw,fx,fy,fz,f123,f124,f125,f126,f32
 };
 

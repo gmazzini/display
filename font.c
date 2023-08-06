@@ -128,21 +128,26 @@ int main(){
   unsigned char F[32784],*a;
   char buf[100],*c,cc;
   FILE *fp;
-  unsigned int x,y,n,m,r,g,b,l,k,v,w;
+  unsigned int x,y,n,m,r,g,b,l,k,v,w,rb,gb,bb;
 
   memcpy(F,"farbfeld",8);
   memcpy(F+8,"\x00\x00\x00\x40",4);
   memcpy(F+12,"\x00\x00\x00\x40",4);
 
+  fp=fopen("gm6.des","rb");
+  fgets(buf,100,fp);
+  rb=hextable[*(buf+0)]<<4|hextable[*(buf+1)];
+  gb=hextable[*(buf+2)]<<4|hextable[*(buf+3)];
+  bb=hextable[*(buf+4)]<<4|hextable[*(buf+5)];
+  
   a=F+16;
   for(n=0;n<4096;n++){
-    *(a++)=0x00; *(a++)=0x00;
-    *(a++)=0x00; *(a++)=0x00;
-    *(a++)=0x00; *(a++)=0x00;
+    *(a++)=rb; *(a++)=0x00;
+    *(a++)=gb; *(a++)=0x00;
+    *(a++)=bb; *(a++)=0x00;
     *(a++)=0xff; *(a++)=0xff;
   }
   
-  fp=fopen("gm6.des","rb");
   for(;;){
     fgets(buf,100,fp);
     if(feof(fp))break;
@@ -160,7 +165,7 @@ int main(){
     printf("%d %d %d %d %d %d\n",x,y,r,g,b,l);
     
     for(k=0;k<l;k++){
-      c=mf[*(buf+13+k)];
+      c=mf[(*(buf+13+k))&0x7f];
       for(n=0;n<7;n++){
         cc=c[n];
         for(m=0;m<5;m++){

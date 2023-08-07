@@ -42,7 +42,7 @@ int main (){
         for(n=l;n<12;n++)printf("0");
         ll=l<<4;
         for(n=12;n<16;n++){
-          printf("%d",ll&0x80);
+          printf("%d",(ll&0x80)?1:0);
           ll<<=1;
         }
         if(ry==y-1)printf("\n");

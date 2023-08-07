@@ -7,7 +7,7 @@ int main (int argc,char **argv){
   FILE *fp;
   unsigned long x,y,v,n,rx,ry,w,ox,r,ty;
 
-  ty=atol(argv[0]);
+  ty=atol(argv[1]);
   for(n=0;n<32;n++)s[n]=32;
   for(n=32;n<127;n++)s[n]=n;
   s[127]=32;

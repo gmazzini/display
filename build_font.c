@@ -2,7 +2,7 @@
 #include "stdlib.h"
 #include "string.h"
 
-char s[18]="aAbBcCdDeEFfGg01234";
+char s[19]="aAbBcCdDeEFfGg01234";
 
 int main (){
   char F[16],*p,l,ll;
@@ -34,7 +34,6 @@ int main (){
     for(ry=0;ry<y;ry++)if(p[rx+ry*x]!=0)w++;
     if(w==0){
       l=rx-ox;
-      printf("%ld %ld %d\n",ox,rx-1,l);
       printf("int f%c[y]={\n",s[r]);
       for(ry=0;ry<y;ry++){
         printf("0b");

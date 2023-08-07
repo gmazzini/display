@@ -13,7 +13,7 @@ int main (int argc,char **argv){
   s[127]=32;
   printf("/* font %ld\n",ty);
   for(n=32;n<127;n++)printf("%c",(char)n);
-  printf("*/\n");
+  printf("\n*/\n");
   
   fp=fopen("my.ff","rb");
   fread(F,16,1,fp);
@@ -27,11 +27,6 @@ int main (int argc,char **argv){
     p[n]=((F[0]<<16|F[2]<<8|F[4])==0)?1:0;
   }
   fclose(fp);
-
-  for(ry=0;ry<y;ry++){
-    for(rx=0;rx<x;rx++)printf("%d",p[rx+ry*x]);
-    printf("\n");
-  }
   
   ox=0;
   r=0;

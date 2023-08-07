@@ -39,7 +39,8 @@ int main (){
       for(ry=0;ry<y;ry++){
         printf("0b");
         for(n=0;n<l;n++)printf("%d",p[ox+n+ry*x]);
-        for(n=l;n<16;n++)printf("0");
+        for(n=l;n<12;n++)printf("0");
+        for(n=12;n<16;n++)printf("%d",0);
         if(ry==y-1)printf("\n");
         else printf(",\n");
       }

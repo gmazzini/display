@@ -17,7 +17,7 @@ int main (){
   for(n=0;n<v;){
     fread(F,8,1,fp);
     a=F[0]<<16|F[2]<<8|F[4];
-    if(a==0)printf("0");else printf("1");
+    if(a==0)printf("1");else printf("0");
     n++;
     if(n%x==0)printf("\n");
   }

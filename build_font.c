@@ -20,8 +20,8 @@ int main (){
   }
   fclose(fp);
 
-  for(rx=0;rx<x;rx++){
-    for(ry=0;ry<y;ry++)printf("%d",p[rx+ry*x]);
+  for(ry=0;ry<y;ry++){
+    for(rx=0;rx<x;rx++)printf("%d",p[rx+ry*x]);
     printf("\n");
   }
 

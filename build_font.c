@@ -11,7 +11,6 @@ int main (int argc,char **argv){
   from_y=atol(argv[2]);
   to_y=atol(argv[3]);
   wx=atol(argv[4]);
-
   
   for(n=0;n<32;n++)s[n]=32;
   for(n=32;n<127;n++)s[n]=n;
@@ -42,7 +41,7 @@ int main (int argc,char **argv){
     w=0;
     for(ry=from_y-1;ry<to_y;ry++)if(p[rx+ry*x]!=0)w++;
     l=rx-ox;
-    if(w==0&&(wx>0&&l==wx||wx==0&&l>0){
+    if(w==0&&(wx>0&&l==wx||wx==0&&l>0)){
       printf("  {\n");
       for(ry=from_y-1;ry<to_y;ry++){
         printf("    0b");

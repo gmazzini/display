@@ -8,10 +8,11 @@ int main (int argc,char **argv){
   unsigned long x,y,v,n,rx,ry,w,ox,r,ty;
 
   ty=atol(argv[0]);
-  for(n=0;n<128;n++)s[n]=32;
+  for(n=0;n<32;n++)s[n]=32;
   for(n=32;n<127;n++)s[n]=n;
-  printf("/*\n");
-  printf("%s\n",s);
+  s[127]=32;
+  printf("/* font %ld\n",ty);
+  for(n=32;n<127;n++)printf("%c\n",n);
   printf("*/\n");
   
   fp=fopen("my.ff","rb");

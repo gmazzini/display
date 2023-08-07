@@ -39,7 +39,7 @@ int main (int argc,char **argv){
     for(ry=from_y-1;ry<to_y;ry++)if(p[rx+ry*x]!=0)w++;
     l=rx-ox;
     if(w==0&&(wx>0&&l==wx||wx==0&&l>0)){
-      printf("  { /* c=%ld,%c */\n",r,r);
+      printf("  { /* c=%ld,%c */\n",r,(char )r);
       for(ry=from_y-1;ry<to_y;ry++){
         printf("    0b");
         for(n=0;n<l;n++)printf("%d",p[ox+n+ry*x]);

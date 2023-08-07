@@ -3,7 +3,7 @@
 #include "string.h"
 
 int main (){
-  char buf[100],*p;
+  char buf[10000],*p;
   FILE *fp;
   int x,y;
 

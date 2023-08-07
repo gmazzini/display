@@ -5,9 +5,11 @@
 int main (int argc,char **argv){
   unsigned char F[16],*p,l,ll,s[128];
   FILE *fp;
-  unsigned long x,y,v,n,rx,ry,w,ox,r,ty;
+  unsigned long x,y,v,n,rx,ry,w,ox,r,ty,from_y,to_y;
 
   ty=atol(argv[1]);
+  from_y=atol(argv[2]);
+  to_y=atol(argv[3]);
   for(n=0;n<32;n++)s[n]=32;
   for(n=32;n<127;n++)s[n]=n;
   s[127]=32;
@@ -32,10 +34,10 @@ int main (int argc,char **argv){
   
   ox=0;
   r=0;
-  printf("int font[%ld][128][%ld]={\n",ty,y);
+  printf("int font[%ld][128][%ld]={\n",ty,to_y-from_y+1);
   for(rx=0;rx<x;rx++){
     w=0;
-    for(ry=0;ry<y;ry++)if(p[rx+ry*x]!=0)w++;
+    for(ry=from_y;ry<to_y;ry++)if(p[rx+ry*x]!=0)w++;
     l=rx-ox;
     if(w==0&&l>0){
       printf("  {\n");

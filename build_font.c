@@ -21,6 +21,11 @@ int main (){
   fclose(fp);
 
   for(rx=0;rx<x;rx++){
+    for(ry=0;ry<y;ry++)printf("%d",p[rx+ry*x]);
+    printf("\n");
+  }
+
+  for(rx=0;rx<x;rx++){
     w=0;
     for(ry=0;ry<y;ry++)if(p[rx+ry*x]==0)w++;
     if(w==0)printf("%ld\n",rx);

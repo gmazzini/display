@@ -24,7 +24,7 @@ int main (){
   for(rx=0;rx<x;rx++){
     w=0;
     for(ry=0;ry<y;ry++)if(p[ry*y+rx]==0)w++;
-    if(w>0)printf("%ld\n",w);
+    if(w==0)printf("%ld\n",rx);
   }
 
 

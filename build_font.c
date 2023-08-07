@@ -51,7 +51,8 @@ int main (int argc,char **argv){
         if(ry==y-1)printf("\n");
         else printf(",\n");
       }
-      printf("},\n");
+      if(rx==x-1)printf("}\n");
+      else printf("},\n");
       ox=rx+1;
       r++;
     }

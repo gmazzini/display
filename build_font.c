@@ -22,10 +22,10 @@ int main (int argc,char **argv){
   y=F[12]<<24|F[13]<<16|F[14]<<8|F[15];
   y--;
   v=x*y;
-  p=malloc(v);
+  p=malloc(v*sizeof(char));
   for(n=0;n<v;n++){
     fread(F,8,1,fp);
-/*    p[n]=((F[0]<<16|F[2]<<8|F[4])==0)?1:0; */
+    p[n]=((F[0]<<16|F[2]<<8|F[4])==0)?1:0;
   }
   fclose(fp);
   

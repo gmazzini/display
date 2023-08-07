@@ -2,7 +2,7 @@
 #include "stdlib.h"
 #include "string.h"
 
-char s[14]="aAbBcCdDeEFfGg";
+char s[18]="aAbBcCdDeEFfGg01234";
 
 int main (){
   char F[16],*p,l,ll;

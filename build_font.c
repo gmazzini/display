@@ -3,7 +3,7 @@
 #include "string.h"
 
 int main (int argc,char **argv){
-  unsigned char F[16],*p,l,ll,s[128];
+  unsigned char F[16],*p,l,ll;
   FILE *fp;
   unsigned long x,y,v,n,rx,ry,w,ox,r,ty,from_y,to_y,wx;
 
@@ -12,11 +12,8 @@ int main (int argc,char **argv){
   to_y=atol(argv[3]);
   wx=atol(argv[4]);
   
-  for(n=0;n<32;n++)s[n]=32;
-  for(n=32;n<127;n++)s[n]=n;
-  s[127]=32;
   printf("/* font %ld\n",ty);
-  for(n=32;n<127;n++)printf("%c",(char)n);
+  for(n=33;n<127;n++)printf("%c",(char)n);
   printf("\n*/\n");
   
   fp=fopen("my.ff","rb");
@@ -35,14 +32,14 @@ int main (int argc,char **argv){
   fclose(fp);
   
   ox=0;
-  r=0;
+  r=33;
   printf("int font[%ld][128][%ld]={\n",ty,to_y-from_y+1);
   for(rx=0;rx<x;rx++){
     w=0;
     for(ry=from_y-1;ry<to_y;ry++)if(p[rx+ry*x]!=0)w++;
     l=rx-ox;
     if(w==0&&(wx>0&&l==wx||wx==0&&l>0)){
-      printf("  {\n");
+      printf("  { /* c=%d */\n",r);
       for(ry=from_y-1;ry<to_y;ry++){
         printf("    0b");
         for(n=0;n<l;n++)printf("%d",p[ox+n+ry*x]);

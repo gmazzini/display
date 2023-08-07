@@ -12,7 +12,7 @@ int main (int argc,char **argv){
   for(n=32;n<127;n++)s[n]=n;
   s[127]=32;
   printf("/* font %ld\n",ty);
-  for(n=32;n<127;n++)printf("%c\n",(char)n);
+  for(n=32;n<127;n++)printf("%c",(char)n);
   printf("*/\n");
   
   fp=fopen("my.ff","rb");

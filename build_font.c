@@ -2,22 +2,16 @@
 #include "stdlib.h"
 #include "string.h"
 
-
-/ nooooo
-  
 int main (){
-  char buf[10000],*p;
+  char H[16],*p;
   FILE *fp;
-  int x,y;
+  unsigned long x,y;
 
-  fp=fopen("my.pbm","rb");
-  fgets(buf,100,fp);
-  if(memcmp(buf,"P1",2)!=0)exit(-1);
-  fgets(buf,100,fp);
-  p=strtok(buf," ");
-  *p='\0';
-  x=atoi(buf);
-  y=atoi(p);
+  fp=fopen("my.ff","rb");
+  fread(H,16,1,fp);
+  if(memcmp(H,"farbfeld",8)!=0)exit(-1);
+  x=F[8]<<24|F[9]<<16|F[10]<<8|F[11];
+  y=F[12]<<24|F[13]<<16|F[14]<<8|F[15];
   fclose(fp);
   
   printf("%d %d\n",x,y);

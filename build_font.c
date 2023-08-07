@@ -2,13 +2,14 @@
 #include "stdlib.h"
 #include "string.h"
 
-int main (){
+int main (int argc,char **argv){
   char F[16],*p,l,ll,s[128];
   FILE *fp;
-  unsigned long x,y,v,n,rx,ry,w,ox,r;
+  unsigned long x,y,v,n,rx,ry,w,ox,r,p;
 
-  for(n=0;n<128;n++)p[n]=0;
-  for(n=33;n<127;n++)s[n]=n;
+  p=atol(argv[0]]);
+  for(n=0;n<128;n++)s[n]=32;
+  for(n=32;n<127;n++)s[n]=n;
   printf("/*\n");
   printf("%s\n",s);
   printf("*/\n");

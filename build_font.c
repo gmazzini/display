@@ -47,7 +47,7 @@ int main (){
         if(ry==y-1)printf("\n");
         else printf(",\n");
       }
-      printf("}\n");
+      printf("};\n");
       ox=rx+1;
       r++;
     }

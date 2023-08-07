@@ -7,7 +7,7 @@ int main (){
   FILE *fp;
   unsigned long x,y;
 
-  fp=fopen("gm2.ff","rb");
+  fp=fopen("my.ff","rb");
   fread(F,16,1,fp);
   if(memcmp(F,"farbfeld",8)!=0)exit(-1);
   x=F[8]<<24|F[9]<<16|F[10]<<8|F[11];

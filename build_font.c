@@ -2,6 +2,9 @@
 #include "stdlib.h"
 #include "string.h"
 
+
+/ nooooo
+  
 int main (){
   char buf[10000],*p;
   FILE *fp;

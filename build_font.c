@@ -7,8 +7,11 @@ int main (){
   FILE *fp;
   unsigned long x,y,v,n,rx,ry,w,ox,r;
 
-  for(n=0;n<128;n++)s[n]=(n<32||n==127)?32:n;
+  for(n=0;n<128;n++)p[n]=0;
+  for(n=33;n<127;n++)s[n]=n;
+  printf("/*\n");
   printf("%s\n",s);
+  printf("*/\n");
   
   fp=fopen("my.ff","rb");
   fread(F,16,1,fp);

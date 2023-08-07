@@ -18,7 +18,7 @@ int main (){
   for(n=0;n<t;n++){
     fread(A,8,1,fp);
     v=A[0]<<16|A[2]<<8|A[4];
-    printf("%ld",v);
+    printf("%ld ",v);
   }
   fclose(fp);
   

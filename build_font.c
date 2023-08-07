@@ -5,7 +5,7 @@
 int main (){
   char F[16],*p;
   FILE *fp;
-  unsigned long x,y,v,n,a;
+  unsigned long x,y,v,n,a,rx,ry,w;
 
   fp=fopen("my.ff","rb");
   fread(F,16,1,fp);
@@ -14,14 +14,20 @@ int main (){
   y=F[12]<<24|F[13]<<16|F[14]<<8|F[15];
   v=x*y;
   p=malloc(v);
-  for(n=0;n<v;){
+  for(n=0;n<v;n++){
     fread(F,8,1,fp);
     a=F[0]<<16|F[2]<<8|F[4];
-    if(a==0)printf("1");else printf("0");
-    n++;
-    if(n%x==0)printf("\n");
+    p[n]=(a==0)?1:0;
   }
   fclose(fp);
+
+  for(rx=0;rx<x;rx++){
+    w=0;
+    for(ry=0;ry<y;ry++)if(p[ry*y+rx]==0)w++;
+    if(w>0)printf("%ld\n",w);
+  }
+
+
   
   printf("%ld %ld\n",x,y);
 

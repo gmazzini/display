@@ -2,10 +2,12 @@
 #include "stdlib.h"
 #include "string.h"
 
+char s[14]="aAbBcCdDeEFfGg";
+
 int main (){
   char F[16],*p;
   FILE *fp;
-  unsigned long x,y,v,n,rx,ry,w;
+  unsigned long x,y,v,n,rx,ry,w,ox;
 
   fp=fopen("my.ff","rb");
   fread(F,16,1,fp);
@@ -24,11 +26,15 @@ int main (){
     for(rx=0;rx<x;rx++)printf("%d",p[rx+ry*x]);
     printf("\n");
   }
-
+  
+  ox=0;
   for(rx=0;rx<x;rx++){
     w=0;
     for(ry=0;ry<y;ry++)if(p[rx+ry*x]!=0)w++;
-    if(w==0)printf("%ld\n",rx);
+    if(w==0){
+      printf("%ld %ld\n",ox,rx-1);
+      ox=rx+1;
+    }
   }
 
 

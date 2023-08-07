@@ -32,8 +32,8 @@ int main (){
   for(rx=0;rx<x;rx++){
     w=0;
     for(ry=0;ry<y;ry++)if(p[rx+ry*x]!=0)w++;
-    if(w==0){
-      l=rx-ox;
+    l=rx-ox;
+    if(w==0&&l>0){
       printf("int f%c[y]={\n",s[r]);
       for(ry=0;ry<y;ry++){
         printf("0b");

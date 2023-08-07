@@ -7,7 +7,7 @@ char s[14]="aAbBcCdDeEFfGg";
 int main (){
   char F[16],*p;
   FILE *fp;
-  unsigned long x,y,v,n,rx,ry,w,ox,r;
+  unsigned long x,y,v,n,rx,ry,w,ox,r,l;
 
   fp=fopen("my.ff","rb");
   fread(F,16,1,fp);
@@ -33,9 +33,14 @@ int main (){
     w=0;
     for(ry=0;ry<y;ry++)if(p[rx+ry*x]!=0)w++;
     if(w==0){
-      printf("%ld %ld\n",ox,rx-1);
+      l=rx-ox;
+      printf("%ld %ld %ld\n",ox,rx-1,l);
       printf("char f%c[y]={\n",s[r]);
-      for(ry=0;ry<y;ry++)----
+      for(ry=0;ry<y;ry++){
+        printf("0b");
+        for(n=0;n<l;n++)printf("%d",p[ox+n+ry*x]);
+        printf(",\n");
+      }
       printf("}\n");
       ox=rx+1;
       r++;

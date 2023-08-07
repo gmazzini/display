@@ -22,6 +22,7 @@ int main (int argc,char **argv){
   y=F[12]<<24|F[13]<<16|F[14]<<8|F[15];
   y--;
   v=x*y;
+  printf("%ld %ld %ld\n",x,y,v);
   p=malloc(v*sizeof(char));
   for(n=0;n<v;n++){
     fread(F,8,1,fp);

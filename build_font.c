@@ -37,11 +37,11 @@ int main (int argc,char **argv){
   printf("int font[%ld][128][%ld]={\n",ty,to_y-from_y+1);
   for(rx=0;rx<x;rx++){
     w=0;
-    for(ry=from_y;ry<to_y;ry++)if(p[rx+ry*x]!=0)w++;
+    for(ry=from_y-1;ry<to_y;ry++)if(p[rx+ry*x]!=0)w++;
     l=rx-ox;
     if(w==0&&l>0){
       printf("  {\n");
-      for(ry=0;ry<y;ry++){
+      for(ry=from_y-1;ry<to_y;ry++){
         printf("    0b");
         for(n=0;n<l;n++)printf("%d",p[ox+n+ry*x]);
         for(n=l;n<12;n++)printf("0");

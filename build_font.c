@@ -11,7 +11,7 @@ int main (){
   fgets(buf,100,fp);
   if(memcmp(buf,"P1",2)!=0)exit(-1);
   fgets(buf,100,fp);
-  p=strtok(" ",buf);
+  p=strtok(buf," ");
   *p='\0';
   x=atoi(buf);
   y=atoi(p);

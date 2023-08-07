@@ -8,7 +8,7 @@ int main (){
   char F[16],*p;
   FILE *fp;
   unsigned long x,y,v,n,rx,ry,w,ox,r,l;
-
+  
   fp=fopen("my.ff","rb");
   fread(F,16,1,fp);
   if(memcmp(F,"farbfeld",8)!=0)exit(-1);
@@ -35,11 +35,11 @@ int main (){
     if(w==0){
       l=rx-ox;
       printf("%ld %ld %ld\n",ox,rx-1,l);
-      printf("char f%c[y]={\n",s[r]);
+      printf("int f%c[y]={\n",s[r]);
       for(ry=0;ry<y;ry++){
         printf("0b");
         for(n=0;n<l;n++)printf("%d",p[ox+n+ry*x]);
-        for(n=l;n<8;n++)printf("0");
+        for(n=l;n<16;n++)printf("0");
         if(ry==y-1)printf("\n");
         else printf(",\n");
       }

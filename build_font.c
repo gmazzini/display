@@ -7,7 +7,7 @@ int main (){
   FILE *fp;
   unsigned long x,y,v,n,rx,ry,w,ox,r;
 
-  fon(n=0;n<128;n++)s[n]=(n<32||n=127)?32:n;
+  for(n=0;n<128;n++)s[n]=(n<32||n=127)?32:n;
   printf("%s\n",s);
   
   fp=fopen("my.ff","rb");

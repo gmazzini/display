@@ -190,7 +190,7 @@ int main(){
           cc<<=1;
         }
       }
-      ax+*(ml+1);
+      ax+=(ml+1);
     }
   }
   fclose(fp);

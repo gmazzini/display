@@ -60,9 +60,10 @@ int main (int argc,char **argv){
     if(wx==0){
       w=0;
       for(ry=from_y-1;ry<to_y;ry++)if(p[rx+ry*x]!=0)w++;
+      if(w==0)ox=rx;
     }
     l=rx-ox;
-    if(wx>0 && l==wx){
+    if(wx>0 && l==wx || wx==0 && l>0){
       printf("  { /* c=%ld,%c */\n",r,(char )r);
       for(ry=from_y-1;ry<to_y;ry++){
         printf("    0b");

@@ -1,9 +1,9 @@
 /* font 0
 !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
 */
-unsigned int font_0[97][7]={
+unsigned int font_1[97][7]={
   { /* header */
-    0, /* ty */
+    1, /* ty */
     7, /* y */
     0, /* wx */
     0,

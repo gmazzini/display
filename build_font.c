@@ -106,7 +106,7 @@ int main (int argc,char **argv){
           printf("%d",(ll&0x80)?1:0);
           ll<<=1;
         }
-        if(ry==y-1)printf("\n");
+        if(ry==to_y-1)printf("\n");
         else printf(",\n");
       }
       if(rx==x-2)printf("  }\n");

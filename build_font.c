@@ -57,10 +57,12 @@ int main (int argc,char **argv){
   printf("  },\n");
   
   for(rx=0;rx<x;rx++){
-    w=0;
-    for(ry=from_y-1;ry<to_y;ry++)if(p[rx+ry*x]!=0)w++;
+    if(wx==0){
+      w=0;
+      for(ry=from_y-1;ry<to_y;ry++)if(p[rx+ry*x]!=0)w++;
+    }
     l=rx-ox;
-    if(w==0&&(wx>0&&l==wx||wx==0&&l>0)){
+    if(wx>0 && l==wx){
       printf("  { /* c=%ld,%c */\n",r,(char )r);
       for(ry=from_y-1;ry<to_y;ry++){
         printf("    0b");

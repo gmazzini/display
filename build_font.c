@@ -3,7 +3,8 @@
 #include "string.h"
 
 int main (int argc,char **argv){
-  unsigned char F[16],*p,l,ll;
+  unsigned char F[16],*p,ll;
+  int l;
   FILE *fp;
   unsigned long x,y,v,n,rx,ry,w,ox,r,ty,from_y,to_y,wx;
 

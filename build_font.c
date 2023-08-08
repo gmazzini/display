@@ -31,7 +31,7 @@ int main (int argc,char **argv){
     p[n]=((F[0]<<16|F[2]<<8|F[4])==0)?1:0;
   }
   fclose(fp);
-  kk=malloc(rx*sizeof(int));
+  kk=malloc(x*sizeof(int));
   
   printf("int font[%ld][97][%ld]={\n",ty,to_y-from_y+1);
 

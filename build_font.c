@@ -37,8 +37,24 @@ int main (int argc,char **argv){
 
   printf("  { /* headher */\n");
   printf("    %ld, /* ty */\n",ty);
-  printf("    %ld, /* y */\n",y);
+  printf("    %ld, /* y */\n",to_y-from_y+1);
   printf("    %ld /* wx */\n",wx);
+  printf("  },\n");
+
+  printf("  { /* c=space */\n");
+  for(ry=from_y-1;ry<to_y;ry++){
+    printf("    0b");
+    for(n=0;n<l;n++)printf("%d",p[ox+n+ry*x]);
+    l=(wx==0)?1:wx;
+    for(n=0;n<12;n++)printf("0");
+    ll=l<<4;
+    for(n=12;n<16;n++){
+      printf("%d",(ll&0x80)?1:0);
+      ll<<=1;
+    }
+    if(ry==y-1)printf("\n");
+    else printf(",\n");
+  }
   printf("  },\n");
   
   for(rx=0;rx<x;rx++){

@@ -39,7 +39,7 @@ int main (int argc,char **argv){
   printf("    %ld, /* ty */\n",ty);
   printf("    %d, /* y */\n",l);
   printf("    %ld, /* wx */\n",wx);
-  for(n=4;n<l;n++){
+  for(n=3;n<l;n++){
     if(n==l-1)printf("    0\n");
     else printf("    0,\n");
   }

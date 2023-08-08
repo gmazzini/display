@@ -42,6 +42,7 @@ int main (int argc,char **argv){
   for(n=4;n<l;n++){
     if(n==l-1)printf("    0");
     else printf("    0,");
+  }
   printf("  },\n");
 
   printf("  { /* c=space */\n");

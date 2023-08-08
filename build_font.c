@@ -4,7 +4,7 @@
 
 int main (int argc,char **argv){
   unsigned char F[16],*p,ll;
-  int l,ox;
+  int l,ox,*kk;
   FILE *fp;
   unsigned long x,y,v,n,rx,ry,w,r,ty,from_y,to_y,wx;
 
@@ -31,6 +31,7 @@ int main (int argc,char **argv){
     p[n]=((F[0]<<16|F[2]<<8|F[4])==0)?1:0;
   }
   fclose(fp);
+  kk=malloc(rx*sizeof(int));
   
   printf("int font[%ld][97][%ld]={\n",ty,to_y-from_y+1);
 
@@ -55,17 +56,32 @@ int main (int argc,char **argv){
   }
   printf("  },\n");
 
+  for(rx=0;rx<x;rx++){
+    w=0;
+    for(ry=from_y-1;ry<to_y;ry++)if(p[rx+ry*x]!=0)w++;
+    kk[rx]=w;
+  }
+  for(rx=0;rx<x;rx++){
+    if(kk[rx]>0){
+      w=1;
+      for(n=rx+1;n<x;n++){
+        if(kk[n]>0){
+          kk[n]=-1;
+          w++;
+        }
+        else break;
+      }
+      kk[rx]=w;
+    }
+  }
+
+
+  for(rx=0;rx<x;rx++)printf("%d ",kk[rx]);
+    
   ox=-1;
   r=33;
   for(rx=0;rx<x;rx++){
-    if(wx==0){
-      w=0;
-      for(ry=from_y-1;ry<to_y;ry++)if(p[rx+ry*x]!=0)w++;
-      if(w==0)ox=rx;
-      if(w==0)printf("rx=%ld\n",rx);
-    }
     l=rx-ox;
-    printf("%d\n",l);
     if(wx>0 && l==wx || wx==0 && l>0){
       printf("  { /* c=%ld,%c */\n",r,(char )r);
       for(ry=from_y-1;ry<to_y;ry++){

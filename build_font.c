@@ -86,7 +86,7 @@ int main (int argc,char **argv){
       printf("  { /* c=%ld,%c */\n",r,(char )r);
       for(ry=from_y-1;ry<to_y;ry++){
         printf("    0b");
-        for(n=0;n<l;n++)printf("%d",p[ox+n+ry*x]);
+        for(n=0;n<l;n++)printf("%d",p[rx+n+ry*x]);
         for(n=l;n<12;n++)printf("0");
         ll=l<<4;
         for(n=12;n<16;n++){

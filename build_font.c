@@ -65,7 +65,7 @@ int main (int argc,char **argv){
       if(w==0)printf("rx=%ld\n",rx);
     }
     l=rx-ox;
-    printf("%d\n,l);
+    printf("%d\n",l);
     if(wx>0 && l==wx || wx==0 && l>0){
       printf("  { /* c=%ld,%c */\n",r,(char )r);
       for(ry=from_y-1;ry<to_y;ry++){

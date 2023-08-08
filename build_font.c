@@ -33,7 +33,7 @@ int main (int argc,char **argv){
   kk=malloc(x*sizeof(int));
 
   l=to_y-from_y+1;
-  printf("int font[%ld][97][%d]={\n",ty,l);
+  printf("int font_%ld[97][%d]={\n",ty,l);
 
   printf("  { /* header */\n");
   printf("    %ld, /* ty */\n",ty);

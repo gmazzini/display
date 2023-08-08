@@ -80,8 +80,9 @@ int main (int argc,char **argv){
     
   r=33;
   for(rx=0;rx<x;rx++){
-    l=wx;
-    if(wx>0 && rx%wx==0 && rx>0){
+    if( wx>0 && rx%wx==0 && rx>0 || wx==0 && kk[rx]>0 ){
+      if(wx==0)l=kk[rx];
+      else l=wx;
       printf("  { /* c=%ld,%c */\n",r,(char )r);
       for(ry=from_y-1;ry<to_y;ry++){
         printf("    0b");

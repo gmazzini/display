@@ -109,7 +109,7 @@ int main (int argc,char **argv){
         if(ry==to_y-1)printf("\n");
         else printf(",\n");
       }
-      if(rx==x-2)printf("  }\n");
+      if(r<126)printf("  }\n");
       else printf("  },\n");
       r++;
     }

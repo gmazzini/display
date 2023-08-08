@@ -34,6 +34,13 @@ int main (int argc,char **argv){
   ox=0;
   r=33;
   printf("int font[%ld][128][%ld]={\n",ty,to_y-from_y+1);
+
+  printf("  { /* headher */\n");
+  printf("    %ld, /* ty */\n",ty);
+  printf("    %ld, /* y */\n",y);
+  printf("    %ld /* wx */\n",wx);
+  printf("  },\n");
+  
   for(rx=0;rx<x;rx++){
     w=0;
     for(ry=from_y-1;ry<to_y;ry++)if(p[rx+ry*x]!=0)w++;

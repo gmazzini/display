@@ -128,8 +128,8 @@ char hextable[] = {
 
 int main(){
   unsigned char F[32784],*a;
-  char buf[100],*c;
-  unsigned int cc;
+  char buf[100];
+  unsigned int cc,*c;
   FILE *fp;
   unsigned int x,y,n,m,r,g,b,l,k,v,w,rb,gb,bb;
 
@@ -168,12 +168,13 @@ int main(){
     printf("%d %d %d %d %d %d\n",x,y,r,g,b,l);
     
     for(k=0;k<l;k++){
-      c=mf[(*(buf+13+k))&0x7f];
-      // c=font_0[(*(buf+13+k)-31)&0x7f];
+      // c=mf[(*(buf+13+k))&0x7f];
+      c=font_0[(*(buf+13+k)-31)&0x7f];
       for(n=0;n<7;n++){
         cc=c[n];
         for(m=0;m<5;m++){
-          if(cc&0x80){
+          if(cc&0x8000){
+       //   if(cc&0x80){
             v=x+m+k*6;
             w=y+n;
             if(v<64&&w<64){

@@ -172,7 +172,7 @@ int main(){
       c=font_0[(*(buf+13+k)-31)&0x7f];
       for(n=0;n<7;n++){
         cc=c[n];
-        ml=cc&0f;
+        ml=cc&0x000f;
         for(m=0;m<ml;m++){
           if(cc&0x8000){
        //   if(cc&0x80){

@@ -131,7 +131,7 @@ int main(){
   char buf[100];
   unsigned int cc,*c;
   FILE *fp;
-  unsigned int x,y,n,m,r,g,b,l,k,v,w,rb,gb,bb;
+  unsigned int x,y,n,m,r,g,b,l,k,v,w,rb,gb,bb,ml;
 
   memcpy(F,"farbfeld",8);
   memcpy(F+8,"\x00\x00\x00\x40",4);
@@ -172,7 +172,8 @@ int main(){
       c=font_0[(*(buf+13+k)-31)&0x7f];
       for(n=0;n<7;n++){
         cc=c[n];
-        for(m=0;m<5;m++){
+        ml=cc&0f;
+        for(m=0;m<ml;m++){
           if(cc&0x8000){
        //   if(cc&0x80){
             v=x+m+k*6;

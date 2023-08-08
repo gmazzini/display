@@ -74,6 +74,19 @@ int main (int argc,char **argv){
       kk[rx]=w;
     }
   }
+  /* double apex */
+  l=0;
+  for(rx=0;rx<x;rx++){
+    if(kk[rx]>0&&l==1)break;
+    if(kk[rx]>0)l++;
+  }
+  l=rx;
+  for(rx++;rx<x;rx++)if(kk[rx]==0)break;
+  for(rx++;rx<x;rx++)if(kk[rx]>0)break;
+  for(rx++;rx<x;rx++)if(kk[rx]==0)break;
+  kk[l]=rx-l;
+  for(n=l+1;n<rx;n++)kk[n]=-1;
+
 
 
   for(rx=0;rx<x;rx++)printf("%d ",kk[rx]);

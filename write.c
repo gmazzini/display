@@ -177,7 +177,7 @@ int main(){
         for(m=0;m<ml;m++){
           if(cc&0x8000){
        //   if(cc&0x80){
-            v=x+m+k*6;
+            v=x+m+k*(ml+1);
             w=y+n;
             if(v<64&&w<64){
               a=F+16+(w*64+v)*8;

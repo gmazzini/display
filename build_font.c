@@ -31,8 +31,6 @@ int main (int argc,char **argv){
   }
   fclose(fp);
   
-  ox=0;
-  r=33;
   printf("int font[%ld][97][%ld]={\n",ty,to_y-from_y+1);
 
   printf("  { /* headher */\n");
@@ -55,12 +53,14 @@ int main (int argc,char **argv){
     else printf(",\n");
   }
   printf("  },\n");
-  
+
+  ox=0;
+  r=33;
   for(rx=0;rx<x;rx++){
     if(wx==0){
       w=0;
       for(ry=from_y-1;ry<to_y;ry++)if(p[rx+ry*x]!=0)w++;
-      if(w==0)ox=rx;
+      if(w==0)ox=rx+1;
     }
     l=rx-ox;
     if(wx>0 && l==wx || wx==0 && l>0){

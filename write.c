@@ -128,7 +128,8 @@ char hextable[] = {
 
 int main(){
   unsigned char F[32784],*a;
-  char buf[100],*c,cc;
+  char buf[100],*c;
+  unsigned int cc;
   FILE *fp;
   unsigned int x,y,n,m,r,g,b,l,k,v,w,rb,gb,bb;
 
@@ -172,7 +173,7 @@ int main(){
       for(n=0;n<7;n++){
         cc=c[n];
         for(m=0;m<5;m++){
-          if(cc&0x80){
+          if(cc&0x8000){
             v=x+m+k*6;
             w=y+n;
             if(v<64&&w<64){

@@ -32,9 +32,9 @@ int main (int argc,char **argv){
   fclose(fp);
   kk=malloc(x*sizeof(int));
   
-  printf("int font[%ld][97][%ld]={\n",ty,to_y-from_y+1);
+  printf("int font[%ld][98][%ld]={\n",ty,to_y-from_y+1);
 
-  printf("  { /* headher */\n");
+  printf("  { /* header */\n");
   printf("    %ld, /* ty */\n",ty);
   printf("    %ld, /* y */\n",to_y-from_y+1);
   printf("    %ld /* wx */\n",wx);

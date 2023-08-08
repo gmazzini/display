@@ -93,7 +93,7 @@ int main (int argc,char **argv){
     
   r=33;
   for(rx=0;rx<x;rx++){
-    if( wx>0 && rx%wx==0 || wx==0 && kk[rx]>0 ){
+    if( wx>0 && rx%(wx+1)==0 || wx==0 && kk[rx]>0 ){
       if(wx==0)l=kk[rx];
       else l=wx;
       printf("  { /* c=%ld,%c */\n",r,(char )r);

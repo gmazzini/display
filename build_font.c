@@ -4,9 +4,9 @@
 
 int main (int argc,char **argv){
   unsigned char F[16],*p,ll;
-  int l;
+  int l,ox;
   FILE *fp;
-  unsigned long x,y,v,n,rx,ry,w,ox,r,ty,from_y,to_y,wx;
+  unsigned long x,y,v,n,rx,ry,w,r,ty,from_y,to_y,wx;
 
   ty=atol(argv[1]);
   from_y=atol(argv[2]);
@@ -55,13 +55,13 @@ int main (int argc,char **argv){
   }
   printf("  },\n");
 
-  ox=0;
+  ox=-1;
   r=33;
   for(rx=0;rx<x;rx++){
     if(wx==0){
       w=0;
       for(ry=from_y-1;ry<to_y;ry++)if(p[rx+ry*x]!=0)w++;
-      if(w==0)ox=rx+1;
+      if(w==0)ox=rx;
       if(w==0)printf("rx=%ld\n",rx);
     }
     l=rx-ox;

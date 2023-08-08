@@ -3,8 +3,8 @@
 #include "string.h"
 
 int main (int argc,char **argv){
-  unsigned char F[16],*p,ll;
-  int l,ox,*kk;
+  unsigned char F[16],*p,ll,l;
+  int *kk;
   FILE *fp;
   unsigned long x,y,v,n,rx,ry,w,r,ty,from_y,to_y,wx;
 
@@ -78,11 +78,10 @@ int main (int argc,char **argv){
 
   for(rx=0;rx<x;rx++)printf("%d ",kk[rx]);
     
-  ox=-1;
   r=33;
   for(rx=0;rx<x;rx++){
-    l=rx-ox;
-    if(wx>0 && l==wx || wx==0 && l>0){
+    l=wx;
+    if(wx>0 && rx%wx==0 && rx>0){
       printf("  { /* c=%ld,%c */\n",r,(char )r);
       for(ry=from_y-1;ry<to_y;ry++){
         printf("    0b");
@@ -98,7 +97,6 @@ int main (int argc,char **argv){
       }
       if(rx==x-2)printf("  }\n");
       else printf("  },\n");
-      ox=rx+1;
       r++;
     }
   }

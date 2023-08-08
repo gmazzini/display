@@ -2,6 +2,8 @@
 #include "stdlib.h"
 #include "string.h"
 
+#include "font_0.h"
+
 // from https://fontstruct.com/fontstructions/show/847768/5x7_dot_matrix
 char fA[7]={0b00100000,0b01010000,0b10001000,0b10001000,0b11111000,0b10001000,0b10001000};
 char fB[7]={0b11110000,0b01001000,0b01001000,0b01110000,0b01001000,0b01001000,0b11110000};

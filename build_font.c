@@ -33,7 +33,7 @@ int main (int argc,char **argv){
   
   ox=0;
   r=33;
-  printf("int font[%ld][128][%ld]={\n",ty,to_y-from_y+1);
+  printf("int font[%ld][97][%ld]={\n",ty,to_y-from_y+1);
 
   printf("  { /* headher */\n");
   printf("    %ld, /* ty */\n",ty);
@@ -44,7 +44,6 @@ int main (int argc,char **argv){
   printf("  { /* c=space */\n");
   for(ry=from_y-1;ry<to_y;ry++){
     printf("    0b");
-    for(n=0;n<l;n++)printf("%d",p[ox+n+ry*x]);
     l=(wx==0)?1:wx;
     for(n=0;n<12;n++)printf("0");
     ll=l<<4;

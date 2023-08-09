@@ -20,7 +20,6 @@ char hextable[] = {
 };
 
 unsigned int *mf[]={&font_0[0][0],&font_1[0][0]};
-
 int main(int argc,char **argv){
   unsigned char F[32784],*a;
   char buf[100];

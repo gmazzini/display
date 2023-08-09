@@ -22,7 +22,7 @@ char hextable[] = {
 int main(int argc,char **argv){
   unsigned char F[32784],*a,buf[100];
   FILE *fp;
-  unsigned int x,y,n,m,r,g,b,l,k,v,w,rb,gb,bb,ml,ax,cc,*c,y;
+  unsigned int x,y,n,m,r,g,b,l,k,v,w,rb,gb,bb,ml,ax,cc,*c,yy;
 
   // name.des
   
@@ -61,14 +61,14 @@ int main(int argc,char **argv){
     
     printf("%d %d %d %d %d %d\n",x,y,r,g,b,l);
     
-    y=font_0[0][1];
+    yy=font_0[0][1];
     ax=0;
     for(k=0;k<l;k++){
       n=(*(buf+13+k)-31)&0x7f;
       c=font_0[n];
       ml=c[0];
 
-      for(n=1;n<=y;n++){
+      for(n=1;n<=yy;n++){
         cc=c[n];
         for(m=0;m<ml;m++){
           if(cc&0x8000){

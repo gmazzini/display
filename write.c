@@ -61,22 +61,22 @@ int main(int argc,char **argv){
     b=hextable[*(buf+10)]<<4|hextable[*(buf+11)];
     *(buf+15)='\0';
     ty=atoi(buf+13);
+    yy=*(mf[ty]+1);
     l=strlen(buf+16)-1;
     
     printf("%d %d %d %d %d %d %d\n",x,y,r,g,b,ty,l);
-    
+
     // justification
     if(x<0){
       ml=0;
       for(k=0;k<l;k++){
         n=(*(buf+16+k)-31)&0x7f;
-        ml+=*(mf[ty]+n*8)+1;
+        ml+=*(mf[ty]+n*(yy+1))+1;
       }
       if(x==-1)x=64-ml;
       else if(x==-2)x=(64-ml)/2;
     }
     
-    yy=*(mf[ty]+1);
     ax=0;
     for(k=0;k<l;k++){
       n=(*(buf+16+k)-31)&0x7f;

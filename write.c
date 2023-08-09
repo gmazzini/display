@@ -67,7 +67,7 @@ int main(int argc,char **argv){
 
     if(ty==0)yy=font_0[0][1];
     else if(ty==1)yy=font_1[0][1];
-    ty=*(mf[ty]+1);
+    yy=*(mf[ty]+1);
       
 
     ax=0;

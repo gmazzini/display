@@ -19,7 +19,7 @@ char hextable[] = {
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 };
 
-int *mf[2]={font_0,font_1};
+unsigned int *mf[2]={font_0,font_1};
 
 int main(int argc,char **argv){
   unsigned char F[32784],*a;

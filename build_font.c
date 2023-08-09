@@ -31,7 +31,7 @@ int main (int argc,char **argv){
   kk=malloc(x*sizeof(int));
 
   l=to_y-from_y+1;
-  printf("unsigned int font_%ld[97][%d]={\n",ty,l);
+  printf("unsigned int font_%ld[97][%d]={\n",ty,l+1);
 
   // header
   printf("  { /* header */\n");
@@ -47,7 +47,7 @@ int main (int argc,char **argv){
   // space
   printf("  { /* c=space */\n");
   l=(wx==0)?1:wx;
-  printf("    %d",l);
+  printf("    %d,\n",l);
   for(ry=from_y-1;ry<to_y;ry++){
     printf("    0b");
     for(n=0;n<16;n++)printf("0");
@@ -96,7 +96,7 @@ int main (int argc,char **argv){
       if(wx==0)l=kk[rx];
       else l=wx;
       printf("  { /* c=%ld,%c */\n",r,(char )r);
-      printf("    %d",l);
+      printf("    %d,\n",l);
       for(ry=from_y-1;ry<to_y;ry++){
         printf("    0b");
         for(n=0;n<l;n++)printf("%d",p[rx+n+ry*x]);

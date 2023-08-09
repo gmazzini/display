@@ -3,6 +3,7 @@
 #include "string.h"
 #include "font_0.h"
 #include "font_1.h"
+#include "font_2.h"
 
 char hextable[] = {
   -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,

@@ -65,11 +65,11 @@ int main(int argc,char **argv){
     
     printf("%d %d %d %d %d %d %d\n",x,y,r,g,b,ty,l);
     
-    yy=font_0[0][1];
+    yy=mf[ty][0][1];
     ax=0;
     for(k=0;k<l;k++){
       n=(*(buf+16+k)-31)&0x7f;
-      c=font_0[n];
+      c=mf[ty][n];
       ml=c[0];
 
       for(n=1;n<=yy;n++){

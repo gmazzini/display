@@ -80,7 +80,7 @@ int main(int argc,char **argv){
     ax=0;
     for(k=0;k<l;k++){
       n=(*(buf+16+k)-31)&0x7f;
-      c=mf[ty]+n*8;
+      c=mf[ty]+n*(yy+1);
       ml=*c;
       
       for(n=1;n<=yy;n++){

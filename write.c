@@ -67,13 +67,14 @@ int main(int argc,char **argv){
     printf("%d %d %d %d %d %d %d\n",x,y,r,g,b,ty,l);
 
     // justification
-    if(x==-1){
+    if(x<0){
       ml=0;
       for(k=0;k<l;k++){
         n=(*(buf+16+k)-31)&0x7f;
         ml+=*(mf[ty]+n*8)+1;
       }
-      x=64-ml;
+      if(x==-1)x=64-ml;
+      else if(x==-2)x=(64-ml)/2;
     }
     
     yy=*(mf[ty]+1);

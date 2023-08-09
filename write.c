@@ -64,17 +64,11 @@ int main(int argc,char **argv){
     l=strlen(buf+16)-1;
     
     printf("%d %d %d %d %d %d %d\n",x,y,r,g,b,ty,l);
-
-    if(ty==0)yy=font_0[0][1];
-    else if(ty==1)yy=font_1[0][1];
+    
     yy=*(mf[ty]+1);
-      
-
     ax=0;
     for(k=0;k<l;k++){
       n=(*(buf+16+k)-31)&0x7f;
-      if(ty==0)c=font_0[n];
-      else if(ty==1)c=font_1[n];
       c=mf[ty]+n*8;
       ml=*c;
 

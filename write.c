@@ -20,7 +20,8 @@ char hextable[] = {
 };
 
 int main(int argc,char **argv){
-  unsigned char F[32784],*a,buf[100];
+  unsigned char F[32784],*a;
+  char buf[100];
   FILE *fp;
   unsigned int x,y,n,m,r,g,b,l,k,v,w,rb,gb,bb,ml,ax,cc,*c,yy;
 

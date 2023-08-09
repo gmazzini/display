@@ -25,7 +25,8 @@ int main(int argc,char **argv){
   unsigned char F[32784],*a;
   char buf[100];
   FILE *fp;
-  unsigned int x,y,n,m,r,g,b,l,k,v,w,rb,gb,bb,ml,ax,cc,*c,yy,ty;
+  unsigned int y,n,m,r,g,b,l,k,v,w,rb,gb,bb,ml,ax,cc,*c,yy,ty;
+  int x;
 
   // name.des out.ff
   
@@ -64,6 +65,16 @@ int main(int argc,char **argv){
     l=strlen(buf+16)-1;
     
     printf("%d %d %d %d %d %d %d\n",x,y,r,g,b,ty,l);
+
+    // justification
+    if(x==-1){
+      ml=0;
+      for(k=0;k<l;k++){
+        n=(*(buf+16+k)-31)&0x7f;
+        ml+=*(mf[ty]+n*8)+1;
+      }
+      x=64-ml;
+    }
     
     yy=*(mf[ty]+1);
     ax=0;

@@ -75,10 +75,11 @@ int main(int argc,char **argv){
       n=(*(buf+16+k)-31)&0x7f;
       if(ty==0)c=font_0[n];
       else if(ty==1)c=font_1[n];
-      ml=c[0];
+      c=mf[ty]+n*8;
+      ml=*c;
 
       for(n=1;n<=yy;n++){
-        cc=c[n];
+        cc=*(c+n);
         for(m=0;m<ml;m++){
           if(cc&0x8000){
             v=x+m+ax;

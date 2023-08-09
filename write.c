@@ -19,13 +19,15 @@ char hextable[] = {
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 };
 
+int *mf[2]={font_0,font_1};
+
 int main(int argc,char **argv){
   unsigned char F[32784],*a;
   char buf[100];
   FILE *fp;
-  unsigned int x,y,n,m,r,g,b,l,k,v,w,rb,gb,bb,ml,ax,cc,*c,yy;
+  unsigned int x,y,n,m,r,g,b,l,k,v,w,rb,gb,bb,ml,ax,cc,*c,yy,ty;
 
-  // name.des
+  // name.des out.ff
   
   memcpy(F,"farbfeld",8);
   memcpy(F+8,"\x00\x00\x00\x40",4);
@@ -51,21 +53,22 @@ int main(int argc,char **argv){
     if(feof(fp))break;
   
     *(buf+2)='\0';
-    *(buf+5)='\0';
-    *(buf+12)='\0';
     x=atoi(buf);
+    *(buf+5)='\0';
     y=atoi(buf+3);
     r=hextable[*(buf+6)]<<4|hextable[*(buf+7)];
     g=hextable[*(buf+8)]<<4|hextable[*(buf+9)];
     b=hextable[*(buf+10)]<<4|hextable[*(buf+11)];
-    l=strlen(buf+13)-1;
+    *(buf+15)='\0';
+    ty=atoi(buf+13);
+    l=strlen(buf+16)-1;
     
-    printf("%d %d %d %d %d %d\n",x,y,r,g,b,l);
+    printf("%d %d %d %d %d %d %d\n",x,y,r,g,b,ty,l);
     
     yy=font_0[0][1];
     ax=0;
     for(k=0;k<l;k++){
-      n=(*(buf+13+k)-31)&0x7f;
+      n=(*(buf+16+k)-31)&0x7f;
       c=font_0[n];
       ml=c[0];
 

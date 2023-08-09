@@ -1,5 +1,0 @@
-#!/bin/bash
-convert gm3.ff gm3.gif
-convert gm3_R.ff gm3_R.gif
-convert gm3_G.ff gm3_G.gif
-convert gm3_B.ff gm3_B.gif

@@ -22,7 +22,7 @@ char hextable[] = {
 unsigned int *mf[]={&font_0[0][0],&font_1[0][0],&font_2[0][0]};
 
 int main(int argc,char **argv){
-  unsigned char F[32784],*a;
+  unsigned char F[32784],*a,zz;
   char buf[100];
   FILE *fp;
   unsigned int y,n,m,r,g,b,l,k,v,w,rb,gb,bb,ml,ax,cc,*c,yy,ty;
@@ -114,27 +114,27 @@ int main(int argc,char **argv){
   fp=fopen(argv[3],"wb");
   a=F+16;
   for(n=0;n<2048;n++){
-    xx=(*a)>>4;
+    zz=(*a)>>4;
     a+=8;
-    xx|=(*a);
+    zz|=(*a);
     a+=8;
-    fwrite(&xx,1,1,fp);
+    fwrite(&zz,1,1,fp);
   }
   a=F+18;
   for(n=0;n<2048;n++){
-    xx=(*a)>>4;
+    zz=(*a)>>4;
     a+=8;
-    xx|=(*a);
+    zz|=(*a);
     a+=8;
-    fwrite(&xx,1,1,fp);
+    fwrite(&zz,1,1,fp);
   }
   a=F+20;
   for(n=0;n<2048;n++){
-    xx=(*a)>>4;
+    zz=(*a)>>4;
     a+=8;
-    xx|=(*a);
+    zz|=(*a);
     a+=8;
-    fwrite(&xx,1,1,fp);
+    fwrite(&zz,1,1,fp);
   }
   fclose(fp);
 }

@@ -76,7 +76,8 @@ int main(int argc,char **argv){
       if(x==-1)x=64-ml;
       else if(x==-2)x=(64-ml)/2;
     }
-    
+
+    // processing 12 bits
     ax=0;
     for(k=0;k<l;k++){
       n=(*(buf+16+k)-31)&0x7f;
@@ -91,9 +92,9 @@ int main(int argc,char **argv){
             w=y+n;
             if(v<64&&w<64){
               a=F+16+(w*64+v)*8;
-              *(a+0)=r;
-              *(a+2)=g;
-              *(a+4)=b;
+              *(a+0)=r&0xf0;
+              *(a+2)=g&0xf0;
+              *(a+4)=b&0xf0;
             }
           }
           cc<<=1;
@@ -103,8 +104,37 @@ int main(int argc,char **argv){
     }
   }
   fclose(fp);
-  
+
+  // write ff file
   fp=fopen(argv[2],"wb");
   fwrite(F,32784,1,fp);
+  fclose(fp);
+
+  // write gm file
+  fp=fopen(argv[3],"wb");
+  a=F+16;
+  for(n=0;n<2048;n++){
+    xx=(*a)>>4;
+    a+=8;
+    xx|=(*a);
+    a+=8;
+    fwrite(&xx,1,1,fp);
+  }
+  a=F+18;
+  for(n=0;n<2048;n++){
+    xx=(*a)>>4;
+    a+=8;
+    xx|=(*a);
+    a+=8;
+    fwrite(&xx,1,1,fp);
+  }
+  a=F+20;
+  for(n=0;n<2048;n++){
+    xx=(*a)>>4;
+    a+=8;
+    xx|=(*a);
+    a+=8;
+    fwrite(&xx,1,1,fp);
+  }
   fclose(fp);
 }

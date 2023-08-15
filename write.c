@@ -141,8 +141,8 @@ int main(int argc,char **argv){
     zz|=(*a);
     a+=8;
     fwrite(&zz,1,1,fp);
-    if(n<2047)fprintf(fp2,"%d,",zz);
-    else fprintf(fp2,"%d",zz);
+    if(n<2047)fprintf(fp2,"%02x,",zz);
+    else fprintf(fp2,"%d};\n",zz);
     if(n%16==0&&n>0)fprintf(fp2,"\n");
   }
   fclose(fp);

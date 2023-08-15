@@ -24,7 +24,7 @@ unsigned int *mf[]={&font_0[0][0],&font_1[0][0],&font_2[0][0]};
 int main(int argc,char **argv){
   unsigned char F[32784],*a,zz;
   char buf[100];
-  FILE *fp;
+  FILE *fp,*fp2;
   unsigned int y,n,m,r,g,b,l,k,v,w,rb,gb,bb,ml,ax,cc,*c,yy,ty;
   int x;
   
@@ -111,6 +111,8 @@ int main(int argc,char **argv){
   fclose(fp);
 
   // write gm file
+  fp2=fopen("hh.qq","wb");
+  fprintf(fp2,"char MM[6166]={\n");
   fp=fopen(argv[3],"wb");
   a=F+16;
   for(n=0;n<2048;n++){
@@ -119,6 +121,8 @@ int main(int argc,char **argv){
     zz|=(*a);
     a+=8;
     fwrite(&zz,1,1,fp);
+    fprintf(fp2,"%d,",zz);
+    if(n%16==0&&n>0)fprintf(fp2,"\n");
   }
   a=F+18;
   for(n=0;n<2048;n++){
@@ -127,6 +131,8 @@ int main(int argc,char **argv){
     zz|=(*a);
     a+=8;
     fwrite(&zz,1,1,fp);
+    fprintf(fp2,"%d,",zz);
+    if(n%16==0&&n>0)fprintf(fp2,"\n");
   }
   a=F+20;
   for(n=0;n<2048;n++){
@@ -135,6 +141,10 @@ int main(int argc,char **argv){
     zz|=(*a);
     a+=8;
     fwrite(&zz,1,1,fp);
+    if(n<2047)fprintf(fp2,"%d,",zz);
+    else fprintf(fp2,"%d",zz);
+    if(n%16==0&&n>0)fprintf(fp2,"\n");
   }
   fclose(fp);
+  fclose(fp2);
 }

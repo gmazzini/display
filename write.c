@@ -146,7 +146,7 @@ int main(int argc,char **argv){
     if(n<2047)fprintf(fp2,"0x%02x,",zz);
     else fprintf(fp2,"0x%02x};\n",zz);
     n++;
-    if(n%16==0)fprintf(fp2,"\n");
+    if(n%16==0)fprintf(fp2,"-\n");
   }
   fclose(fp);
   fclose(fp2);

@@ -112,27 +112,29 @@ int main(int argc,char **argv){
 
   // write gm file
   fp2=fopen("hh.qq","wb");
-  fprintf(fp2,"char MM[6166]={\n");
+  fprintf(fp2,"char MM[6164]={\n");
   fp=fopen(argv[3],"wb");
   a=F+16;
-  for(n=0;n<2048;n++){
+  for(n=0;n<2048;){
     zz=(*a)>>4;
     a+=8;
     zz|=(*a);
     a+=8;
     fwrite(&zz,1,1,fp);
     fprintf(fp2,"0x%02x,",zz);
-    if(n%16==0&&n>0)fprintf(fp2,"\n");
+    n++;
+    if(n%16==0)fprintf(fp2,"\n");
   }
   a=F+18;
-  for(n=0;n<2048;n++){
+  for(n=0;n<2048;){
     zz=(*a)>>4;
     a+=8;
     zz|=(*a);
     a+=8;
     fwrite(&zz,1,1,fp);
     fprintf(fp2,"0x%02x,",zz);
-    if(n%16==0&&n>0)fprintf(fp2,"\n");
+    n++;
+    if(n%16==0)fprintf(fp2,"\n");
   }
   a=F+20;
   for(n=0;n<2048;n++){
@@ -143,7 +145,8 @@ int main(int argc,char **argv){
     fwrite(&zz,1,1,fp);
     if(n<2047)fprintf(fp2,"0x%02x,",zz);
     else fprintf(fp2,"0x%02x};\n",zz);
-    if(n%16==0&&n>0)fprintf(fp2,"\n");
+    n++;
+    if(n%16==0)fprintf(fp2,"\n");
   }
   fclose(fp);
   fclose(fp2);

@@ -116,9 +116,9 @@ int main(int argc,char **argv){
   fp=fopen(argv[3],"wb");
   a=F+16;
   for(n=0;n<2048;){
-    zz=(*a)>>4;
+    zz=((*a)&0xf0)>>4;
     a+=8;
-    zz|=(*a);
+    zz|=((*a)&0xf0);
     a+=8;
     fwrite(&zz,1,1,fp);
     fprintf(fp2,"0x%02x,",zz);
@@ -127,9 +127,9 @@ int main(int argc,char **argv){
   }
   a=F+18;
   for(n=0;n<2048;){
-    zz=(*a)>>4;
+    zz=((*a)&0xf0)>>4;
     a+=8;
-    zz|=(*a);
+    zz|=((*a)&0xf0);
     a+=8;
     fwrite(&zz,1,1,fp);
     fprintf(fp2,"0x%02x,",zz);
@@ -138,9 +138,9 @@ int main(int argc,char **argv){
   }
   a=F+20;
   for(n=0;n<2048;){
-    zz=(*a)>>4;
+    zz=((*a)&0xf0)>>4;
     a+=8;
-    zz|=(*a);
+    zz|=((*a)&0xf0);
     a+=8;
     fwrite(&zz,1,1,fp);
     if(n<2047)fprintf(fp2,"0x%02x,",zz);

@@ -123,7 +123,7 @@ int main(int argc,char **argv){
     fwrite(&zz,1,1,fp);
     fprintf(fp2,"0x%02x,",zz);
     n++;
-    if(n%16==0)fprintf(fp2,"\n");
+    if(n%32==0)fprintf(fp2,"\n");
   }
   a=F+18;
   for(n=0;n<2048;){
@@ -134,7 +134,7 @@ int main(int argc,char **argv){
     fwrite(&zz,1,1,fp);
     fprintf(fp2,"0x%02x,",zz);
     n++;
-    if(n%16==0)fprintf(fp2,"\n");
+    if(n%32==0)fprintf(fp2,"\n");
   }
   a=F+20;
   for(n=0;n<2048;){
@@ -146,7 +146,7 @@ int main(int argc,char **argv){
     if(n<2047)fprintf(fp2,"0x%02x,",zz);
     else fprintf(fp2,"0x%02x};\n",zz);
     n++;
-    if(n%16==0)fprintf(fp2,"\n");
+    if(n%32==0)fprintf(fp2,"\n");
   }
   fclose(fp);
   fclose(fp2);

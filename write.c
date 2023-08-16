@@ -124,8 +124,8 @@ int main(int argc,char **argv){
       }
       if(m<63)fprintf(fp,",");
     }
-    fprintf(fp,"};\n");
   }
+  fprintf(fp,"};\n");
   
   fclose(fp);
 

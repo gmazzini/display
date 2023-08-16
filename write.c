@@ -122,7 +122,7 @@ int main(int argc,char **argv){
         if(zz&k)fprintf(fp,"1");
         else fprintf(fp,"0");
       }
-      if(m<63)fprintf(fp,",");
+      if(k<14||k==15&&m<63)fprintf(fp,",");
     }
   }
   fprintf(fp,"};\n");

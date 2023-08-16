@@ -112,7 +112,7 @@ int main(int argc,char **argv){
 
   // write mm file
   fp=fopen("hh.mm","wb");
-  printf(fp,"unsigned long mr1[16][64]={");
+  fprintf(fp,"unsigned long mr1[16][64]={");
   for(k=0;k<16;k++){
     a=F+16;
     for(m=0;m<64;m++){

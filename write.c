@@ -126,7 +126,7 @@ int main(int argc,char **argv){
       }
       if(m<31)fprintf(fp,",");
     }
-    fprintf(fp,"\n");
+    fprintf(fp,"};\n");
   }
   fclose(fp);
 

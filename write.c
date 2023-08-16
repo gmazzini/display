@@ -127,6 +127,71 @@ int main(int argc,char **argv){
       if(m<31)fprintf(fp,",");
     }
     fprintf(fp,"};\n");
+    fprintf(fp,"unsigned long r2[%d]={",k);
+    a=F+2048+16;
+    for(m=0;m<32;m++){
+      aa=0;
+      fprintf(fp,"0b");
+      for(n=0;n<32;n++){
+        zz=(*a)>>4; a+=8;
+        if(zz&k)fprintf(fp,"1");
+        else fprintf(fp,"0");
+      }
+      if(m<31)fprintf(fp,",");
+    }
+    fprintf(fp,"};\n");
+    fprintf(fp,"unsigned long g1[%d]={",k);
+    a=F+18;
+    for(m=0;m<32;m++){
+      aa=0;
+      fprintf(fp,"0b");
+      for(n=0;n<32;n++){
+        zz=(*a)>>4; a+=8;
+        if(zz&k)fprintf(fp,"1");
+        else fprintf(fp,"0");
+      }
+      if(m<31)fprintf(fp,",");
+    }
+    fprintf(fp,"};\n");
+    fprintf(fp,"unsigned long g2[%d]={",k);
+    a=F+2048+18;
+    for(m=0;m<32;m++){
+      aa=0;
+      fprintf(fp,"0b");
+      for(n=0;n<32;n++){
+        zz=(*a)>>4; a+=8;
+        if(zz&k)fprintf(fp,"1");
+        else fprintf(fp,"0");
+      }
+      if(m<31)fprintf(fp,",");
+    }
+    fprintf(fp,"};\n");
+    fprintf(fp,"unsigned long b1[%d]={",k);
+    a=F+20;
+    for(m=0;m<32;m++){
+      aa=0;
+      fprintf(fp,"0b");
+      for(n=0;n<32;n++){
+        zz=(*a)>>4; a+=8;
+        if(zz&k)fprintf(fp,"1");
+        else fprintf(fp,"0");
+      }
+      if(m<31)fprintf(fp,",");
+    }
+    fprintf(fp,"};\n");
+    fprintf(fp,"unsigned long b2[%d]={",k);
+    a=F+2048+20;
+    for(m=0;m<32;m++){
+      aa=0;
+      fprintf(fp,"0b");
+      for(n=0;n<32;n++){
+        zz=(*a)>>4; a+=8;
+        if(zz&k)fprintf(fp,"1");
+        else fprintf(fp,"0");
+      }
+      if(m<31)fprintf(fp,",");
+    }
+    fprintf(fp,"};\n");
   }
   fclose(fp);
 

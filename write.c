@@ -126,6 +126,20 @@ int main(int argc,char **argv){
     }
   }
   fprintf(fp,"};\n");
+  fprintf(fp,"unsigned long mr2[16][64]={");
+  for(k=0;k<16;k++){
+    a=F+2048+16;
+    for(m=0;m<64;m++){
+      fprintf(fp,"0b");
+      for(n=0;n<32;n++){
+        zz=(*a)>>4; a+=8;
+        if(zz&k)fprintf(fp,"1");
+        else fprintf(fp,"0");
+      }
+      if(k<15||(k==15&&m<63))fprintf(fp,",");
+    }
+  }
+  fprintf(fp,"};\n");
   
   fclose(fp);
 

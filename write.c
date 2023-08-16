@@ -114,7 +114,7 @@ int main(int argc,char **argv){
   // write mm file
   fp=fopen("hh.mm","wb");
   for(k=0;k<16;k++){
-    fprintf(fp,"unsigned long r1[%d]={",k);
+    fprintf(fp,"unsigned long mr1[%d]={",k);
     a=F+16;
     for(m=0;m<32;m++){
       aa=0;
@@ -127,7 +127,7 @@ int main(int argc,char **argv){
       if(m<31)fprintf(fp,",");
     }
     fprintf(fp,"};\n");
-    fprintf(fp,"unsigned long r2[%d]={",k);
+    fprintf(fp,"unsigned long mr2[%d]={",k);
     a=F+2048+16;
     for(m=0;m<32;m++){
       aa=0;
@@ -140,7 +140,7 @@ int main(int argc,char **argv){
       if(m<31)fprintf(fp,",");
     }
     fprintf(fp,"};\n");
-    fprintf(fp,"unsigned long g1[%d]={",k);
+    fprintf(fp,"unsigned long mg1[%d]={",k);
     a=F+18;
     for(m=0;m<32;m++){
       aa=0;
@@ -153,7 +153,7 @@ int main(int argc,char **argv){
       if(m<31)fprintf(fp,",");
     }
     fprintf(fp,"};\n");
-    fprintf(fp,"unsigned long g2[%d]={",k);
+    fprintf(fp,"unsigned long mg2[%d]={",k);
     a=F+2048+18;
     for(m=0;m<32;m++){
       aa=0;
@@ -166,7 +166,7 @@ int main(int argc,char **argv){
       if(m<31)fprintf(fp,",");
     }
     fprintf(fp,"};\n");
-    fprintf(fp,"unsigned long b1[%d]={",k);
+    fprintf(fp,"unsigned long mb1[%d]={",k);
     a=F+20;
     for(m=0;m<32;m++){
       aa=0;
@@ -179,7 +179,7 @@ int main(int argc,char **argv){
       if(m<31)fprintf(fp,",");
     }
     fprintf(fp,"};\n");
-    fprintf(fp,"unsigned long b2[%d]={",k);
+    fprintf(fp,"unsigned long mb2[%d]={",k);
     a=F+2048+20;
     for(m=0;m<32;m++){
       aa=0;

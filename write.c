@@ -26,7 +26,6 @@ int main(int argc,char **argv){
   char buf[100];
   FILE *fp,*fp2;
   unsigned int y,n,m,r,g,b,l,k,v,w,rb,gb,bb,ml,ax,cc,*c,yy,ty;
-  unsigned long aa;
   int x;
   
   // name.des out.ff
@@ -113,86 +112,21 @@ int main(int argc,char **argv){
 
   // write mm file
   fp=fopen("hh.mm","wb");
+  printf(fp,"unsigned long mr1[16][64]={");
   for(k=0;k<16;k++){
-    fprintf(fp,"unsigned long mr1[%d]={",k);
     a=F+16;
-    for(m=0;m<32;m++){
-      aa=0;
+    for(m=0;m<64;m++){
       fprintf(fp,"0b");
       for(n=0;n<32;n++){
         zz=(*a)>>4; a+=8;
         if(zz&k)fprintf(fp,"1");
         else fprintf(fp,"0");
       }
-      if(m<31)fprintf(fp,",");
-    }
-    fprintf(fp,"};\n");
-    fprintf(fp,"unsigned long mr2[%d]={",k);
-    a=F+2048+16;
-    for(m=0;m<32;m++){
-      aa=0;
-      fprintf(fp,"0b");
-      for(n=0;n<32;n++){
-        zz=(*a)>>4; a+=8;
-        if(zz&k)fprintf(fp,"1");
-        else fprintf(fp,"0");
-      }
-      if(m<31)fprintf(fp,",");
-    }
-    fprintf(fp,"};\n");
-    fprintf(fp,"unsigned long mg1[%d]={",k);
-    a=F+18;
-    for(m=0;m<32;m++){
-      aa=0;
-      fprintf(fp,"0b");
-      for(n=0;n<32;n++){
-        zz=(*a)>>4; a+=8;
-        if(zz&k)fprintf(fp,"1");
-        else fprintf(fp,"0");
-      }
-      if(m<31)fprintf(fp,",");
-    }
-    fprintf(fp,"};\n");
-    fprintf(fp,"unsigned long mg2[%d]={",k);
-    a=F+2048+18;
-    for(m=0;m<32;m++){
-      aa=0;
-      fprintf(fp,"0b");
-      for(n=0;n<32;n++){
-        zz=(*a)>>4; a+=8;
-        if(zz&k)fprintf(fp,"1");
-        else fprintf(fp,"0");
-      }
-      if(m<31)fprintf(fp,",");
-    }
-    fprintf(fp,"};\n");
-    fprintf(fp,"unsigned long mb1[%d]={",k);
-    a=F+20;
-    for(m=0;m<32;m++){
-      aa=0;
-      fprintf(fp,"0b");
-      for(n=0;n<32;n++){
-        zz=(*a)>>4; a+=8;
-        if(zz&k)fprintf(fp,"1");
-        else fprintf(fp,"0");
-      }
-      if(m<31)fprintf(fp,",");
-    }
-    fprintf(fp,"};\n");
-    fprintf(fp,"unsigned long mb2[%d]={",k);
-    a=F+2048+20;
-    for(m=0;m<32;m++){
-      aa=0;
-      fprintf(fp,"0b");
-      for(n=0;n<32;n++){
-        zz=(*a)>>4; a+=8;
-        if(zz&k)fprintf(fp,"1");
-        else fprintf(fp,"0");
-      }
-      if(m<31)fprintf(fp,",");
+      if(m<63)fprintf(fp,",");
     }
     fprintf(fp,"};\n");
   }
+  
   fclose(fp);
 
   // write gm file

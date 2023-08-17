@@ -20,7 +20,7 @@ char hextable[] = {
   -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
   -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 };
-
+int tt[8]={1,2,2,4,4,4,4,8,8,8,8};
 void ww1(FILE *fp,char *name,unsigned char *a,int bit){
   int k,m,n,zz,elm;
   unsigned char *aa;
@@ -33,7 +33,7 @@ void ww1(FILE *fp,char *name,unsigned char *a,int bit){
       for(n=0;n<32;n++){
         zz=(*aa)>>(8-bit); 
         aa+=8;
-        if(zz&k)fprintf(fp,"1");
+        if(zz&tt[k])fprintf(fp,"1");
         else fprintf(fp,"0");
       }
       if(k<elm-1||(k==elm-1&&m<127))fprintf(fp,",");

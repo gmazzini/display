@@ -21,7 +21,7 @@ char hextable[] = {
 
 unsigned int *mf[]={&font_0[0][0],&font_1[0][0],&font_2[0][0]};
 
-void ww1(FILE *fp,char *name,char *a){
+void ww1(FILE *fp,char *name,unsigned char *a){
   int k,m,n,zz;
   fprintf(fp,"unsigned long %s[16][64]={",name);
   for(k=0;k<16;k++){
@@ -128,16 +128,15 @@ int main(int argc,char **argv){
   fwrite(F,32784,1,fp);
   fclose(fp);
 
-
   // write mm file
- 
   fp=fopen("hh.mm","wb");
-  ww1(fp,"mr1",a+16); 
+  ww1(fp,"mr1",a+16);
+  ww1(fp,"mr2",a+16+2048);
+  ww1(fp,"mg1",a+18);
+  ww1(fp,"mg2",a+18+2048);
+  ww1(fp,"mb1",a+20);
+  ww1(fp,"mb2",a+20+2048);
   fclose(fp);
-
-
-
-
   
   // write gm file
   fp2=fopen("hh.qq","wb");

@@ -43,10 +43,10 @@ char refresh[16][16]={
 void ww1(FILE *fp,char *name,unsigned char *a){
   int k,m,n,zz;
   unsigned char *aa;
-  fprintf(fp,"unsigned long %s[16][64]={",name);
+  fprintf(fp,"unsigned long %s[16][128]={",name);
   for(k=0;k<16;k++){
     aa=a;
-    for(m=0;m<64;m++){
+    for(m=0;m<128;m++){
       fprintf(fp,"0b");
       for(n=0;n<32;n++){
         zz=(*aa)>>4; 
@@ -54,7 +54,7 @@ void ww1(FILE *fp,char *name,unsigned char *a){
         if(refresh[zz][k])fprintf(fp,"1");
         else fprintf(fp,"0");
       }
-      if(k<15||(k==15&&m<63))fprintf(fp,",");
+      if(k<15||(k==15&&m<127))fprintf(fp,",");
     }
   }
   fprintf(fp,"};\n");
@@ -151,12 +151,9 @@ int main(int argc,char **argv){
 
   // write mm file
   fp=fopen("hh.mm","wb");
-  ww1(fp,"mr1",F+16);
-  ww1(fp,"mr2",F+16+2048);
-  ww1(fp,"mg1",F+18);
-  ww1(fp,"mg2",F+18+2048);
-  ww1(fp,"mb1",F+20);
-  ww1(fp,"mb2",F+20+2048);
+  ww1(fp,"mr",F+16);
+  ww1(fp,"mg",F+18);
+  ww1(fp,"mb",F+20);
   fclose(fp);
   
   // write gm file

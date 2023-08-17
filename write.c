@@ -133,10 +133,10 @@ int main(int argc,char **argv){
 
   // write mm file
   fp=fopen("hh.mm","wb");
-  fprintf(fp,"unsigned int elm=%d;\n",7);
-  ww1(fp,"mr",F+16,3);
-  ww1(fp,"mg",F+18,3);
-  ww1(fp,"mb",F+20,3);
+  fprintf(fp,"unsigned int elm=%d;\n",3);
+  ww1(fp,"mr",F+16,2);
+  ww1(fp,"mg",F+18,2);
+  ww1(fp,"mb",F+20,2);
   fclose(fp);
   
   // write gm file

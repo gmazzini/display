@@ -20,11 +20,11 @@ char hextable[] = {
   -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
   -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 };
-int tt[8]={1,2,2,4,4,4,4,8,8,8,8};
+int tt[]={0,1,2,2,4,4,4,4,8,8,8,8,8,8,8,8};
 void ww1(FILE *fp,char *name,unsigned char *a,int bit){
   int k,m,n,zz,elm;
   unsigned char *aa;
-  elm=1<<bit;
+  elm=(1<<bit)-1;
   fprintf(fp,"unsigned long %s[%d][128]={",name,elm);
   for(k=0;k<elm;k++){
     aa=a;
@@ -33,7 +33,7 @@ void ww1(FILE *fp,char *name,unsigned char *a,int bit){
       for(n=0;n<32;n++){
         zz=(*aa)>>(8-bit); 
         aa+=8;
-        if(zz)fprintf(fp,"1");
+        if(zz&tt[k+1])fprintf(fp,"1");
         else fprintf(fp,"0");
       }
       if(k<elm-1||(k==elm-1&&m<127))fprintf(fp,",");
@@ -98,7 +98,7 @@ int main(int argc,char **argv){
       else if(x==-2)x=(64-ml)/2;
     }
 
-    // processing 12 bits
+    // processing xxxxxxxxx bits
     ax=0;
     for(k=0;k<l;k++){
       n=(*(buf+16+k)-31)&0x7f;
@@ -133,7 +133,7 @@ int main(int argc,char **argv){
 
   // write mm file
   fp=fopen("hh.mm","wb");
-  fprintf(fp,"unsigned int elm=%d;\n",1<<3);
+  fprintf(fp,"unsigned int elm=%d;\n",7);
   ww1(fp,"mr",F+16,3);
   ww1(fp,"mg",F+18,3);
   ww1(fp,"mb",F+20,3);

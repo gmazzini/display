@@ -130,12 +130,12 @@ int main(int argc,char **argv){
 
   // write mm file
   fp=fopen("hh.mm","wb");
-  ww1(fp,"mr1",a+16);
-  ww1(fp,"mr2",a+16+2048);
-  ww1(fp,"mg1",a+18);
-  ww1(fp,"mg2",a+18+2048);
-  ww1(fp,"mb1",a+20);
-  ww1(fp,"mb2",a+20+2048);
+  ww1(fp,"mr1",F+16);
+  ww1(fp,"mr2",F+16+2048);
+  ww1(fp,"mg1",F+18);
+  ww1(fp,"mg2",F+18+2048);
+  ww1(fp,"mb1",F+20);
+  ww1(fp,"mb2",F+20+2048);
   fclose(fp);
   
   // write gm file

@@ -132,7 +132,7 @@ int main(int argc,char **argv){
   // write mm file
  
   fp=fopen("hh.mm","wb");
-  ww1(fp,mr1,a+16); 
+  ww1(fp,"mr1",a+16); 
   fclose(fp);
 
 

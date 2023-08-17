@@ -25,7 +25,6 @@ void ww1(FILE *fp,char *name,unsigned char *a,int bit){
   int k,m,n,zz,elm;
   unsigned char *aa;
   elm=1<<bit;
-  fprintf(fp,"unsigned int elm=%d;\n",elm);
   fprintf(fp,"unsigned long %s[%d][128]={",name,elm);
   for(k=0;k<elm;k++){
     aa=a;
@@ -134,6 +133,7 @@ int main(int argc,char **argv){
 
   // write mm file
   fp=fopen("hh.mm","wb");
+  fprintf(fp,"unsigned int elm=%d;\n",1<<3);
   ww1(fp,"mr",F+16,3);
   ww1(fp,"mg",F+18,3);
   ww1(fp,"mb",F+20,3);

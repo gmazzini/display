@@ -60,7 +60,7 @@ void ww1(int rr,FILE *fp,char *name,unsigned char *a){
     for(m=0;m<128;m++){
       fprintf(fp,"0b");
       for(n=0;n<32;n++){
-        zz=(*aa)>>4; 
+        zz=(*aa)>>5; 
         aa+=8;
         if(refresh[zz][k])fprintf(fp,"1");
         else fprintf(fp,"0");

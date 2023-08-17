@@ -21,7 +21,7 @@ char hextable[] = {
 
 unsigned int *mf[]={&font_0[0][0],&font_1[0][0],&font_2[0][0]};
 
-void function ww1(FILE *fp,char *name,char *a){
+void ww1(FILE *fp,char *name,char *a){
   int k,m,n,zz;
   fprintf(fp,"unsigned long %s[16][64]={",name);
   for(k=0;k<16;k++){

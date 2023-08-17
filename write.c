@@ -21,6 +21,24 @@ char hextable[] = {
 
 unsigned int *mf[]={&font_0[0][0],&font_1[0][0],&font_2[0][0]};
 
+ function ww1(FILE *fp,char *name,char *a){
+    int k,m,n,zz;
+    fprintf(fp,"unsigned long %s[16][64]={",name);
+    for(k=0;k<16;k++){
+      for(m=0;m<64;m++){
+        fprintf(fp,"0b");
+        for(n=0;n<32;n++){
+          zz=(*a)>>4; 
+          a+=8;
+          if(zz&k)fprintf(fp,"1");
+          else fprintf(fp,"0");
+        }
+        if(k<15||(k==15&&m<63))fprintf(fp,",");
+      }
+    }
+    fprintf(fp,"};\n");
+  }
+
 int main(int argc,char **argv){
   unsigned char F[32784],*a,zz;
   char buf[100];
@@ -112,23 +130,7 @@ int main(int argc,char **argv){
 
 
   // write mm file
-  function ww1(FILE *fp,char *name,char *a){
-    int k,m,n,zz;
-    fprintf(fp,"unsigned long %s[16][64]={",name);
-    for(k=0;k<16;k++){
-      for(m=0;m<64;m++){
-        fprintf(fp,"0b");
-        for(n=0;n<32;n++){
-          zz=(*a)>>4; 
-          a+=8;
-          if(zz&k)fprintf(fp,"1");
-          else fprintf(fp,"0");
-        }
-        if(k<15||(k==15&&m<63))fprintf(fp,",");
-      }
-    }
-    fprintf(fp,"};\n");
-  }
+ 
   fp=fopen("hh.mm","wb");
   ww1(fp,mr1,a+16); 
   fclose(fp);

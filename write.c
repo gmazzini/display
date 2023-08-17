@@ -21,7 +21,7 @@ char hextable[] = {
   -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 };
 
-char refresh[16][16]={
+char refreshOLD[16][16]={
   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
   0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,
   0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,
@@ -40,6 +40,17 @@ char refresh[16][16]={
   1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 };
 
+char refresh[8][8]={
+  0,0,0,0,0,0,0,0,
+  0,0,0,1,0,0,0,0,
+  0,0,1,0,0,0,1,0,
+  0,1,0,1,0,1,0,1,
+  0,1,0,1,1,0,1,1,
+  1,1,0,1,1,0,1,1,
+  1,1,0,1,1,1,1,1,
+  1,1,1,1,1,1,1,1
+};
+
 void ww1(int rr,FILE *fp,char *name,unsigned char *a){
   int k,m,n,zz;
   unsigned char *aa;
@@ -54,7 +65,7 @@ void ww1(int rr,FILE *fp,char *name,unsigned char *a){
         if(refresh[zz][k])fprintf(fp,"1");
         else fprintf(fp,"0");
       }
-      if(k<15||(k==15&&m<127))fprintf(fp,",");
+      if(k<rr-1||(k==rr-1&&m<127))fprintf(fp,",");
     }
   }
   fprintf(fp,"};\n");
@@ -151,9 +162,9 @@ int main(int argc,char **argv){
 
   // write mm file
   fp=fopen("hh.mm","wb");
-  ww1(9,fp,"mr",F+16);
-  ww1(9,fp,"mg",F+18);
-  ww1(9,fp,"mb",F+20);
+  ww1(8,fp,"mr",F+16);
+  ww1(8,fp,"mg",F+18);
+  ww1(8,fp,"mb",F+20);
   fclose(fp);
   
   // write gm file

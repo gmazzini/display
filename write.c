@@ -33,7 +33,7 @@ void ww1(FILE *fp,char *name,unsigned char *a,int bit){
       for(n=0;n<32;n++){
         zz=(*aa)>>(8-bit); 
         aa+=8;
-        if(zz&tt[k])fprintf(fp,"1");
+        if(zz)fprintf(fp,"1");
         else fprintf(fp,"0");
       }
       if(k<elm-1||(k==elm-1&&m<127))fprintf(fp,",");
@@ -110,7 +110,7 @@ int main(int argc,char **argv){
         for(m=0;m<ml;m++){
           if(cc&0x8000){
             v=x+m+ax;
-            w=y+n;
+            w=y+n-1;
             if(v<64&&w<64){
               a=F+16+(w*64+v)*8;
               *(a+0)=r&0xf0;

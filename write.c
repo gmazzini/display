@@ -44,7 +44,7 @@ void ww1(FILE *fp,char *name,unsigned char *a){
   int k,m,n,zz;
   unsigned char *aa;
   fprintf(fp,"unsigned long %s[16][128]={",name);
-  for(k=0;k<16;k++){
+  for(k=0;k<9;k++){
     aa=a;
     for(m=0;m<128;m++){
       fprintf(fp,"0b");

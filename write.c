@@ -23,13 +23,15 @@ unsigned int *mf[]={&font_0[0][0],&font_1[0][0],&font_2[0][0]};
 
 void ww1(FILE *fp,char *name,unsigned char *a){
   int k,m,n,zz;
+  unsigned char *aa;
   fprintf(fp,"unsigned long %s[16][64]={",name);
   for(k=0;k<16;k++){
+    aa=a;
     for(m=0;m<64;m++){
       fprintf(fp,"0b");
       for(n=0;n<32;n++){
-        zz=(*a)>>4; 
-        a+=8;
+        zz=(*aa)>>4; 
+        aa+=8;
         if(zz&k)fprintf(fp,"1");
         else fprintf(fp,"0");
       }

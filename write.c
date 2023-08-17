@@ -25,7 +25,7 @@ void ww1(FILE *fp,char *name,unsigned char *a,int bit){
   int k,m,n,zz,elm;
   unsigned char *aa;
   elm=1<<bit;
-  fprintf(fp,"unsigned int elm=%d;",elm);
+  fprintf(fp,"unsigned int elm=%d;\n",elm);
   fprintf(fp,"unsigned long %s[%d][128]={",name,elm);
   for(k=0;k<elm;k++){
     aa=a;

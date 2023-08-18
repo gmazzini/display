@@ -20,7 +20,9 @@ char hextable[] = {
   -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
   -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 };
+
 int tt[]={0,1,2,2,4,4,4,4,8,8,8,8,8,8,8,8};
+int mask[]={0,0b10000000,0b1100000,0b11100000,0b11110000,0b11111000,0b11111100,0b11111110,0b11111111};
 void ww1(FILE *fp,char *name,unsigned char *a,int bit){
   int k,m,n,zz,elm;
   unsigned char *aa;
@@ -46,21 +48,23 @@ int main(int argc,char **argv){
   unsigned char F[32784],*a,zz;
   char buf[100];
   FILE *fp,*fp2;
-  unsigned int y,n,m,r,g,b,l,k,v,w,rb,gb,bb,ml,ax,cc,*c,yy,ty;
+  unsigned int y,n,m,r,g,b,l,k,v,w,rb,gb,bb,ml,ax,cc,*c,yy,ty,bit,mymask;
   int x;
   
-  // name.des out.ff
+  // name.des bit out.ff
   memcpy(F,"farbfeld",8);
   memcpy(F+8,"\x00\x00\x00\x40",4);
   memcpy(F+12,"\x00\x00\x00\x40",4);
-  
+  bit=atoi(argv[2]);
+  mymask=mask[bit];
+
   fp=fopen(argv[1],"rb");
   fgets(buf,100,fp);
   
   // background
-  rb=hextable[*(buf+0)]<<4|hextable[*(buf+1)];
-  gb=hextable[*(buf+2)]<<4|hextable[*(buf+3)];
-  bb=hextable[*(buf+4)]<<4|hextable[*(buf+5)];
+  rb=(hextable[*(buf+0)]<<4|hextable[*(buf+1)])&mymask;
+  gb=(hextable[*(buf+2)]<<4|hextable[*(buf+3)])&mymask;
+  bb=(hextable[*(buf+4)]<<4|hextable[*(buf+5)])&mymask;
   a=F+16;
   for(n=0;n<4096;n++){
     *(a++)=rb; *(a++)=0x00;
@@ -68,6 +72,7 @@ int main(int argc,char **argv){
     *(a++)=bb; *(a++)=0x00;
     *(a++)=0xff; *(a++)=0xff;
   }
+  printf("%02x%02x%02x\n",rb,gb,bb);
   
   for(;;){
     fgets(buf,100,fp);
@@ -77,15 +82,15 @@ int main(int argc,char **argv){
     x=atoi(buf);
     *(buf+5)='\0';
     y=atoi(buf+3);
-    r=hextable[*(buf+6)]<<4|hextable[*(buf+7)];
-    g=hextable[*(buf+8)]<<4|hextable[*(buf+9)];
-    b=hextable[*(buf+10)]<<4|hextable[*(buf+11)];
+    r=(hextable[*(buf+6)]<<4|hextable[*(buf+7)])&mymask;
+    g=(hextable[*(buf+8)]<<4|hextable[*(buf+9)])&mymask;
+    b=(hextable[*(buf+10)]<<4|hextable[*(buf+11)])&mymask;
     *(buf+15)='\0';
     ty=atoi(buf+13);
     yy=*(mf[ty]+1);
     l=strlen(buf+16)-1;
     
-    printf("%d %d %d %d %d %d %d\n",x,y,r,g,b,ty,l);
+    printf("%02d %02d %02x%02x%02x %02d %02d\n",x,y,r,g,b,ty,l);
 
     // justification
     if(x<0){
@@ -98,7 +103,7 @@ int main(int argc,char **argv){
       else if(x==-2)x=(64-ml)/2;
     }
 
-    // processing xxxxxxxxx bits
+    // processing
     ax=0;
     for(k=0;k<l;k++){
       n=(*(buf+16+k)-31)&0x7f;
@@ -113,9 +118,9 @@ int main(int argc,char **argv){
             w=y+n-1;
             if(v<64&&w<64){
               a=F+16+(w*64+v)*8;
-              *(a+0)=r&0xf0;
-              *(a+2)=g&0xf0;
-              *(a+4)=b&0xf0;
+              *(a+0)=r;
+              *(a+2)=g;
+              *(a+4)=b;
             }
           }
           cc<<=1;
@@ -130,53 +135,4 @@ int main(int argc,char **argv){
   fp=fopen(argv[2],"wb");
   fwrite(F,32784,1,fp);
   fclose(fp);
-
-  // write mm file
-  fp=fopen("hh.mm","wb");
-  fprintf(fp,"unsigned int elm=%d;\n",3);
-  ww1(fp,"mr",F+16,2);
-  ww1(fp,"mg",F+18,2);
-  ww1(fp,"mb",F+20,2);
-  fclose(fp);
-  
-  // write gm file
-  fp2=fopen("hh.qq","wb");
-  fprintf(fp2,"char MM[6164]={\n");
-  fp=fopen(argv[3],"wb");
-  a=F+16;
-  for(n=0;n<2048;){
-    zz=((*a)&0xf0)>>4;
-    a+=8;
-    zz|=((*a)&0xf0);
-    a+=8;
-    fwrite(&zz,1,1,fp);
-    fprintf(fp2,"0x%02x,",zz);
-    n++;
-    if(n%32==0)fprintf(fp2,"\n");
-  }
-  a=F+18;
-  for(n=0;n<2048;){
-    zz=((*a)&0xf0)>>4;
-    a+=8;
-    zz|=((*a)&0xf0);
-    a+=8;
-    fwrite(&zz,1,1,fp);
-    fprintf(fp2,"0x%02x,",zz);
-    n++;
-    if(n%32==0)fprintf(fp2,"\n");
-  }
-  a=F+20;
-  for(n=0;n<2048;){
-    zz=((*a)&0xf0)>>4;
-    a+=8;
-    zz|=((*a)&0xf0);
-    a+=8;
-    fwrite(&zz,1,1,fp);
-    if(n<2047)fprintf(fp2,"0x%02x,",zz);
-    else fprintf(fp2,"0x%02x};\n",zz);
-    n++;
-    if(n%32==0)fprintf(fp2,"\n");
-  }
-  fclose(fp);
-  fclose(fp2);
 }

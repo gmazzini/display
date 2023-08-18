@@ -28,11 +28,8 @@ void mywrite(FILE *fp,char *name,unsigned char *a){
 }
 
 int main(int argc,char **argv){
-  unsigned char F[32784],*a,zz;
-  char buf[100];
-  FILE *fp,*fp2;
-  unsigned int y,n,m,r,g,b,l,k,v,w,rb,gb,bb,ml,ax,cc,*c,yy,ty;
-  int x;
+  unsigned char F[32784];
+  FILE *fp,;
   
   // file.ff out.h
   fp=fopen(argv[1],"rb");

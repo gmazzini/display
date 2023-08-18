@@ -21,28 +21,7 @@ char hextable[] = {
   -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 };
 
-int tt[]={0,1,2,2,4,4,4,4,8,8,8,8,8,8,8,8};
 int mask[]={0,0b10000000,0b11000000,0b11100000,0b11110000,0b11111000,0b11111100,0b11111110,0b11111111};
-void ww1(FILE *fp,char *name,unsigned char *a,int bit){
-  int k,m,n,zz,elm;
-  unsigned char *aa;
-  elm=(1<<bit)-1;
-  fprintf(fp,"unsigned long %s[%d][128]={",name,elm);
-  for(k=0;k<elm;k++){
-    aa=a;
-    for(m=0;m<128;m++){
-      fprintf(fp,"0b");
-      for(n=0;n<32;n++){
-        zz=(*aa)>>(8-bit); 
-        aa+=8;
-        if(zz&tt[k+1])fprintf(fp,"1");
-        else fprintf(fp,"0");
-      }
-      if(k<elm-1||(k==elm-1&&m<127))fprintf(fp,",");
-    }
-  }
-  fprintf(fp,"};\n");
-}
 
 int main(int argc,char **argv){
   unsigned char F[32784],*a,zz;

@@ -22,7 +22,7 @@ char hextable[] = {
 };
 
 int tt[]={0,1,2,2,4,4,4,4,8,8,8,8,8,8,8,8};
-int mask[]={0,0b10000000,0b1100000,0b11100000,0b11110000,0b11111000,0b11111100,0b11111110,0b11111111};
+int mask[]={0,0b10000000,0b11000000,0b11100000,0b11110000,0b11111000,0b11111100,0b11111110,0b11111111};
 void ww1(FILE *fp,char *name,unsigned char *a,int bit){
   int k,m,n,zz,elm;
   unsigned char *aa;

@@ -29,7 +29,7 @@ void mywrite(FILE *fp,char *name,unsigned char *a){
 
 int main(int argc,char **argv){
   unsigned char F[32784];
-  FILE *fp,;
+  FILE *fp;
   
   // file.ff out.h
   fp=fopen(argv[1],"rb");

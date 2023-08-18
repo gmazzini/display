@@ -6,41 +6,38 @@
 
 int tt[]={0,1,2,2,4,4,4,4,8,8,8,8,8,8,8,8};
 
-void mywrite(FILE *fp,char *name,unsigned char *a){
-  int k,m,n,zz,elm;
-  unsigned char *aa;
-  elm=(1<<BITREFRESH)-1;
-  fprintf(fp,"unsigned long %s[%d][128]={",name,elm);
-  for(k=0;k<elm;k++){
-    aa=a;
-    for(m=0;m<128;m++){
-      fprintf(fp,"0b");
-      for(n=0;n<32;n++){
-        zz=(*aa)>>(8-BITREFRESH); 
-        aa+=8;
-        if(zz&tt[k+1])fprintf(fp,"1");
-        else fprintf(fp,"0");
-      }
-      if(k<elm-1||(k==elm-1&&m<127))fprintf(fp,",");
-    }
-  }
-  fprintf(fp,"};\n");
-}
-
 int main(int argc,char **argv){
   unsigned char F[32784];
   FILE *fp;
+  int k,m,n,zz,elm,i,j;
+  unsigned char *aa;
   
   // file.ff out.h
   fp=fopen(argv[1],"rb");
   fread(F,32784,1,fp);
   fclose(fp);
-  
+
+  elm=(1<<BITREFRESH)-1;
   fp=fopen(argv[2],"wb");
-  fprintf(fp,"unsigned int elm=%d;\n",(1<<BITREFRESH)-1);
-  mywrite(fp,"mr",F+16);
-  mywrite(fp,"mg",F+18);
-  mywrite(fp,"mb",F+20);
+  fprintf(fp,"unsigned int elm=%d;\n",elm);
+  fprintf(fp,"unsigned long MM[%d][384]={",elm);
+  i=384*3;
+  for(k=0;k<elm;k++){
+    for(j=0;j<3;j++){
+      aa=F+16+j*2;
+      for(m=0;m<128;m++){
+        fprintf(fp,"0b");
+        for(n=0;n<32;n++){
+          zz=(*aa)>>(8-BITREFRESH); 
+          aa+=8;
+          if(zz&tt[k+1])fprintf(fp,"1");
+          else fprintf(fp,"0");
+        }
+        if(--i>0)fprintf(fp,",");
+        else fprintf(fp,"};");
+      }
+    }
+  }
   fclose(fp);
 }
   

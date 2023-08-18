@@ -6,7 +6,7 @@
 
 int tt[]={0,1,2,2,4,4,4,4,8,8,8,8,8,8,8,8};
 
-void ww1(FILE *fp,char *name,unsigned char *a){
+void mywrite(FILE *fp,char *name,unsigned char *a){
   int k,m,n,zz,elm;
   unsigned char *aa;
   elm=(1<<BITREFRESH)-1;
@@ -41,9 +41,9 @@ int main(int argc,char **argv){
   
   fp=fopen(argv[2],"wb");
   fprintf(fp,"unsigned int elm=%d;\n",(1<<BITREFRESH)-1);
-  ww1(fp,"mr",F+16,BITREFRESH);
-  ww1(fp,"mg",F+18,BITREFRESH);
-  ww1(fp,"mb",F+20,BITREFRESH);
+  mywrite(fp,"mr",F+16);
+  mywrite(fp,"mg",F+18);
+  mywrite(fp,"mb",F+20);
   fclose(fp);
 }
   

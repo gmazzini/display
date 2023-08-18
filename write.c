@@ -24,9 +24,9 @@ char hextable[] = {
 int mask[]={0,0b10000000,0b11000000,0b11100000,0b11110000,0b11111000,0b11111100,0b11111110,0b11111111};
 
 int main(int argc,char **argv){
-  unsigned char F[32784],*a,zz;
+  unsigned char F[32784],*a;
   char buf[100];
-  FILE *fp,*fp2;
+  FILE *fp;
   unsigned int y,n,m,r,g,b,l,k,v,w,rb,gb,bb,ml,ax,cc,*c,yy,ty,bit,mymask;
   int x;
   

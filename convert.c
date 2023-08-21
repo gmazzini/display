@@ -20,7 +20,7 @@ int main(int argc,char **argv){
   fp=fopen(argv[3],"wb");
   fprintf(fp,"unsigned int elm=%d;\n",elm);
   fprintf(fp,"unsigned long MM[%d][384]={",elm);
-  i=384*3;
+  i=384*elm;
   for(k=0;k<elm;k++){
     for(j=0;j<3;j++){
       aa=F+16+j*2;

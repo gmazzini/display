@@ -7,11 +7,11 @@ int tt[]={0,1,2,2,4,4,4,4,8,8,8,8,8,8,8,8};
 int main(int argc,char **argv){
   unsigned char F[32784];
   FILE *fp;
-  int k,m,n,zz,elm,i,j.nit;
+  int k,m,n,zz,elm,i,j,bit;
   unsigned char *aa;
   
   // file.ff bit out.h
-  bit=atoi(bit);
+  bit=atoi(argv[2]);
   fp=fopen(argv[1],"rb");
   fread(F,32784,1,fp);
   fclose(fp);

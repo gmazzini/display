@@ -19,7 +19,7 @@ int main(int argc,char **argv){
 
   elm=(1<<bit)-1;
   fp=fopen(argv[3],"wb");
-  fwrite(fp,&elm,1,1);
+  fwrite(&elm,1,1,fp);
   i=384*elm;
   for(k=0;k<elm;k++){
     for(j=0;j<3;j++){
@@ -32,7 +32,7 @@ int main(int argc,char **argv){
           if(zz&tt[k+1])oo|=1;
           if(n<31)oo<<=1;
         }
-        fwrite(fp,&elm,4,1);
+        fwrite(&elm,4,1,fp);
         i--;
       }
     }

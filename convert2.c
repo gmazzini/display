@@ -32,7 +32,7 @@ int main(int argc,char **argv){
           if(zz&tt[k+1])oo|=1;
           if(n<31)oo<<=1;
         }
-        fwrite(&elm,4,1,fp);
+        fwrite(&oo,4,1,fp);
         i--;
       }
     }

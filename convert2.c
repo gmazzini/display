@@ -8,17 +8,19 @@ int main(int argc,char **argv){
   unsigned char F[32784];
   FILE *fp;
   int k,m,n,zz,i,j,bit;
-  unsigned char *aa,elm;
+  unsigned char *aa,elm,myqq;
   unsigned long oo;
   
-  // file.ff bit out.h
-  bit=atoi(argv[2]);
+  // file.ff myqq bits out.h
+  bit=atoi(argv[3]);
+  myqq=atoi(argv[2]);
   fp=fopen(argv[1],"rb");
   fread(F,32784,1,fp);
   fclose(fp);
 
   elm=(1<<bit)-1;
-  fp=fopen(argv[3],"wb");
+  fp=fopen(argv[4],"wb");
+  fwrite(&myqq,1,1,fp);
   fwrite(&elm,1,1,fp);
   i=384*elm;
   for(k=0;k<elm;k++){

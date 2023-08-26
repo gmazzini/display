@@ -7,7 +7,6 @@ int main(int argc,char **argv){
   FILE *fp;
   int m,n,j;
   unsigned char *aa,myqq,zz;
-  unsigned long oo;
   
   // file.ff myqq out.h
   myqq=atoi(argv[2]);
@@ -19,15 +18,10 @@ int main(int argc,char **argv){
   fwrite(&myqq,1,1,fp);
   for(j=0;j<3;j++){
     aa=F+16+j*2;
-    for(m=0;m<512;m++){
-      oo=0;
-      for(n=0;n<8;n++){
-        zz=(*aa)>>4;
-        aa+=8;
-        oo|=zz;
-        if(n<7)oo<<=4;
-      }
-      fwrite(&oo,4,1,fp);
+    for(m=0;m<2048;m++){
+      zz=((*aa)>>4)<<4;
+      zz|=(*aa)>>4
+      fwrite(&zz,1,1,fp);
     }
   }
   fclose(fp);

@@ -18,7 +18,7 @@ fclose($fp);
 if($vv%2==0){
   $vf=$vv/2;
   $name=sprintf("tmp/img/%03d.ff",$vf);
-  shell_exec("tmp/convert2 $name 3 4 $bin");
+  shell_exec("tmp/convert3 $name 7 $bin");
 }
 else {
   $fp=fopen($des,"w");
@@ -31,7 +31,7 @@ else {
   fprintf($fp,"-2 46 FFFF00 02 Punti WiFi\n");
   fprintf($fp,"-2 54 0000FF 02 %s\n","11.234");
   fclose($fp);
-  shell_exec("tmp/write $des 4 $ff; tmp/convert2 $ff 3 4 $bin");
+  shell_exec("tmp/write $des 4 $ff; tmp/convert3 $ff 11 $bin");
 }
 
 $len=filesize($bin);

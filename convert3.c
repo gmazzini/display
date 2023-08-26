@@ -19,8 +19,8 @@ int main(int argc,char **argv){
   for(j=0;j<3;j++){
     aa=F+16+j*2;
     for(m=0;m<2048;m++){
-      zz=((*aa)>>4)<<4;
-      zz|=(*aa)>>4
+      zz=((*aa++)>>4)<<4;
+      zz|=(*aa++)>>4;
       fwrite(&zz,1,1,fp);
     }
   }

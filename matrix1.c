@@ -1,3 +1,5 @@
+// arduino UNO R4 Minima
+
 // OE=13 LAT=12 CLK=11
 // A=10 B=9 C=8 D=7 E=6
 // B2=5 B1=4 R2=3 R1=2 G2=1 G1=0

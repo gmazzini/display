@@ -5,7 +5,7 @@
 int main(int argc,char **argv){
   unsigned char F[32784];
   FILE *fp;
-  int m,n,j;
+  int m,j;
   unsigned char *aa,myqq,zz;
   
   // file.ff myqq out.h

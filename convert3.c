@@ -5,7 +5,7 @@
 int main(int argc,char **argv){
   unsigned char F[32784];
   FILE *fp;
-  int k,m,n,i,j,bit;
+  int m,n,j;
   unsigned char *aa,myqq,zz;
   unsigned long oo;
   

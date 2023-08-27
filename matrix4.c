@@ -1,7 +1,6 @@
 #include <WiFi.h>
 #include <SPI.h>
 
-// arduino ESP32S3
 // OE=D13=GPIO_NUM_48 LAT=D12=GPIO_NUM_47 CLK=11=GPIO_NUM_38
 // A=D10=GPIO_NUM_21 B=D9=GPIO_NUM_18 C=D8=GPIO_NUM_17 D=D7=GPIO_NUM_10 E=D6=GPIO_NUM_9
 // B2=D5=GPIO_NUM_8 B1=D4=GPIO_NUM_7
@@ -134,26 +133,26 @@ void loop(){
       if(k1==3){
         if(mywait())goto mybreak;
         c=client.read();
-        if(c>0)myqq=c;
-        Serial.print("tt:"); Serial.println(tt);
-        Serial.print("myqq:"); Serial.println(myqq);
         for(i=0;i<6144;i++){
           if(mywait())goto mybreak;
           buf[i]=client.read();
         }
-      }
-      for(k1=0;k1<15;k1++){
-        aa=buf;
-        for(k2=0;k2<384;k2++){
-          oo=0;
-          for(n=0;n<16;n++){
-            if((*aa)&TTh[k1+1])oo|=1;
-            oo<<=1;
-            if((*aa)&TTl[k1+1])oo|=1;
-            if(n<15)oo<<=1;
-            aa++;
+        if(c>0)myqq=c;
+        Serial.print("tt:"); Serial.println(tt);
+        Serial.print("myqq:"); Serial.println(myqq);
+        for(k1=0;k1<15;k1++){
+          aa=buf;
+          for(k2=0;k2<384;k2++){
+            oo=0;
+            for(n=0;n<16;n++){
+              if((*aa)&TTh[k1+1])oo|=1;
+              oo<<=1;
+              if((*aa)&TTl[k1+1])oo|=1;
+              if(n<15)oo<<=1;
+              aa++;
+            }
+            MM[k1][k2]=oo;
           }
-          MM[k1][k2]=oo;
         }
       }
       mybreak:

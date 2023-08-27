@@ -14,7 +14,8 @@ int main(int argc,char **argv){
   fp=fopen(argv[1],"rb");
   fread(F,32784,1,fp);
   fclose(fp);
-
+  
+  h=2166136261UL;
   fp=fopen(argv[3],"wb");
   fwrite(&myqq,1,1,fp);
   for(j=0;j<3;j++){

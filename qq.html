@@ -15,6 +15,7 @@ function myload(){
   var r,g,b,i,j,z;
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.overrideMimeType('text/plain; charset=x-user-defined');
+
   xmlHttp.open("GET","http://www.mazzini.org/matrix.php?ip="+ip,false);
   xmlHttp.send(null);
   var x = xmlHttp.response;
@@ -48,7 +49,13 @@ function myload(){
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
-const ip = urlParams.get('ip');
+var ip = urlParams.get('ip');
+if(ip===null){
+  const rr = new Uint32Array(2);
+  self.crypto.getRandomValues(rr);
+  ip="TEST."+rr[0].toString(16)+"."+rr[1].toString(16);
+}
+
 myload();
 </script>
 </body>

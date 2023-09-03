@@ -111,7 +111,7 @@ void loop(){
       tt=ta;
       ip=WiFi.localIP();
       client.stop();
-      client.connect("www.mazzini.org",80);
+      client.connect("matrix.lepida.it",80);
       client.print("GET /matrix.php?ip=");
       client.print(ip);
       client.println(" HTTP/1.1");

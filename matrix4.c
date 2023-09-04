@@ -115,7 +115,7 @@ void loop(){
       client.print("GET /matrix.php?ip=");
       client.print(ip);
       client.println(" HTTP/1.1");
-      client.println("Host: www.mazzini.org");
+      client.println("Host: matrix.lepida.it");
       client.println("User-Agent: ArduinoWiFi/1.1");
       client.println("Connection: close");
       client.println();

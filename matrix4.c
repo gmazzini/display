@@ -112,7 +112,7 @@ void loop(){
       ip=WiFi.localIP();
       client.stop();
       client.connect("matrix.lepida.it",80);
-      client.print("GET /matrix.php?ip=");
+      client.print("GET /matrix.php?ser=0001&ip=");
       client.print(ip);
       client.println(" HTTP/1.1");
       client.println("Host: matrix.lepida.it");

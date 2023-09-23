@@ -86,6 +86,19 @@ fai3($conn,1,"areeaai","areeaai","https://docs.google.com/spreadsheets/d/1cgCtac
 fai2($conn,1,"aziendeaai","aziendeaai","https://docs.google.com/spreadsheets/d/1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0/gviz/tq?tq=select%20G%2CF&tqx=out:csv&gid=566741345",$sovra,$ss);
 fai2($conn,1,"apwifi","apwifi","https://docs.google.com/spreadsheets/d/1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0/gviz/tq?tq=select%20H%2CI&tqx=out:csv&gid=1373772362",$sovra,$ss);
 
+echo "userwifi\n";
+mysqli_query($conn,"delete from userwifi");
+$res=mysqli_query($conn,"select distinct(istat) from idistat where istat>'30000'");
+for(;;){
+  $row=mysqli_fetch_array($res,MYSQLI_NUM);
+  if($row==null)break;
+  $istat=$row[0];
+  mysqli_query($conn,"insert ignore into userwifi select '$istat',count(distinct id) from logwifi where istat='$istat'");
+}
+mysqli_free_result($res);
+mysqli_query($conn,"insert into userwifi select '00008',count(distinct id) from logwifi");
+// MANCA UNIONI
+
 mysqli_close($conn);
 
 ?>

@@ -1,0 +1,66 @@
+<html>
+<body>
+<canvas id="myCanvas" width="578" height="578" style="background-color:#000000;">
+<script>
+function componentToHex(c) {
+  var hex = c.toString(16);
+  return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
+function myload(){
+  var r,g,b,i,j,z;
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.overrideMimeType('text/plain; charset=x-user-defined');
+
+  xmlHttp.open("GET","http://matrix.lepida.it/matrix.php?ser="+ser+"&ip="+ip,false);
+  xmlHttp.send(null);
+  var x = xmlHttp.response;
+  var c = document.getElementById("myCanvas");
+  var ctx = c.getContext("2d");
+  ctx.globalAlpha = 1.0;
+  ctx.clearRect(0, 0, c.width, c.height);
+
+  z=1;
+  for(j=0;j<64;j++){
+    for(i=0;i<64;i++){
+      if(i%2==0){
+        r=x.charCodeAt(z) & 240;
+        g=x.charCodeAt(z+2048) & 240;
+        b=x.charCodeAt(z+4096) & 240;
+      }
+      else {
+        r=(x.charCodeAt(z) & 15) << 4;
+        g=(x.charCodeAt(z+2048) & 15) << 4;
+        b=(x.charCodeAt(z+4096) & 15) << 4;
+        z++;
+      }
+      ctx.fillStyle = rgbToHex(r,g,b);
+      ctx.beginPath();
+      ctx.arc(5+i*9,5+j*9,4,0,Math.PI*2,true);
+      ctx.fill();
+    }
+  }
+  setTimeout(myload,1000*x.charCodeAt(0));
+}
+
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+var ip = urlParams.get('ip');
+var ser = urlParams.get('ser');
+if(ip===null){
+  const rr = new Uint32Array(2);
+  self.crypto.getRandomValues(rr);
+  ip="TEST."+rr[0].toString(16)+"."+rr[1].toString(16);
+}
+if(ser===null){
+  ser="0000";
+}
+
+myload();
+</script>
+</body>
+</html>

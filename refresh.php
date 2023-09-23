@@ -67,7 +67,7 @@ for($i=1;;$i++){
   $kk=substr($aa[0],1,5);
   if(!is_numeric($kk))continue;
   $vv=substr($aa[1],1,strlen($aa[1])-2);
-  $qq=substr($aa[2],1,5);
+  $qq=substr($aa[2],1,strlen($aa[2])-2);
   mysqli_query($conn,"insert into istatente values ('$kk','$vv')");
   mysqli_query($conn,"update idistat set sovra='$qq' where istat='$kk'");
 }

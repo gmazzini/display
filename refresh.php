@@ -57,6 +57,21 @@ function fai3($conn,$base,$table,$field,$url,$sovra,$ss){
   for($i=0;$i<$ss;$i++)mysqli_query($conn,"insert ignore into $table select idistat.sovra,sum($field) from $table,idistat where $table.istat=idistat.istat and idistat.sovra='$sovra[$i]'");
 }
 
+echo "istatente\n";
+mysqli_query($conn,"delete from istatente");
+$aux=explode("\n",file_get_contents("https://docs.google.com/spreadsheets/d/1DTngQUDqQgcYhA4S1iOW3jGuj-nOO-98opbXeUC-ffA/gviz/tq?tq=select%20A%2CB%2CD&tqx=out:csv&gid=0"));
+for($i=1;;$i++){
+  if(!isset($aux[$i]))break;
+  $aa=explode(",",$aux[$i]);
+  if(strlen($aa[0])<5)continue;
+  $kk=substr($aa[0],1,5);
+  if(!is_numeric($kk))continue;
+  $vv=substr($aa[1],1,strlen($aa[1])-2);
+  $qq=substr($aa[2],1,5);
+  mysqli_query($conn,"insert into istatente values ('$kk','$vv')");
+  mysqli_query($conn,"update idistat set sovra='$qq' where istat='$kk'");
+}
+
 fai1($conn,"attivifse","attivi","https://dati.fascicolo-sanitario.it/rest/attivi/comune",$sovra,$ss);
 fai1($conn,"accessifse","accessi","https://dati.fascicolo-sanitario.it/rest/accessi/comune",$sovra,$ss);
 fai1($conn,"scaricatifse","scaricati","https://dati.fascicolo-sanitario.it/rest/documenti/comune",$sovra,$ss);

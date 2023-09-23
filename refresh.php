@@ -11,6 +11,7 @@ for($ss=0;;$ss++){
 mysqli_free_result($res);
 
 function fai1($conn,$table,$field,$url,$sovra,$ss){
+  echo "$table\n";
   mysqli_query($conn,"delete from $table");
   $aux=json_decode(file_get_contents("$url"),true);
   foreach($aux["dati"] as $k => $v){

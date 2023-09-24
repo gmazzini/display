@@ -51,7 +51,7 @@ function fai1($conn,$table,$field,$url,$sovra,$ss){
     $row=oci_fetch_row($query);
     @$vv=$row[0];
     oci_free_statement($query);
-    $query=oci_parse($conn,"insert into $table values ('$sovra[$o]',$vv)");
+    $query=oci_parse($conn,"insert into $table values ('$sovra[$i]',$vv)");
     oci_execute($query);
   }
 }

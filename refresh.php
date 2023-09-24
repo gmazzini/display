@@ -68,7 +68,8 @@ function fai2($conn,$base,$table,$field,$url,$sovra,$ss){
     if(strlen($aa[0])<5)continue;
     $kk=substr($aa[0],1,5);
     if(!is_numeric($kk))continue;
-    $vv=substr($aa[1],1,strlen($aa[1])-2);
+    if(isset($aa[1])$vv=substr($aa[1],1,strlen($aa[1])-2);
+    else $vv=1;
     $query=oci_parse($conn,"select count(*) from $table where istat='$kk'");
     oci_execute($query);
     $row=oci_fetch_row($query);
@@ -96,7 +97,8 @@ function fai2($conn,$base,$table,$field,$url,$sovra,$ss){
 
 function fai3($conn,$base,$table,$field,$url,$sovra,$ss){
   echo "$table\n";
-  mysqli_query($conn,"delete from $table");
+  $query=oci_parse($conn,"delete from $table");
+  oci_execute($query);
   $aux=explode("\n",file_get_contents("$url"));
   for($i=$base;;$i++){
     if(!isset($aux[$i]))break;

@@ -43,21 +43,34 @@ for($yy=0;;){
 }
 oci_free_statement($query);
 
-exit();
-
-
 echo "userwifi\n";
-mysqli_query($conn,"delete from userwifi");
-$res=mysqli_query($conn,"select distinct(istat) from idistat where istat>'30000'");
-for(;;){
-  $row=mysqli_fetch_array($res,MYSQLI_NUM);
-  if($row==null)break;
-  $istat=$row[0];
-  mysqli_query($conn,"insert ignore into userwifi select '$istat',count(distinct id) from logwifi where istat='$istat'");
+$query=oci_parse($conn,"delete from userwifi");
+oci_execute($query);
+for($i=0;$i<$yy;$i++){
+  $query=oci_parse($conn,"count(distinct id) from logwifi where istat='$yyistat[$i]'");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  if(isset($row[0]))$vv=$row[0];
+  else $vv=0;
+  oci_free_statement($query);
+  echo "userwifi:$yyistat[$i]\n";
+  $query=oci_parse($conn,"insert ignore into userwifi values ('$yyistat[$i]',$vv)");
+  oci_execute($query);
 }
-mysqli_free_result($res);
-mysqli_query($conn,"insert into userwifi select '00008',count(distinct id) from logwifi");
-// MANCA UNIONI
+echo "userwifi:00008\n";
+$query=oci_parse($conn,"insert into userwifi select '00008',count(distinct id) from logwifi from $table");
+oci_execute($query);
+for($i=0;$i<$ss;$i++){
+  echo "userwifi:$sovra[$i]\n";
+  $query=oci_parse($conn,"select count(distinct logwifi.id) from logwifi,idistat where logwifi.istat=idistat.istat and idistat.sovra='$sovra[$i]'");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  if(isset($row[0]))$vv=$row[0];
+  else $vv=0;
+  oci_free_statement($query);
+  $query=oci_parse($conn,"insert into logwifi values ('$sovra[$i]',$vv)");
+  oci_execute($query);
+}
 
 function fai1($conn,$table,$field,$url,$sovra,$ss){
   echo "$table\n";

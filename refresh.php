@@ -4,6 +4,29 @@ include "data.php";
 
 $conn=oci_connect($p1,$p2,$p3);
 
+echo "istatente\n";
+$query=oci_parse($conn,"delete from istatente");
+oci_execute($query);
+for($i=1;;$i++){
+  if(!isset($aux[$i]))break;
+  $aa=explode(",",$aux[$i]);
+  if(strlen($aa[0])<5)continue;
+  $kk=substr($aa[0],1,5);
+  if(!is_numeric($kk))continue;
+  $vv=substr($aa[1],1,strlen($aa[1])-2);
+  $qq=substr($aa[2],1,strlen($aa[2])-2);
+  $query=oci_parse($conn,"insert into istatente values ('$kk','$vv')");
+  oci_execute($query);
+  $query=oci_parse($conn,"update idistat set sovra='$qq' where istat='$kk'");
+  oci_execute($query);
+}
+
+exit();
+
+
+
+
+
 $query=oci_parse($conn,"select distinct(sovra) from idistat where sovra<>''");
 oci_execute($query);
 for($ss=0;;$ss++){
@@ -62,21 +85,6 @@ function fai3($conn,$base,$table,$field,$url,$sovra,$ss){
   }
   mysqli_query($conn,"insert into $table select '00008',sum($field) from $table");
   for($i=0;$i<$ss;$i++)mysqli_query($conn,"insert ignore into $table select idistat.sovra,sum($field) from $table,idistat where $table.istat=idistat.istat and idistat.sovra='$sovra[$i]'");
-}
-
-echo "istatente\n";
-mysqli_query($conn,"delete from istatente");
-$aux=explode("\n",file_get_contents("https://docs.google.com/spreadsheets/d/1DTngQUDqQgcYhA4S1iOW3jGuj-nOO-98opbXeUC-ffA/gviz/tq?tq=select%20A%2CB%2CD&tqx=out:csv&gid=0"));
-for($i=1;;$i++){
-  if(!isset($aux[$i]))break;
-  $aa=explode(",",$aux[$i]);
-  if(strlen($aa[0])<5)continue;
-  $kk=substr($aa[0],1,5);
-  if(!is_numeric($kk))continue;
-  $vv=substr($aa[1],1,strlen($aa[1])-2);
-  $qq=substr($aa[2],1,strlen($aa[2])-2);
-  mysqli_query($conn,"insert into istatente values ('$kk','$vv')");
-  mysqli_query($conn,"update idistat set sovra='$qq' where istat='$kk'");
 }
 
 fai1($conn,"attivifse","attivi","https://dati.fascicolo-sanitario.it/rest/attivi/comune",$sovra,$ss);

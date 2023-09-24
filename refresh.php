@@ -1,14 +1,21 @@
 <?php
 
-$conn=mysqli_connect("127.0.0.1","matrix","matrix123","matrix");
+include "data.php";
 
-$res=mysqli_query($conn,"select distinct(sovra) from idistat where sovra<>''");
+$conn=oci_connect($p1,$p2,$p3);
+
+$query=oci_parse($conn,"select distinct(sovra) from idistat where sovra<>''");
+oci_execute($query);
 for($ss=0;;$ss++){
-  $row=mysqli_fetch_array($res,MYSQLI_NUM);
+  $row=oci_fetch_row($query);
   if($row==null)break;
   $sovra[$ss]=$row[0];
 }
-mysqli_free_result($res);
+oci_free_statement($query);
+
+print_r($sovra)
+exit(1);
+
 
 function fai1($conn,$table,$field,$url,$sovra,$ss){
   echo "$table\n";

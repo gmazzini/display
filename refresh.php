@@ -156,6 +156,6 @@ fai1($conn,"attivazionilepidaid","attivazioni","https://dati.fascicolo-sanitario
 fai1($conn,"accessilepidaid","accessi","https://dati.fascicolo-sanitario.it/rest/lepidaid/accessi/comune",$sovra,$ss);
 fai1($conn,"sportellilepidaid","sportelli","https://dati.fascicolo-sanitario.it/rest/lepidaid/sportelli/comune",$sovra,$ss);
 
-mysqli_close($conn);
+oci_close($conn);
 
 ?>

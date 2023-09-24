@@ -58,7 +58,12 @@ for($i=0;$i<$yy;$i++){
   oci_execute($query);
 }
 echo "userwifi:00008\n";
-$query=oci_parse($conn,"insert into userwifi select '00008',count(distinct id) from logwifi from $table");
+$query=oci_parse($conn,"select count(distinct id) from logwifi");
+oci_execute($query);
+$row=oci_fetch_row($query);
+$vv=$row[0];
+oci_free_statement($query);
+$query=oci_parse($conn,"insert into userwifi values ('00008',$vv)");
 oci_execute($query);
 for($i=0;$i<$ss;$i++){
   echo "userwifi:$sovra[$i]\n";

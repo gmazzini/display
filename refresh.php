@@ -68,7 +68,7 @@ function fai2($conn,$base,$table,$field,$url,$sovra,$ss){
     if(strlen($aa[0])<5)continue;
     $kk=substr($aa[0],1,5);
     if(!is_numeric($kk))continue;
-    if(isset($aa[1])$vv=substr($aa[1],1,strlen($aa[1])-2);
+    if(isset($aa[1]))$vv=substr($aa[1],1,strlen($aa[1])-2);
     else $vv=1;
     $query=oci_parse($conn,"select count(*) from $table where istat='$kk'");
     oci_execute($query);
@@ -93,23 +93,6 @@ function fai2($conn,$base,$table,$field,$url,$sovra,$ss){
     $query=oci_parse($conn,"insert into $table values ('$sovra[$i]',$vv)");
     oci_execute($query);
   }
-}
-
-function fai3($conn,$base,$table,$field,$url,$sovra,$ss){
-  echo "$table\n";
-  $query=oci_parse($conn,"delete from $table");
-  oci_execute($query);
-  $aux=explode("\n",file_get_contents("$url"));
-  for($i=$base;;$i++){
-    if(!isset($aux[$i]))break;
-    if(strlen($aux[$i])<5)continue;
-    $kk=substr($aux[$i],1,5);
-    if(!is_numeric($kk))continue;
-    mysqli_query($conn,"insert ignore into $table values ('$kk',0)");
-    mysqli_query($conn,"update $table set $field=$field+1 where istat='$kk'");
-  }
-  mysqli_query($conn,"insert into $table select '00008',sum($field) from $table");
-  for($i=0;$i<$ss;$i++)mysqli_query($conn,"insert ignore into $table select idistat.sovra,sum($field) from $table,idistat where $table.istat=idistat.istat and idistat.sovra='$sovra[$i]'");
 }
 
 fai2($conn,3,"uiftth","uiftth","https://docs.google.com/spreadsheets/d/1Nk39CPjf9Lu_UQ_zUnY97cqYZ5Vh7K00owrw-XeSgHM/gviz/tq?tq=select%20B%2CD&tqx=out:csv",$sovra,$ss);

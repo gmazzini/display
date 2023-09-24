@@ -73,7 +73,7 @@ for($i=0;$i<$ss;$i++){
   if(isset($row[0]))$vv=$row[0];
   else $vv=0;
   oci_free_statement($query);
-  $query=oci_parse($conn,"insert into logwifi values ('$sovra[$i]',$vv)");
+  $query=oci_parse($conn,"insert into userwifi values ('$sovra[$i]',$vv)");
   oci_execute($query);
 }
 

@@ -32,6 +32,32 @@ for($ss=0;;){
   $ss++;
 }
 oci_free_statement($query);
+$query=oci_parse($conn,"select istat from idistat where istat>'30000'");
+oci_execute($query);
+for($yy=0;;){
+  $row=oci_fetch_row($query);
+  if($row==null)break;
+  if(strlen($row[0])!=5)continue;
+  $yyistat[$yy]=$row[0];
+  $yy++;
+}
+oci_free_statement($query);
+
+exit();
+
+
+echo "userwifi\n";
+mysqli_query($conn,"delete from userwifi");
+$res=mysqli_query($conn,"select distinct(istat) from idistat where istat>'30000'");
+for(;;){
+  $row=mysqli_fetch_array($res,MYSQLI_NUM);
+  if($row==null)break;
+  $istat=$row[0];
+  mysqli_query($conn,"insert ignore into userwifi select '$istat',count(distinct id) from logwifi where istat='$istat'");
+}
+mysqli_free_result($res);
+mysqli_query($conn,"insert into userwifi select '00008',count(distinct id) from logwifi");
+// MANCA UNIONI
 
 function fai1($conn,$table,$field,$url,$sovra,$ss){
   echo "$table\n";
@@ -101,8 +127,6 @@ fai2($conn,1,"man","man","https://docs.google.com/spreadsheets/d/1DEs7yoAfJ6wK9L
 fai2($conn,1,"pal","pal","https://docs.google.com/spreadsheets/d/1DEs7yoAfJ6wK9L-V5kYoArEeP-g110NgPMU0DDFv9EE/gviz/tq?tq=select%20V&tqx=out:csv&gid=1797209276",$sovra,$ss);
 fai2($conn,1,"scuole","scuole","https://docs.google.com/spreadsheets/d/10xN81W5Dd8LRjVOm_FJ0ubzgJ1EWJ4Vfi8P3iVZdBho/gviz/tq?tq=select%20A%20where%20U%3D%27BULBUL%27&tqx=out:csv&gid=566741345",$sovra,$ss);
 fai2($conn,1,"areeaai","areeaai","https://docs.google.com/spreadsheets/d/1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0/gviz/tq?tq=select%20G&tqx=out:csv&gid=566741345",$sovra,$ss);
-exit();
-
 fai2($conn,3,"uiftth","uiftth","https://docs.google.com/spreadsheets/d/1Nk39CPjf9Lu_UQ_zUnY97cqYZ5Vh7K00owrw-XeSgHM/gviz/tq?tq=select%20B%2CD&tqx=out:csv",$sovra,$ss);
 fai2($conn,1,"aziendeaai","aziendeaai","https://docs.google.com/spreadsheets/d/1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0/gviz/tq?tq=select%20G%2CF&tqx=out:csv&gid=566741345",$sovra,$ss);
 fai2($conn,1,"apwifi","apwifi","https://docs.google.com/spreadsheets/d/1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0/gviz/tq?tq=select%20H%2CI&tqx=out:csv&gid=1373772362",$sovra,$ss);
@@ -113,19 +137,6 @@ fai1($conn,"scaricatifse","scaricati","https://dati.fascicolo-sanitario.it/rest/
 fai1($conn,"attivazionilepidaid","attivazioni","https://dati.fascicolo-sanitario.it/rest/lepidaid/attivazioni/comune",$sovra,$ss);
 fai1($conn,"accessilepidaid","accessi","https://dati.fascicolo-sanitario.it/rest/lepidaid/accessi/comune",$sovra,$ss);
 fai1($conn,"sportellilepidaid","sportelli","https://dati.fascicolo-sanitario.it/rest/lepidaid/sportelli/comune",$sovra,$ss);
-
-echo "userwifi\n";
-mysqli_query($conn,"delete from userwifi");
-$res=mysqli_query($conn,"select distinct(istat) from idistat where istat>'30000'");
-for(;;){
-  $row=mysqli_fetch_array($res,MYSQLI_NUM);
-  if($row==null)break;
-  $istat=$row[0];
-  mysqli_query($conn,"insert ignore into userwifi select '$istat',count(distinct id) from logwifi where istat='$istat'");
-}
-mysqli_free_result($res);
-mysqli_query($conn,"insert into userwifi select '00008',count(distinct id) from logwifi");
-// MANCA UNIONI
 
 mysqli_close($conn);
 

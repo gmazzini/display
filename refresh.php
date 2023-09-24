@@ -24,11 +24,12 @@ for($i=1;;$i++){
 
 $query=oci_parse($conn,"select distinct(sovra) from idistat");
 oci_execute($query);
-for($ss=0;;$ss++){
+for($ss=0;;){
   $row=oci_fetch_row($query);
   if($row==null)break;
   if(strlen($row[0])!=5)continue;
   $sovra[$ss]=$row[0];
+  $ss++;
 }
 oci_free_statement($query);
 

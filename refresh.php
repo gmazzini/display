@@ -14,12 +14,11 @@ for($i=1;;$i++){
   if(strlen($aa[0])<5)continue;
   $kk=substr($aa[0],1,5);
   if(!is_numeric($kk))continue;
-  $vv=substr($aa[1],1,strlen($aa[1])-2);
+  $vv=str_replace("'","\'",substr($aa[1],1,strlen($aa[1])-2));
   $qq=substr($aa[2],1,strlen($aa[2])-2);
-  echo "insert into istatente values (\"$kk\",\"$vv\")\n";
-  $query=oci_parse($conn,"insert into istatente values (\"$kk\",\"$vv\")");
+  $query=oci_parse($conn,"insert into istatente values ('$kk','$vv')");
   oci_execute($query);
-  $query=oci_parse($conn,"update idistat set sovra=\"$qq\" where istat=\"$kk\"");
+  $query=oci_parse($conn,"update idistat set sovra='$qq' where istat='$kk'");
   oci_execute($query);
 }
 

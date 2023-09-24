@@ -7,6 +7,7 @@ $conn=oci_connect($p1,$p2,$p3);
 echo "istatente\n";
 $query=oci_parse($conn,"delete from istatente");
 oci_execute($query);
+$aux=explode("\n",file_get_contents("https://docs.google.com/spreadsheets/d/1DTngQUDqQgcYhA4S1iOW3jGuj-nOO-98opbXeUC-ffA/gviz/tq?tq=select%20A%2CB%2CD&tqx=out:csv&gid=0"));
 for($i=1;;$i++){
   if(!isset($aux[$i]))break;
   $aa=explode(",",$aux[$i]);

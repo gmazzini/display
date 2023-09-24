@@ -54,7 +54,7 @@ for($i=0;$i<$yy;$i++){
   else $vv=0;
   oci_free_statement($query);
   echo "userwifi:$yyistat[$i]\n";
-  $query=oci_parse($conn,"insert ignore into userwifi values ('$yyistat[$i]',$vv)");
+  $query=oci_parse($conn,"insert into userwifi values ('$yyistat[$i]',$vv)");
   oci_execute($query);
 }
 echo "userwifi:00008\n";

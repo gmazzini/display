@@ -32,21 +32,23 @@ for($ss=0;;$ss++){
 }
 oci_free_statement($query);
 
-print_r($sovra);
-exit();
-
-
 function fai1($conn,$table,$field,$url,$sovra,$ss){
   echo "$table\n";
-  mysqli_query($conn,"delete from $table");
+  $query=oci_parse($conn,"delete from $table");
+  oci_execute($query);
   $aux=json_decode(file_get_contents("$url"),true);
   foreach($aux["dati"] as $k => $v){
     $kk=substr($k,1,5);
     $vv=$v["$field"];
-    mysqli_query($conn,"insert into $table values ('$kk','$vv')");
+    $query=oci_parse($conn,"insert into $table values ('$kk','$vv')");
+    oci_execute($query);
   }
-  mysqli_query($conn,"insert into $table select '00008',sum($field) from $table");
-  for($i=0;$i<$ss;$i++)mysqli_query($conn,"insert ignore into $table select idistat.sovra,sum($field) from $table,idistat where $table.istat=idistat.istat and idistat.sovra='$sovra[$i]'");
+  $query=oci_parse($conn,"insert into $table select '00008',sum($field) from $table");
+  oci_execute($query);
+  for($i=0;$i<$ss;$i++){
+    $query=oci_parse($conn,"insert ignore into $table select idistat.sovra,sum($field) from $table,idistat where $table.istat=idistat.istat and idistat.sovra='$sovra[$i]'");
+    oci_execute($query);
+  }
 }
 
 function fai2($conn,$base,$table,$field,$url,$sovra,$ss){
@@ -84,6 +86,8 @@ function fai3($conn,$base,$table,$field,$url,$sovra,$ss){
 }
 
 fai1($conn,"attivifse","attivi","https://dati.fascicolo-sanitario.it/rest/attivi/comune",$sovra,$ss);
+exit();
+
 fai1($conn,"accessifse","accessi","https://dati.fascicolo-sanitario.it/rest/accessi/comune",$sovra,$ss);
 fai1($conn,"scaricatifse","scaricati","https://dati.fascicolo-sanitario.it/rest/documenti/comune",$sovra,$ss);
 fai1($conn,"attivazionilepidaid","attivazioni","https://dati.fascicolo-sanitario.it/rest/lepidaid/attivazioni/comune",$sovra,$ss);

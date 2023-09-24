@@ -22,7 +22,7 @@ for($i=1;;$i++){
   oci_execute($query);
 }
 
-$query=oci_parse($conn,"select distinct(sovra) from idistat");
+$query=oci_parse($conn,"select distinct sovra from idistat");
 oci_execute($query);
 for($ss=0;;){
   $row=oci_fetch_row($query);
@@ -32,7 +32,7 @@ for($ss=0;;){
   $ss++;
 }
 oci_free_statement($query);
-$query=oci_parse($conn,"select istat from idistat where istat>'30000'");
+$query=oci_parse($conn,"select distinct istat from idistat where istat>'30000'");
 oci_execute($query);
 for($yy=0;;){
   $row=oci_fetch_row($query);

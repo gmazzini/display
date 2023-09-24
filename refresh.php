@@ -16,8 +16,8 @@ for($i=1;;$i++){
   if(!is_numeric($kk))continue;
   $vv=str_replace("'","\'",substr($aa[1],1,strlen($aa[1])-2));
   $qq=substr($aa[2],1,strlen($aa[2])-2);
-  $query=oci_parse($conn,"insert into istatente values ('$kk','$vv')");
-  oci_execute($query);
+ // $query=oci_parse($conn,"insert into istatente values ('$kk','$vv')");
+ // oci_execute($query);
   $query=oci_parse($conn,"update idistat set sovra='$qq' where istat='$kk'");
   oci_execute($query);
 }

@@ -40,7 +40,7 @@ function fai1($conn,$table,$field,$url,$sovra,$ss){
   foreach($aux["dati"] as $k => $v){
     $kk=substr($k,1,5);
     $vv=$v["$field"];
-    $query=oci_parse($conn,"insert into $table values ('$kk','$vv')");
+    $query=oci_parse($conn,"insert into $table values ('$kk',$vv)");
     oci_execute($query);
   }
   $query=oci_parse($conn,"insert into $table select '00008',sum($field) from $table");

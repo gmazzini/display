@@ -13,8 +13,8 @@ for($ss=0;;$ss++){
 }
 oci_free_statement($query);
 
-print_r($sovra)
-exit(1);
+print_r($sovra);
+exit();
 
 
 function fai1($conn,$table,$field,$url,$sovra,$ss){

@@ -47,7 +47,7 @@ echo "userwifi\n";
 $query=oci_parse($conn,"delete from userwifi");
 oci_execute($query);
 for($i=0;$i<$yy;$i++){
-  $query=oci_parse($conn,"count(distinct id) from logwifi where istat='$yyistat[$i]'");
+  $query=oci_parse($conn,"select count(distinct id) from logwifi where istat='$yyistat[$i]'");
   oci_execute($query);
   $row=oci_fetch_row($query);
   if(isset($row[0]))$vv=$row[0];

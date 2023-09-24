@@ -69,8 +69,15 @@ function fai2($conn,$base,$table,$field,$url,$sovra,$ss){
     $kk=substr($aa[0],1,5);
     if(!is_numeric($kk))continue;
     $vv=substr($aa[1],1,strlen($aa[1])-2);
-    @$query=oci_parse($conn,"insert into $table values ('$kk',0)");
-    @oci_execute($query);
+    $query=oci_parse($conn,"select count(*) from $table where istat='$kk'");
+    oci_execute($query);
+    $row=oci_fetch_row($query);
+    @$myexist=$row[0];
+    oci_free_statement($query);
+    if(!$myexist){
+      $query=oci_parse($conn,"insert into $table values ('$kk',0)");
+      oci_execute($query);
+    }
     $query=oci_parse($conn,"update $table set $field=$field+$vv where istat='$kk'");
     oci_execute($query);
   }

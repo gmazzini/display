@@ -50,7 +50,8 @@ function fai1($conn,$table,$field,$url,$sovra,$ss){
     $query=oci_parse($conn,"select sum($table.$field) from $table,idistat where $table.istat=idistat.istat and idistat.sovra='$sovra[$i]'");
     oci_execute($query);
     $row=oci_fetch_row($query);
-    @$vv=$row[0];
+    if(isset($row[0]))$vv=$row[0];
+    else $vv=0;
     oci_free_statement($query);
     $query=oci_parse($conn,"insert into $table values ('$sovra[$i]',$vv)");
     oci_execute($query);
@@ -88,7 +89,8 @@ function fai2($conn,$base,$table,$field,$url,$sovra,$ss){
     $query=oci_parse($conn,"select sum($table.$field) from $table,idistat where $table.istat=idistat.istat and idistat.sovra='$sovra[$i]'");
     oci_execute($query);
     $row=oci_fetch_row($query);
-    @$vv=$row[0];
+    if(isset($row[0]))$vv=$row[0];
+    else $vv=0;
     oci_free_statement($query);
     $query=oci_parse($conn,"insert into $table values ('$sovra[$i]',$vv)");
     oci_execute($query);

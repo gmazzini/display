@@ -59,8 +59,8 @@ function fai1($conn,$table,$field,$url,$sovra,$ss){
 
 function fai2($conn,$base,$table,$field,$url,$sovra,$ss){
   echo "$table\n";
-  mysqli_query($conn,"delete from $table");
-  $aux=explode("\n",file_get_contents("$url"));
+  $query=oci_parse($conn,"delete from $table");
+  oci_execute($query);
   for($i=$base;;$i++){
     if(!isset($aux[$i]))break;
     $aa=explode(",",$aux[$i]);
@@ -68,11 +68,22 @@ function fai2($conn,$base,$table,$field,$url,$sovra,$ss){
     $kk=substr($aa[0],1,5);
     if(!is_numeric($kk))continue;
     $vv=substr($aa[1],1,strlen($aa[1])-2);
-    mysqli_query($conn,"insert into $table values ('$kk',0)");
-    mysqli_query($conn,"update $table set $field=$field+$vv where istat='$kk'");
+    $query=oci_parse($conn,"insert into $table values ('$kk',0)");
+    oci_execute($query);
+    $query=oci_parse($conn,update $table set $field=$field+$vv where istat='$kk'");
+    oci_execute($query);
   }
-  mysqli_query($conn,"insert into $table select '00008',sum($field) from $table");
-  for($i=0;$i<$ss;$i++)mysqli_query($conn,"insert ignore into $table select idistat.sovra,sum($field) from $table,idistat where $table.istat=idistat.istat and idistat.sovra='$sovra[$i]'");
+  $query=oci_parse($conn,"insert into $table select '00008',sum($field) from $table");
+  oci_execute($query);
+  for($i=0;$i<$ss;$i++){
+    $query=oci_parse($conn,"select sum($table.$field) from $table,idistat where $table.istat=idistat.istat and idistat.sovra='$sovra[$i]'");
+    oci_execute($query);
+    $row=oci_fetch_row($query);
+    @$vv=$row[0];
+    oci_free_statement($query);
+    $query=oci_parse($conn,"insert into $table values ('$sovra[$i]',$vv)");
+    oci_execute($query);
+  }
 }
 
 function fai3($conn,$base,$table,$field,$url,$sovra,$ss){
@@ -97,15 +108,16 @@ fai1($conn,"scaricatifse","scaricati","https://dati.fascicolo-sanitario.it/rest/
 fai1($conn,"attivazionilepidaid","attivazioni","https://dati.fascicolo-sanitario.it/rest/lepidaid/attivazioni/comune",$sovra,$ss);
 fai1($conn,"accessilepidaid","accessi","https://dati.fascicolo-sanitario.it/rest/lepidaid/accessi/comune",$sovra,$ss);
 fai1($conn,"sportellilepidaid","sportelli","https://dati.fascicolo-sanitario.it/rest/lepidaid/sportelli/comune",$sovra,$ss);
-exit();
-
+        
 fai2($conn,3,"uiftth","uiftth","https://docs.google.com/spreadsheets/d/1Nk39CPjf9Lu_UQ_zUnY97cqYZ5Vh7K00owrw-XeSgHM/gviz/tq?tq=select%20B%2CD&tqx=out:csv",$sovra,$ss);
+fai2($conn,1,"aziendeaai","aziendeaai","https://docs.google.com/spreadsheets/d/1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0/gviz/tq?tq=select%20G%2CF&tqx=out:csv&gid=566741345",$sovra,$ss);
+fai2($conn,1,"apwifi","apwifi","https://docs.google.com/spreadsheets/d/1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0/gviz/tq?tq=select%20H%2CI&tqx=out:csv&gid=1373772362",$sovra,$ss);
+exit();
+    
 fai3($conn,1,"man","man","https://docs.google.com/spreadsheets/d/1DEs7yoAfJ6wK9L-V5kYoArEeP-g110NgPMU0DDFv9EE/gviz/tq?tq=select%20V%20where%20K%3D%27MAN%27&tqx=out:csv&gid=902689105",$sovra,$ss);
 fai3($conn,1,"pal","pal","https://docs.google.com/spreadsheets/d/1DEs7yoAfJ6wK9L-V5kYoArEeP-g110NgPMU0DDFv9EE/gviz/tq?tq=select%20V&tqx=out:csv&gid=1797209276",$sovra,$ss);
 fai3($conn,1,"scuole","scuole","https://docs.google.com/spreadsheets/d/10xN81W5Dd8LRjVOm_FJ0ubzgJ1EWJ4Vfi8P3iVZdBho/gviz/tq?tq=select%20A%20where%20U%3D%27BULBUL%27&tqx=out:csv&gid=566741345",$sovra,$ss);
 fai3($conn,1,"areeaai","areeaai","https://docs.google.com/spreadsheets/d/1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0/gviz/tq?tq=select%20G&tqx=out:csv&gid=566741345",$sovra,$ss);
-fai2($conn,1,"aziendeaai","aziendeaai","https://docs.google.com/spreadsheets/d/1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0/gviz/tq?tq=select%20G%2CF&tqx=out:csv&gid=566741345",$sovra,$ss);
-fai2($conn,1,"apwifi","apwifi","https://docs.google.com/spreadsheets/d/1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0/gviz/tq?tq=select%20H%2CI&tqx=out:csv&gid=1373772362",$sovra,$ss);
 
 echo "userwifi\n";
 mysqli_query($conn,"delete from userwifi");

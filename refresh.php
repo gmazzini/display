@@ -70,7 +70,7 @@ function fai2($conn,$base,$table,$field,$url,$sovra,$ss){
     $vv=substr($aa[1],1,strlen($aa[1])-2);
     $query=oci_parse($conn,"insert into $table values ('$kk',0)");
     oci_execute($query);
-    $query=oci_parse($conn,update $table set $field=$field+$vv where istat='$kk'");
+    $query=oci_parse($conn,"update $table set $field=$field+$vv where istat='$kk'");
     oci_execute($query);
   }
   $query=oci_parse($conn,"insert into $table select '00008',sum($field) from $table");

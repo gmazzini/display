@@ -22,22 +22,25 @@ function mysplit($x,$len){
 }
 
 function showme($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$conn){
-  $res=mysqli_query($conn,"select $par from $table where istat='$istat'");
-  $row=mysqli_fetch_array($res,MYSQLI_NUM);
+  $query=oci_parse($conn,"select $par from $table where istat='$istat'");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
   @$aux=$row[0];
-  mysqli_free_result($res);
-  $res=mysqli_query($conn,"select $par from $table where istat='00008'");
-  $row=mysqli_fetch_array($res,MYSQLI_NUM);
+  oci_free_statement($query);
+  $query=oci_parse($conn,"select $par from $table where istat='00008'");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
   @$reraux=$row[0];
-  mysqli_free_result($res);
+  oci_free_statement($query);
   $fp=fopen($des,"w");
   fprintf($fp,"000000\n");
   fprintf($fp,"-2 00 400040 02 %s\n",$title);
   if($sovra<>""){
-    $res=mysqli_query($conn,"select $par from $table where istat='$sovra'");
-    $row=mysqli_fetch_array($res,MYSQLI_NUM);
+    $query=oci_parse($conn,"select $par from $table where istat='$sovra'");
+    oci_execute($query);
+    $row=oci_fetch_row($query);
     @$sovraaux=$row[0];
-    mysqli_free_result($res);
+    oci_free_statement($query);
     fprintf($fp,"-2 29 00FFFF 01 Unione\n");
     fprintf($fp,"-2 38 0000FF 02 %s\n",number_format($sovraaux,0,",","."));
     $delta=0;
@@ -52,31 +55,45 @@ function showme($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$conn){
   return;
 }
 
-$conn=mysqli_connect("127.0.0.1","matrix","matrix123","matrix");
+include "data.php";
+$conn=oci_connect($p1,$p2,$p3);
 
 $istat=0;
 $aux=explode(".",$ip);
 if($aux[0]=="10"){
   $aux=explode(".",$ip);
   $id=$aux[1]*256+$aux[2];
-  $res=mysqli_query($conn,"select istat,sovra from idistat where '$id'>=idstart and '$id'<=idend");
-  $row=mysqli_fetch_array($res,MYSQLI_NUM);
+  $query=oci_parse($conn,"select istat,sovra from idistat where '$id'>=idstart and '$id'<=idend");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
   $istat=$row[0];
   $sovra=$row[1];
-  mysqli_free_result($res);
-  $res=mysqli_query($conn,"select ente from istatente where istat='$istat'");
-  $row=mysqli_fetch_array($res,MYSQLI_NUM);
+  oci_free_statement($query);
+  $query=oci_parse($conn,"select ente from istatente where istat='$istat'");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
   $ente=$row[0];
-  mysqli_free_result($res);
+  oci_free_statement($query);
 }
 
-mysqli_query($conn,"insert ignore into session values ('$ip','$ser',0,0,0)");
-mysqli_query($conn,"update session set iter=iter+1 where id='$ip'");
-mysqli_query($conn,"update session set ser='$ser' where id='$ip'");
-$res=mysqli_query($conn,"select iter from session where id='$ip'");
-$row=mysqli_fetch_array($res,MYSQLI_NUM);
+$query=oci_parse($conn,"select count(*) from mysession where id='$ip'");
+oci_execute($query);
+$row=oci_fetch_row($query);
+@$myexist=$row[0];
+oci_free_statement($query);
+if(!$myexist){
+  $query=oci_parse($conn,"insert into mysession values ('$ip','$ser',0,0,0)");
+  oci_execute($query);
+}
+$query=oci_parse($conn,"update mysession set iter=iter+1 where id='$ip'");
+oci_execute($query);
+$query=oci_parse($conn,"update mysession set ser='$ser' where id='$ip'");
+oci_execute($query);
+$query=oci_parse($conn,"select iter from mysession where id='$ip'");
+oci_execute($query);
+$row=oci_fetch_row($query);
 $sel=$row[0]%17;
-mysqli_free_result($res);
+oci_free_statement($query);
 
 switch($sel){
 
@@ -158,11 +175,13 @@ case 14:
 
 // immagine
 case 15:
-  mysqli_query($conn,"update session set c1=c1+1 where id='$ip'");
-  $res=mysqli_query($conn,"select c1 from session where id='$ip'");
-  $row=mysqli_fetch_array($res,MYSQLI_NUM);
+  $query=oci_parse($conn,"update mysession set c1=c1+1 where id='$ip'");
+  oci_execute($query);
+  $query=oci_parse($conn,"select c1 from mysession where id='$ip'");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
   $vf=$row[0]%76;
-  mysqli_free_result($res);
+  oci_free_statement($query);
   $name=sprintf("tmp/img/%03d.ff",$vf);
   shell_exec("tmp/convert3 $name 7 $bin");
   break;
@@ -179,6 +198,6 @@ header("Content-Type: application/octet-stream");
 header("Content-Length: $len");
 readfile($bin);
 
-mysqli_close($conn);
+oci_close($conn);
 
 ?>

@@ -1,7 +1,6 @@
 <?php
 
 include "data.php";
-
 $conn=oci_connect($p1,$p2,$p3);
 
 for($i=42;$i<=63;$i++){

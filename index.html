@@ -16,7 +16,7 @@ function myload(){
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.overrideMimeType('text/plain; charset=x-user-defined');
 
-  xmlHttp.open("GET","http://10.248.45.149/matrix.php?ser="+ser+"&ip="+ip,false);
+  xmlHttp.open("GET","http://matrix.lepida.it/matrix.php?ser="+ser+"&ip="+ip,false);
   xmlHttp.send(null);
   var x = xmlHttp.response;
   var c = document.getElementById("myCanvas");

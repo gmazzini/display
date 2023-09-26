@@ -34,7 +34,7 @@ for(;;){
     $le=strpos($buf," ",$ll+5);
     $mac=substr($buf,$ll+5,$le-$ll-5);
     $aa=explode(".",$ip);
-    if($aa[0]=="10"){
+    if($aa[0]=="10" && $aa[1]>=32 && $aa[1]<=63){
       $id=$aa[1]*256+$aa[2];
       if($myistat[$id]==0)echo "Missed:$ip\n";
       else {

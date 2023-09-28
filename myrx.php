@@ -39,9 +39,9 @@ for(;;){
       else {
         $i++;
         $vv=substr(hash("sha256",$mac),0,8);
-        $tt=time();
+        $tt=(int)(time()/86400);
 
-        $query=oci_parse($conn,"select count(*) from logwifi where id='$vv' and ip=$id and tt=$tt");
+        $query=oci_parse($conn,"select count(*) from dhcpwifi where id='$vv' and ip=$id and tt=$tt");
         oci_execute($query);
         $row=oci_fetch_row($query);
         @$myexist=$row[0];
@@ -49,10 +49,10 @@ for(;;){
 
         if(!$myexist){
           $istat=$myistat[$id];
-          $stmt=oci_parse($conn,"insert into logwifi values ('$vv',$id,$tt,'$istat')");
+          $stmt=oci_parse($conn,"insert into dhcpwifi values ('$vv',$id,$tt,'$istat')");
           oci_execute($stmt);
-           $ii++;
-           echo "$i,$ii,$ip,$id,$vv,$istat,$tt\n";
+          $ii++;
+          echo "$i,$ii,$ip,$id,$vv,$istat,$tt\n";
         }
       }
     }

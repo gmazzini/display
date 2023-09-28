@@ -24,8 +24,9 @@ for($i=1;;$i++){
   if($i<$start)continue;
   $aa=explode(",",$aux);
   
-  $tt=strtotime($aa[2]);
-  $query=oci_parse($conn,"select count(*) from logwifi where id='$aa[0]' and ip=$aa[1] and tt=$tt");
+  $tt=(int)(strtotime($aa[2])/86400);
+  
+  $query=oci_parse($conn,"select count(*) from dhcpwifi where id='$aa[0]' and ip=$aa[1] and tt=$tt");
   oci_execute($query);
   $row=oci_fetch_row($query);
   @$myexist=$row[0];
@@ -33,7 +34,7 @@ for($i=1;;$i++){
 
   if(!$myexist){
     $istat=$myistat[$aa[1]];
-    $stmt=oci_parse($conn,"insert into logwifi values ('$aa[0]',$aa[1],$tt,'$istat')");
+    $stmt=oci_parse($conn,"insert into dhcpwifi values ('$aa[0]',$aa[1],$tt,'$istat')");
     oci_execute($stmt);
     $ii++;
     echo "$i,$ii\n";

@@ -95,7 +95,18 @@ $row=oci_fetch_row($query);
 $sel=$row[0]%17;
 oci_free_statement($query);
 
-switch($sel){
+if($ser=="0029"){
+  $query=oci_parse($conn,"update mysession set c1=c1+1 where id='$ip'");
+  oci_execute($query);
+  $query=oci_parse($conn,"select c1 from mysession where id='$ip'");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  $vf=$row[0]%76;
+  oci_free_statement($query);
+  $name=sprintf("tmp/img/%03d.ff",$vf);
+  shell_exec("tmp/convert3 $name 7 $bin");
+}
+else switch($sel){
 
 case 0:
   $aux=mysplit($ente,12);

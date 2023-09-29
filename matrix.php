@@ -101,10 +101,10 @@ if($ser=="0029"){
   $query=oci_parse($conn,"select c1 from mysession where id='$ip'");
   oci_execute($query);
   $row=oci_fetch_row($query);
-  $vf=$row[0]%76;
+  $vf=$row[0]%15;
   oci_free_statement($query);
-  $name=sprintf("tmp/img/%03d.ff",$vf);
-  shell_exec("tmp/convert3 $name 7 $bin");
+  $name=sprintf("tmp/aldini/%03d.ff",$vf+1);
+  shell_exec("tmp/convert3 $name 10 $bin");
 }
 else switch($sel){
 

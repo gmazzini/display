@@ -1,6 +1,7 @@
 <?php
 
-$conn=oci_connect("matrix","M4T2023!xX-RfG","dbprodlep01vm.ad.lepida.it:1521/lepa.ad.lepida.it");
+include "data.php";
+$conn=oci_connect($p1,$p2,$p3);
 
 for($i=42;$i<=63;$i++){
   for($j=0;$j<=255;$j++){
@@ -17,7 +18,7 @@ for($i=42;$i<=63;$i++){
 $i=0;
 $ii=0;
 
-$fp=fopen("zz","r");
+$fp=fopen("zz.log","r");
 for(;;){
   $buf=fgets($fp);
   if(feof($fp))break;
@@ -55,14 +56,15 @@ for(;;){
           $istat=$myistat[$id];
           $stmt=oci_parse($conn,"insert into dhcpwifi values ('$vv',$id,$tt,'$istat')");
           oci_execute($stmt);
-           $ii++;
-           echo "$i,$ii,$ip,$id,$vv,$istat,$tt\n";
+          $ii++;
+          echo "$i,$ii,$ip,$id,$vv,$istat,$tt\n";
         }
       }
     }
   }
 }
-  fclose($fp);
-  oci_close($conn);
+
+fclose($fp);
+oci_close($conn);
 
 ?>

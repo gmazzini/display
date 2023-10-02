@@ -92,7 +92,7 @@ oci_execute($query);
 $query=oci_parse($conn,"select iter from mysession where id='$ip'");
 oci_execute($query);
 $row=oci_fetch_row($query);
-$sel=$row[0]%17;
+$sel=$row[0]%22;
 oci_free_statement($query);
 
 if($ser=="0029"){
@@ -197,11 +197,36 @@ case 15:
   shell_exec("tmp/convert3 $name 2 $bin");
   break;
 
-// Logo
 case 16:
-  $name="tmp/img/logo.ff";
+  $name="tmp/img/L001.ff";
   shell_exec("tmp/convert3 $name 2 $bin");
   break;
+
+case 17:
+  $name="tmp/img/L002.ff";
+  shell_exec("tmp/convert3 $name 2 $bin");
+  break;
+
+case 18:
+  $name="tmp/img/L003.ff";
+  shell_exec("tmp/convert3 $name 2 $bin");
+  break;
+
+case 19:
+  $name="tmp/img/L004.ff";
+  shell_exec("tmp/convert3 $name 2 $bin");
+  break;
+
+case 20:
+  $name="tmp/img/L005.ff";
+  shell_exec("tmp/convert3 $name 2 $bin");
+  break;
+
+case 21:
+  $name="tmp/img/L006.ff";
+  shell_exec("tmp/convert3 $name 2 $bin");
+  break;
+
 }
 
 $len=filesize($bin);

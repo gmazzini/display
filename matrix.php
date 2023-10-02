@@ -51,7 +51,7 @@ function showme($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$conn){
   fprintf($fp,"-2 %02d FF00FF 01 Regione\n",48-$delta);
   fprintf($fp,"-2 %02d FF0000 02 %s\n",57-$delta,number_format($reraux,0,",","."));
   fclose($fp);
-  shell_exec("tmp/write $des 4 $ff; tmp/convert3 $ff 4 $bin");
+  shell_exec("tmp/write $des 4 $ff; tmp/convert3 $ff 6 $bin");
   return;
 }
 
@@ -125,7 +125,7 @@ case 0:
   fprintf($fp,"-2 48 FFFFFF 02 %s\n",@$aux[2]);
   fprintf($fp,"-2 56 FFFFFF 02 %s\n",@$aux[3]);
   fclose($fp);
-  shell_exec("tmp/write $des 4 $ff; tmp/convert3 $ff 10 $bin");
+  shell_exec("tmp/write $des 4 $ff; tmp/convert3 $ff 6 $bin");
   break;
 
 case 1:

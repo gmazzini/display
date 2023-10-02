@@ -34,22 +34,22 @@ function showme($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$conn){
   oci_free_statement($query);
   $fp=fopen($des,"w");
   fprintf($fp,"000000\n");
-  fprintf($fp,"-2 00 400040 02 %s\n",$title);
+  fprintf($fp,"-2 00 FFFFFF 02 %s\n",$title);
   if($sovra<>""){
     $query=oci_parse($conn,"select $par from $table where istat='$sovra'");
     oci_execute($query);
     $row=oci_fetch_row($query);
     @$sovraaux=$row[0];
     oci_free_statement($query);
-    fprintf($fp,"-2 29 00FFFF 01 Unione\n");
-    fprintf($fp,"-2 38 0000FF 02 %s\n",number_format($sovraaux,0,",","."));
+    fprintf($fp,"-2 29 FF0000 01 Unione\n");
+    fprintf($fp,"-2 38 FF00FF 02 %s\n",number_format($sovraaux,0,",","."));
     $delta=0;
   }
   else $delta=7;
-  fprintf($fp,"-2 %02d FFFF00 01 Comune\n",10+$delta);
-  fprintf($fp,"-2 %02d 00FF00 02 %s\n",19+$delta,number_format($aux,0,",","."));
-  fprintf($fp,"-2 %02d FF00FF 01 Regione\n",48-$delta);
-  fprintf($fp,"-2 %02d FF0000 02 %s\n",57-$delta,number_format($reraux,0,",","."));
+  fprintf($fp,"-2 %02d FF0000 01 Comune\n",10+$delta);
+  fprintf($fp,"-2 %02d FF00FF 02 %s\n",19+$delta,number_format($aux,0,",","."));
+  fprintf($fp,"-2 %02d FF0000 01 Regione\n",48-$delta);
+  fprintf($fp,"-2 %02d FF00ff 02 %s\n",57-$delta,number_format($reraux,0,",","."));
   fclose($fp);
   shell_exec("tmp/write $des 4 $ff; tmp/convert3 $ff 6 $bin");
   return;

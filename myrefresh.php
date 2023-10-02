@@ -46,7 +46,7 @@ echo "userwifi\n";
 $query=oci_parse($conn,"delete from userwifi");
 oci_execute($query);
 for($i=0;$i<$yy;$i++){
-  $query=oci_parse($conn,"select count(distinct id) from logwifi where istat='$yyistat[$i]'");
+  $query=oci_parse($conn,"select count(distinct id) from dhcpwifi where istat='$yyistat[$i]'");
   oci_execute($query);
   $row=oci_fetch_row($query);
   if(isset($row[0]))$vv=$row[0];
@@ -57,7 +57,7 @@ for($i=0;$i<$yy;$i++){
   oci_execute($query);
 }
 echo "userwifi:00008\n";
-$query=oci_parse($conn,"select count(distinct id) from logwifi");
+$query=oci_parse($conn,"select count(distinct id) from dhcpwifi");
 oci_execute($query);
 $row=oci_fetch_row($query);
 $vv=$row[0];
@@ -66,7 +66,7 @@ $query=oci_parse($conn,"insert into userwifi values ('00008',$vv)");
 oci_execute($query);
 for($i=0;$i<$ss;$i++){
   echo "userwifi:$sovra[$i]\n";
-  $query=oci_parse($conn,"select count(distinct logwifi.id) from logwifi,idistat where logwifi.istat=idistat.istat and idistat.sovra='$sovra[$i]'");
+  $query=oci_parse($conn,"select count(distinct dhcpwifi.id) from dhcpwifi,idistat where dhcpwifi.istat=idistat.istat and idistat.sovra='$sovra[$i]'");
   oci_execute($query);
   $row=oci_fetch_row($query);
   if(isset($row[0]))$vv=$row[0];

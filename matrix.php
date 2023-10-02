@@ -51,7 +51,7 @@ function showme($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$conn){
   fprintf($fp,"-2 %02d FF00FF 01 Regione\n",48-$delta);
   fprintf($fp,"-2 %02d FF0000 02 %s\n",57-$delta,number_format($reraux,0,",","."));
   fclose($fp);
-  shell_exec("tmp/write $des 4 $ff; tmp/convert3 $ff 10 $bin");
+  shell_exec("tmp/write $des 4 $ff; tmp/convert3 $ff 4 $bin");
   return;
 }
 
@@ -194,13 +194,13 @@ case 15:
   $vf=$row[0]%76;
   oci_free_statement($query);
   $name=sprintf("tmp/img/%03d.ff",$vf);
-  shell_exec("tmp/convert3 $name 7 $bin");
+  shell_exec("tmp/convert3 $name 2 $bin");
   break;
 
 // Logo
 case 16:
   $name="tmp/img/logo.ff";
-  shell_exec("tmp/convert3 $name 5 $bin");
+  shell_exec("tmp/convert3 $name 2 $bin");
   break;
 }
 

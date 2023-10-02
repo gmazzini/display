@@ -123,7 +123,7 @@ case 0:
   $aux=mysplit($ente,12);
   $fp=fopen($des,"w");
   fprintf($fp,"000000\n");
-  fprintf($fp,"-2 00 FF0000 03 %s\n",date("d.m.y H:i"));
+  fprintf($fp,"-2 00 FF0000 03 %sZ\n",date("d.m.y H:i"));
   fprintf($fp,"-2 06 FFFFFF 03 %s %s\n",$ip,$ser);
   fprintf($fp,"00 12 FFFF00 03 Istat\n");
   fprintf($fp,"00 18 0000FF 03 %s\n",$istat);
@@ -195,7 +195,6 @@ case 14:
   showme("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$des,$ff,$bin,$conn);
   break;
 
-// immagine
 case 15:
   $query=oci_parse($conn,"update mysession set c1=c1+1 where id='$ip'");
   oci_execute($query);

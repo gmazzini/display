@@ -49,7 +49,7 @@ for(;;){
 
         if(!$myexist){
           $istat=$myistat[$id];
-          $stmt=oci_parse($conn,"insert into dhcpwifi values ('$vv',$id,$tt,'$istat')");
+          $stmt=oci_parse($conn,"insert into dhcpwifi (id,ip,tt,istat) values ('$vv',$id,$tt,'$istat')");
           oci_execute($stmt);
           $ii++;
           echo "$i,$ii,$ip,$id,$vv,$istat,$tt\n";

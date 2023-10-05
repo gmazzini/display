@@ -17,6 +17,7 @@ mydelete($conn,"scaricatifse");
 mydelete($conn,"attivazionilepidaid");
 mydelete($conn,"accessilepidaid");
 mydelete($conn,"sportellilepidaid");
+mydelete($conn,"userwifi");
 
 
 ?>

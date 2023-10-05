@@ -60,6 +60,7 @@ for($ss=0;;){
   $ss++;
 }
 oci_free_statement($query);
+
 $query=oci_parse($conn,"select distinct istat from idistat where istat>'30000'");
 oci_execute($query);
 for($yy=0;;){
@@ -160,39 +161,43 @@ fai1($conn,"attivazionilepidaid","attivazioni","https://dati.fascicolo-sanitario
 fai1($conn,"accessilepidaid","accessi","https://dati.fascicolo-sanitario.it/rest/lepidaid/accessi/comune",$sovra,$ss);
 fai1($conn,"sportellilepidaid","sportelli","https://dati.fascicolo-sanitario.it/rest/lepidaid/sportelli/comune",$sovra,$ss);
 
-exit();
-
 echo "userwifi\n";
-$query=oci_parse($conn,"delete from userwifi");
-oci_execute($query);
+$table="userwifi";
+$field="userwifi";
 for($i=0;$i<$yy;$i++){
-  $query=oci_parse($conn,"select count(distinct id) from dhcpwifi where istat='$yyistat[$i]'");
+  $kk=$yyistat[$i];
+  echo "userwifi:$kk\n";
+  $query=oci_parse($conn,"select count(distinct id) from dhcpwifi where istat='$kk'");
   oci_execute($query);
   $row=oci_fetch_row($query);
   if(isset($row[0]))$vv=$row[0];
   else $vv=0;
   oci_free_statement($query);
-  echo "userwifi:$yyistat[$i]\n";
-  $query=oci_parse($conn,"insert into userwifi values ('$yyistat[$i]',$vv)");
+  if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
+  else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
   oci_execute($query);
 }
-echo "userwifi:00008\n";
+$kk="00008";
+echo "userwifi:$kk\n";
 $query=oci_parse($conn,"select count(distinct id) from dhcpwifi");
 oci_execute($query);
 $row=oci_fetch_row($query);
 $vv=$row[0];
 oci_free_statement($query);
-$query=oci_parse($conn,"insert into userwifi values ('00008',$vv)");
+if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
+else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
 oci_execute($query);
 for($i=0;$i<$ss;$i++){
-  echo "userwifi:$sovra[$i]\n";
-  $query=oci_parse($conn,"select count(distinct dhcpwifi.id) from dhcpwifi,idistat where dhcpwifi.istat=idistat.istat and idistat.sovra='$sovra[$i]'");
+  $kk=$sovra[$i];
+  echo "userwifi:$kk\n";
+  $query=oci_parse($conn,"select count(distinct dhcpwifi.id) from dhcpwifi,idistat where dhcpwifi.istat=idistat.istat and idistat.sovra='$skk'");
   oci_execute($query);
   $row=oci_fetch_row($query);
   if(isset($row[0]))$vv=$row[0];
   else $vv=0;
   oci_free_statement($query);
-  $query=oci_parse($conn,"insert into userwifi values ('$sovra[$i]',$vv)");
+  if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
+  else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
   oci_execute($query);
 }
 

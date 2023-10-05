@@ -72,6 +72,46 @@ for($yy=0;;){
 }
 oci_free_statement($query);
 
+echo "userwifi\n";
+$table="userwifi";
+$field="userwifi";
+for($i=0;$i<$yy;$i++){
+  $kk=$yyistat[$i];
+  echo "userwifi:$kk\n";
+  $query=oci_parse($conn,"select count(distinct id) from dhcpwifi where istat='$kk'");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  if(isset($row[0]))$vv=$row[0];
+  else $vv=0;
+  oci_free_statement($query);
+  if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
+  else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
+  oci_execute($query);
+}
+$kk="00008";
+echo "userwifi:$kk\n";
+$query=oci_parse($conn,"select count(distinct id) from dhcpwifi");
+oci_execute($query);
+$row=oci_fetch_row($query);
+$vv=$row[0];
+oci_free_statement($query);
+if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
+else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
+oci_execute($query);
+for($i=0;$i<$ss;$i++){
+  $kk=$sovra[$i];
+  echo "userwifi:$kk\n";
+  $query=oci_parse($conn,"select count(distinct dhcpwifi.id) from dhcpwifi,idistat where dhcpwifi.istat=idistat.istat and idistat.sovra='$kk'");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  if(isset($row[0]))$vv=$row[0];
+  else $vv=0;
+  oci_free_statement($query);
+  if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
+  else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
+  oci_execute($query);
+}
+
 function fai1($conn,$table,$field,$url,$sovra,$ss){
   echo "$table\n";
   $aux=json_decode(file_get_contents("$url"),true);
@@ -160,46 +200,6 @@ fai1($conn,"scaricatifse","scaricati","https://dati.fascicolo-sanitario.it/rest/
 fai1($conn,"attivazionilepidaid","attivazioni","https://dati.fascicolo-sanitario.it/rest/lepidaid/attivazioni/comune",$sovra,$ss);
 fai1($conn,"accessilepidaid","accessi","https://dati.fascicolo-sanitario.it/rest/lepidaid/accessi/comune",$sovra,$ss);
 fai1($conn,"sportellilepidaid","sportelli","https://dati.fascicolo-sanitario.it/rest/lepidaid/sportelli/comune",$sovra,$ss);
-
-echo "userwifi\n";
-$table="userwifi";
-$field="userwifi";
-for($i=0;$i<$yy;$i++){
-  $kk=$yyistat[$i];
-  echo "userwifi:$kk\n";
-  $query=oci_parse($conn,"select count(distinct id) from dhcpwifi where istat='$kk'");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  if(isset($row[0]))$vv=$row[0];
-  else $vv=0;
-  oci_free_statement($query);
-  if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
-  else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
-  oci_execute($query);
-}
-$kk="00008";
-echo "userwifi:$kk\n";
-$query=oci_parse($conn,"select count(distinct id) from dhcpwifi");
-oci_execute($query);
-$row=oci_fetch_row($query);
-$vv=$row[0];
-oci_free_statement($query);
-if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
-else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
-oci_execute($query);
-for($i=0;$i<$ss;$i++){
-  $kk=$sovra[$i];
-  echo "userwifi:$kk\n";
-  $query=oci_parse($conn,"select count(distinct dhcpwifi.id) from dhcpwifi,idistat where dhcpwifi.istat=idistat.istat and idistat.sovra='$skk'");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  if(isset($row[0]))$vv=$row[0];
-  else $vv=0;
-  oci_free_statement($query);
-  if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
-  else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
-  oci_execute($query);
-}
 
 oci_close($conn);
 

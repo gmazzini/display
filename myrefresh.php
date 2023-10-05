@@ -1,6 +1,6 @@
 <?php
 
-include "data.php";
+include "/home/admgm02/data.php";
 $conn=oci_connect($p1,$p2,$p3);
 
 function mycheck($conn,$table,$istat){

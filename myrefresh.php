@@ -76,7 +76,7 @@ function fai1($conn,$table,$field,$url,$sovra,$ss){
   $aux=json_decode(file_get_contents("$url"),true);
   foreach($aux["dati"] as $k => $v){
     $kk=substr($k,1,5);
-    $vv=$v["$field"];
+    $vv=(int)$v["$field"];
     if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
     else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
     oci_execute($query);
@@ -153,9 +153,6 @@ fai2($conn,3,"uiftth","uiftth","https://docs.google.com/spreadsheets/d/1Nk39CPjf
 fai2($conn,1,"aziendeaai","aziendeaai","https://docs.google.com/spreadsheets/d/1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0/gviz/tq?tq=select%20G%2CF&tqx=out:csv&gid=566741345",$sovra,$ss);
 fai2($conn,1,"apwifi","apwifi","https://docs.google.com/spreadsheets/d/1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0/gviz/tq?tq=select%20H%2CI&tqx=out:csv&gid=1373772362",$sovra,$ss);
 
-exit();
-
-
 fai1($conn,"attivifse","attivi","https://dati.fascicolo-sanitario.it/rest/attivi/comune",$sovra,$ss);
 fai1($conn,"accessifse","accessi","https://dati.fascicolo-sanitario.it/rest/accessi/comune",$sovra,$ss);
 fai1($conn,"scaricatifse","scaricati","https://dati.fascicolo-sanitario.it/rest/documenti/comune",$sovra,$ss);
@@ -163,6 +160,7 @@ fai1($conn,"attivazionilepidaid","attivazioni","https://dati.fascicolo-sanitario
 fai1($conn,"accessilepidaid","accessi","https://dati.fascicolo-sanitario.it/rest/lepidaid/accessi/comune",$sovra,$ss);
 fai1($conn,"sportellilepidaid","sportelli","https://dati.fascicolo-sanitario.it/rest/lepidaid/sportelli/comune",$sovra,$ss);
 
+exit();
 
 echo "userwifi\n";
 $query=oci_parse($conn,"delete from userwifi");

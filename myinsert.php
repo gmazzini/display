@@ -34,7 +34,7 @@ for($i=1;;$i++){
 
   if(!$myexist){
     $istat=$myistat[$aa[1]];
-    $stmt=oci_parse($conn,"insert into dhcpwifi values ('$aa[0]',$aa[1],$tt,'$istat')");
+    $stmt=oci_parse($conn,"insert into dhcpwifi (id,fnv1a,ip,tt,istat) values ('$vv','',$id,$tt,'$istat')");
     oci_execute($stmt);
     $ii++;
     echo "$i,$ii\n";

@@ -1,0 +1,6 @@
+<?php
+
+
+mydelete($conn,"istatente");
+
+?>

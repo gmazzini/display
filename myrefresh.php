@@ -12,6 +12,27 @@ function mycheck($conn,$table,$istat){
   return $zz; 
 }
 
+echo "idistat\n";
+$aux=explode("\n",file_get_contents("https://docs.google.com/spreadsheets/d/1DTngQUDqQgcYhA4S1iOW3jGuj-nOO-98opbXeUC-ffA/gviz/tq?tq=select%20D%2CA%2CB&tqx=out:csv&gid=644800101"));
+for($i=1;;$i++){
+  if(!isset($aux[$i]))break;
+  $aa=explode(",",$aux[$i]);
+  if(strlen($aa[0])<5)continue;
+  $kk=substr($aa[0],1,5);
+  if(!is_numeric($kk))continue;
+  $vv=substr($aa[1],1,strlen($aa[1])-2);
+  $qq=substr($aa[2],1,strlen($aa[2])-2);
+  $query=oci_parse($conn,"select count(*) from idistat where idstart=$vv and idend=$qq");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  @$zz=$row[0];
+  oci_free_statement($query);
+  if(!$zz){
+    $query=oci_parse($conn,"insert into idistat (idstart,idend,istat,sovra) values ($vv,$qq,'$kk','')");
+    oci_execute($query);
+  }
+}
+
 echo "istatente\n";
 $aux=explode("\n",file_get_contents("https://docs.google.com/spreadsheets/d/1DTngQUDqQgcYhA4S1iOW3jGuj-nOO-98opbXeUC-ffA/gviz/tq?tq=select%20A%2CB%2CD&tqx=out:csv&gid=0"));
 for($i=1;;$i++){

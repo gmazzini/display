@@ -115,9 +115,9 @@ function fai2($conn,$base,$table,$field,$url,$sovra,$ss){
     if(!is_numeric($kk))continue;
     if(isset($aa[1]))$vv=substr($aa[1],1,strlen($aa[1])-2);
     else $vv=1;
-    @$aux[$kk]+=$vv;
+    @$ddd[$kk]+=$vv;
   }
-  foreach($aux as $kk => $vv){
+  foreach($ddd as $kk => $vv){
     if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
     else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
     oci_execute($query);

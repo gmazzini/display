@@ -3,8 +3,8 @@
 include "data.php";
 $conn=oci_connect($p1,$p2,$p3);
 
-function mycheck($conn,$table){
-  $query=oci_parse($conn,"select count(*) from $table where istat='$kk'");
+function mycheck($conn,$table,$istat){
+  $query=oci_parse($conn,"select count(*) from $table where istat='$istat'");
   oci_execute($query);
   $row=oci_fetch_row($query);
   @$zz=$row[0];
@@ -22,7 +22,7 @@ for($i=1;;$i++){
   if(!is_numeric($kk))continue;
   $vv=str_replace("'","''",substr($aa[1],1,strlen($aa[1])-2));
   $qq=substr($aa[2],1,strlen($aa[2])-2);
-  if(mycheck($conn,"istatente"))$query=oci_parse($conn,"update istatente set xx='$vv' where istat='$kk'");
+  if(mycheck($conn,"istatente",$kk))$query=oci_parse($conn,"update istatente set ente='$vv' where istat='$kk'");
   else $query=oci_parse($conn,"insert into istatente (istat,ente) values ('$kk','$vv')");
   oci_execute($query);
   $query=oci_parse($conn,"update idistat set sovra='$qq' where istat='$kk'");

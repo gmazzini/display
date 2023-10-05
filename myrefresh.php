@@ -77,8 +77,8 @@ function fai1($conn,$table,$field,$url,$sovra,$ss){
   foreach($aux["dati"] as $k => $v){
     $kk=substr($k,1,5);
     $vv=$v["$field"];
-    if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
-    else $query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
+    if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
+    else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
     oci_execute($query);
   }
   $query=oci_parse($conn,"select sum($field) from $table where istat>'30000'");
@@ -87,8 +87,8 @@ function fai1($conn,$table,$field,$url,$sovra,$ss){
   $vv=$row[0];
   oci_free_statement($query);
   $kk="00008";
-  if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
-  else $query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
+  if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
+  else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
   oci_execute($query);
   for($i=0;$i<$ss;$i++){
     $query=oci_parse($conn,"select sum($table.$field) from $table,idistat where $table.istat=idistat.istat and idistat.sovra='$sovra[$i]'");
@@ -98,8 +98,8 @@ function fai1($conn,$table,$field,$url,$sovra,$ss){
     else $vv=0;
     oci_free_statement($query);
     $kk=$sovra[$i];
-    if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
-    else $query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
+    if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
+    else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
     oci_execute($query);
   }
 }
@@ -115,11 +115,11 @@ function fai2($conn,$base,$table,$field,$url,$sovra,$ss){
     if(!is_numeric($kk))continue;
     if(isset($aa[1]))$vv=substr($aa[1],1,strlen($aa[1])-2);
     else $vv=1;
-    if(!mycheck($conn,$table,$kk)){
-      $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',0)");
-      oci_execute($query);
-    }
-    $query=oci_parse($conn,"update $table set $field=$field+$vv where istat='$kk'");
+    @$aux[$kk]+=$vv;
+  }
+  foreach($aux as $kk => $vv){
+    if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
+    else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
     oci_execute($query);
   }
   $query=oci_parse($conn,"select sum($field) from $table where istat>'30000'");
@@ -128,8 +128,8 @@ function fai2($conn,$base,$table,$field,$url,$sovra,$ss){
   $vv=$row[0];
   oci_free_statement($query);
   $kk="00008";
-  if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
-  else $query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
+  if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
+  else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
   oci_execute($query);
   for($i=0;$i<$ss;$i++){
     $query=oci_parse($conn,"select sum($table.$field) from $table,idistat where $table.istat=idistat.istat and idistat.sovra='$sovra[$i]'");
@@ -139,8 +139,8 @@ function fai2($conn,$base,$table,$field,$url,$sovra,$ss){
     else $vv=0;
     oci_free_statement($query);
     $kk=$sovra[$i];
-    if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
-    else $query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
+    if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
+    else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
     oci_execute($query);
   }
 }

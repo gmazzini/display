@@ -3,9 +3,16 @@
 include "data.php";
 $conn=oci_connect($p1,$p2,$p3);
 
+function mycheck($conn,$table){
+  $query=oci_parse($conn,"select count(*) from $table where istat='$kk'");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  @$zz=$row[0];
+  oci_free_statement($query);
+  return $zz; 
+}
+
 echo "istatente\n";
-$query=oci_parse($conn,"delete from istatente");
-oci_execute($query);
 $aux=explode("\n",file_get_contents("https://docs.google.com/spreadsheets/d/1DTngQUDqQgcYhA4S1iOW3jGuj-nOO-98opbXeUC-ffA/gviz/tq?tq=select%20A%2CB%2CD&tqx=out:csv&gid=0"));
 for($i=1;;$i++){
   if(!isset($aux[$i]))break;
@@ -15,11 +22,14 @@ for($i=1;;$i++){
   if(!is_numeric($kk))continue;
   $vv=str_replace("'","''",substr($aa[1],1,strlen($aa[1])-2));
   $qq=substr($aa[2],1,strlen($aa[2])-2);
-  $query=oci_parse($conn,"insert into istatente values ('$kk','$vv')");
+  if(mycheck($conn,"istatente"))$query=oci_parse($conn,"update istatente set xx='$vv' where istat='$kk'");
+  else $query=oci_parse($conn,"insert into istatente (istat,ente) values ('$kk','$vv')");
   oci_execute($query);
   $query=oci_parse($conn,"update idistat set sovra='$qq' where istat='$kk'");
   oci_execute($query);
 }
+
+exit();
 
 $query=oci_parse($conn,"select distinct sovra from idistat");
 oci_execute($query);

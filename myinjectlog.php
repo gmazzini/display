@@ -60,6 +60,7 @@ for(;;){
           $istat=$myistat[$id];
           $stmt=oci_parse($conn,"insert into dhcpwifi (id,fnv1a,ip,tt,istat) values ('$vv',hextoraw('$vv2'),$id,$tt,'$istat')");
           oci_execute($stmt);
+          oci_free_statement($stmt);
           $ii++;
           echo "$i,$ii,$ip,$id,$vv,$vv2,$istat,$tt\n";
         }

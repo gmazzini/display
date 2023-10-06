@@ -24,7 +24,9 @@ for($i=0;;$i++){
     oci_free_statement($query1);
     $query1=oci_parse($conn,"update dhcpwifi set fnv1a=hextoraw('$fnv1a') where id='$id' and fnv1a is not null");
     oci_execute($query1);
-    echo "$i $ii $row[0] $id\n";
+    $mm=oci_num_rows($stid);
+    oci_free_statement($query1);
+    echo "$i $ii $row[0] $id $mm\n";
     $ii++;
   }
 }

@@ -53,8 +53,9 @@ for(;;){
 
         if(!$myexist){
           $istat=$myistat[$id];
-          $stmt=oci_parse($conn,"insert into dhcpwifi (id,fnv1a,ip,tt,istat) values ('$vv',hextoraw('$vv2'),$id,$tt,'$istat')");
-          oci_execute($stmt);
+          $query=oci_parse($conn,"insert into dhcpwifi (id,fnv1a,ip,tt,istat) values ('$vv',hextoraw('$vv2'),$id,$tt,'$istat')");
+          oci_execute($query);
+          oci_free_statement($query);
           $ii++;
           echo "$i,$ii,$ip,$id,$vv,$vv2,$istat,$tt\n";
         }

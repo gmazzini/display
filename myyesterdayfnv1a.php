@@ -4,7 +4,7 @@ include "data.php";
 $conn=oci_connect($p1,$p2,$p3);
 
 $tt=(int)(time()/86400)-1;
-$query=oci_parse($conn,"select distinct rawtohex(fnv1a) from dhcpwifi where tt=$tt and fnv1a not in (select fnv1a from dhcpwifi where tt<$tt and fnv1a is not null)");
+$query=oci_parse($conn,"select distinct rawtohex(fnv1a) from dhcpwifi where tt=$tt and fnv1a not in (select fnv1a from dhcpwifi where tt<$tt and fnv1a is not null) order by fnv1a");
 oci_execute($query);
 $ii=0;
 for($i=0;;$i++){

@@ -30,6 +30,7 @@ for($i=1;;$i++){
   if(!$zz){
     $query=oci_parse($conn,"insert into idistat (idstart,idend,istat,sovra) values ($vv,$qq,'$kk','')");
     oci_execute($query);
+    oci_free_statement($query);
   }
 }
 
@@ -46,8 +47,10 @@ for($i=1;;$i++){
   if(mycheck($conn,"istatente",$kk))$query=oci_parse($conn,"update istatente set ente='$vv' where istat='$kk'");
   else $query=oci_parse($conn,"insert into istatente (istat,ente) values ('$kk','$vv')");
   oci_execute($query);
+  oci_free_statement($query);
   $query=oci_parse($conn,"update idistat set sovra='$qq' where istat='$kk'");
   oci_execute($query);
+  oci_free_statement($query);
 }
 
 $query=oci_parse($conn,"select distinct sovra from idistat");
@@ -87,6 +90,7 @@ for($i=0;$i<$yy;$i++){
   if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
   else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
   oci_execute($query);
+  oci_free_statement($query);
 }
 $kk="00008";
 echo "userwifi:$kk\n";
@@ -98,6 +102,7 @@ oci_free_statement($query);
 if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
 else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
 oci_execute($query);
+oci_free_statement($query);
 for($i=0;$i<$ss;$i++){
   $kk=$sovra[$i];
   echo "userwifi:$kk\n";
@@ -110,6 +115,7 @@ for($i=0;$i<$ss;$i++){
   if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
   else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
   oci_execute($query);
+  oci_free_statement($query);
 }
 
 function fai1($conn,$table,$field,$url,$sovra,$ss){
@@ -121,6 +127,7 @@ function fai1($conn,$table,$field,$url,$sovra,$ss){
     if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
     else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
     oci_execute($query);
+    oci_free_statement($query);
   }
   $query=oci_parse($conn,"select sum($field) from $table where istat>'30000'");
   oci_execute($query);
@@ -131,6 +138,7 @@ function fai1($conn,$table,$field,$url,$sovra,$ss){
   if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
   else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
   oci_execute($query);
+  oci_free_statement($query);
   for($i=0;$i<$ss;$i++){
     $query=oci_parse($conn,"select sum($table.$field) from $table,idistat where $table.istat=idistat.istat and idistat.sovra='$sovra[$i]'");
     oci_execute($query);
@@ -142,6 +150,7 @@ function fai1($conn,$table,$field,$url,$sovra,$ss){
     if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
     else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
     oci_execute($query);
+    oci_free_statement($query);
   }
 }
 
@@ -172,6 +181,7 @@ function fai2($conn,$base,$table,$field,$url,$sovra,$ss){
   if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
   else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
   oci_execute($query);
+  oci_free_statement($query);
   for($i=0;$i<$ss;$i++){
     $query=oci_parse($conn,"select sum($table.$field) from $table,idistat where $table.istat=idistat.istat and idistat.sovra='$sovra[$i]'");
     oci_execute($query);
@@ -183,6 +193,7 @@ function fai2($conn,$base,$table,$field,$url,$sovra,$ss){
     if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
     else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
     oci_execute($query);
+    oci_free_statement($query);
   }
 }
 

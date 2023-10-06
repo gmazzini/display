@@ -22,7 +22,7 @@ for($i=0;;$i++){
     $row1=oci_fetch_row($query1);
     $id=$row1[0];
     oci_free_statement($query1);
-    $query1=oci_parse($conn,"update dhcpwifi set fnv1a=hextoraw('$fnv1a') where id='$id' and fnv1a is not null");
+    $query1=oci_parse($conn,"update dhcpwifi set fnv1a=hextoraw('$fnv1a') where id='$id' and fnv1a is null");
     oci_execute($query1);
     $mm=oci_num_rows($query1);
     oci_free_statement($query1);

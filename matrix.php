@@ -2,7 +2,8 @@
 
 $ip=$_GET["ip"];
 $ser=$_GET["ser"];
-if($ser=="")$ser="0000";
+if($ser=="")$ser="S0000";
+else $ser="S".$ser;
 $des="tmp/files/$ip.des";
 $ff="tmp/files/$ip.ff";
 $bin="tmp/files/$ip.bin";
@@ -98,7 +99,7 @@ $row=oci_fetch_row($query);
 $sel=$row[0]%22;
 oci_free_statement($query);
 
-if($ser=="0029"){
+if($ser=="S0029"){
   $query=oci_parse($conn,"update mysession set c1=c1+1 where id='$ip'");
   oci_execute($query);
   oci_free_statement($query);
@@ -110,7 +111,7 @@ if($ser=="0029"){
   $name=sprintf("tmp/aldini/%03d.ff",$vf+1);
   shell_exec("tmp/convert3 $name 10 $bin");
 }
-else if($ser=="0022"){
+else if($ser=="S0022"){
   $query=oci_parse($conn,"update mysession set c1=c1+1 where id='$ip'");
   oci_execute($query);
   oci_free_statement($query);

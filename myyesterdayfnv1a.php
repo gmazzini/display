@@ -7,6 +7,7 @@ $tt=(int)(time()/86400)-1;
 $query=oci_parse($conn,"select distinct rawtohex(fnv1a) from dhcpwifi where tt=$tt and fnv1a not in (select fnv1a from dhcpwifi where tt<$tt and fnv1a is not null) order by fnv1a");
 oci_execute($query);
 $ii=0;
+$iii=0;
 for($i=0;;$i++){
   $row=oci_fetch_row($query);
   if($row==null)break;
@@ -26,7 +27,8 @@ for($i=0;;$i++){
     oci_execute($query1);
     $mm=oci_num_rows($query1);
     oci_free_statement($query1);
-    if($mm>0)echo "$i $ii $row[0] $id $mm\n";
+    $iii+=$mm;
+    if($mm>0)echo "$i $ii $row[0] $id $mm $mmm\n";
     $ii++;
   }
 }

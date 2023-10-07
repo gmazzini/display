@@ -31,7 +31,7 @@ else $ser="S".$ser;
 $query=oci_parse($conn,"select sovra from idistat where istat='$istat'");
 oci_execute($query);
 $row=oci_fetch_row($query);
-@$sovra=$row[1];
+@$sovra=$row[0];
 oci_free_statement($query);
 
 $query=oci_parse($conn,"select ente from istatente where istat='$istat'");

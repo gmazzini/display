@@ -1,12 +1,39 @@
 <?php
 
-$ip=$_GET["ip"];
-$ser=$_GET["ser"];
-if($ser=="")$ser="S0000";
-else $ser="S".$ser;
+include "data.php";
 $des="tmp/files/$ip.des";
 $ff="tmp/files/$ip.ff";
 $bin="tmp/files/$ip.bin";
+$conn=oci_connect($p1,$p2,$p3);
+
+$ip=$_GET["ip"];
+$aux=explode(".",$ip);
+if($aux[0]=="10"){
+  $aux=explode(".",$ip);
+  $id=$aux[1]*256+$aux[2];
+  $query=oci_parse($conn,"select istat,sovra from idistat where '$id'>=idstart and '$id'<=idend");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  $istat=$row[0];
+  $sovra=$row[1];
+  oci_free_statement($query);
+}
+
+$ser=$_GET["ser"];
+if(substr($ip,0,3)=="WEB"){
+  if(strlen($ser)==4){
+    $ser="S".$ser;
+    $istat="";
+  }
+  else $istat=$ser;
+}
+else $ser="S".$ser;
+
+$query=oci_parse($conn,"select ente from istatente where istat='$istat'");
+oci_execute($query);
+$row=oci_fetch_row($query);
+$ente=$row[0];
+oci_free_statement($query);
 
 function mysplit($x,$len){
   $o=0;
@@ -54,27 +81,6 @@ function showme($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$conn){
   fclose($fp);
   shell_exec("tmp/write $des 4 $ff; tmp/convert3 $ff 6 $bin");
   return;
-}
-
-include "data.php";
-$conn=oci_connect($p1,$p2,$p3);
-
-$istat=0;
-$aux=explode(".",$ip);
-if($aux[0]=="10"){
-  $aux=explode(".",$ip);
-  $id=$aux[1]*256+$aux[2];
-  $query=oci_parse($conn,"select istat,sovra from idistat where '$id'>=idstart and '$id'<=idend");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  $istat=$row[0];
-  $sovra=$row[1];
-  oci_free_statement($query);
-  $query=oci_parse($conn,"select ente from istatente where istat='$istat'");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  $ente=$row[0];
-  oci_free_statement($query);
 }
 
 $query=oci_parse($conn,"select count(*) from mysession where id='$ip'");

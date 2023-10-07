@@ -84,11 +84,14 @@ oci_free_statement($query);
 if(!$myexist){
   $query=oci_parse($conn,"insert into mysession values ('$ip','$ser',0,0,0)");
   oci_execute($query);
+  oci_free_statement($query);
 }
 $query=oci_parse($conn,"update mysession set iter=iter+1 where id='$ip'");
 oci_execute($query);
+oci_free_statement($query);
 $query=oci_parse($conn,"update mysession set ser='$ser' where id='$ip'");
 oci_execute($query);
+oci_free_statement($query);
 $query=oci_parse($conn,"select iter from mysession where id='$ip'");
 oci_execute($query);
 $row=oci_fetch_row($query);
@@ -98,6 +101,7 @@ oci_free_statement($query);
 if($ser=="0029"){
   $query=oci_parse($conn,"update mysession set c1=c1+1 where id='$ip'");
   oci_execute($query);
+  oci_free_statement($query);
   $query=oci_parse($conn,"select c1 from mysession where id='$ip'");
   oci_execute($query);
   $row=oci_fetch_row($query);
@@ -109,6 +113,7 @@ if($ser=="0029"){
 else if($ser=="0022"){
   $query=oci_parse($conn,"update mysession set c1=c1+1 where id='$ip'");
   oci_execute($query);
+  oci_free_statement($query);
   $query=oci_parse($conn,"select c1 from mysession where id='$ip'");
   oci_execute($query);
   $row=oci_fetch_row($query);
@@ -198,6 +203,7 @@ case 14:
 case 15:
   $query=oci_parse($conn,"update mysession set c1=c1+1 where id='$ip'");
   oci_execute($query);
+  oci_free_statement($query);
   $query=oci_parse($conn,"select c1 from mysession where id='$ip'");
   oci_execute($query);
   $row=oci_fetch_row($query);

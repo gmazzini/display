@@ -11,11 +11,10 @@ $aux=explode(".",$ip);
 if($aux[0]=="10"){
   $aux=explode(".",$ip);
   $id=$aux[1]*256+$aux[2];
-  $query=oci_parse($conn,"select istat,sovra from idistat where '$id'>=idstart and '$id'<=idend");
+  $query=oci_parse($conn,"select istat from idistat where '$id'>=idstart and '$id'<=idend");
   oci_execute($query);
   $row=oci_fetch_row($query);
   $istat=$row[0];
-  $sovra=$row[1];
   oci_free_statement($query);
 }
 
@@ -28,6 +27,12 @@ if(substr($ip,0,3)=="WEB"){
   else $istat=$ser;
 }
 else $ser="S".$ser;
+
+$query=oci_parse($conn,"select sovra from idistat where istat='$istat'");
+oci_execute($query);
+$row=oci_fetch_row($query);
+@$sovra=$row[1];
+oci_free_statement($query);
 
 $query=oci_parse($conn,"select ente from istatente where istat='$istat'");
 oci_execute($query);

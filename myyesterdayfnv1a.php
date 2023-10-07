@@ -28,7 +28,7 @@ for($i=0;;$i++){
     $mm=oci_num_rows($query1);
     oci_free_statement($query1);
     $iii+=$mm;
-    if($mm>0)echo "$i $ii $row[0] $id $mm $mmm\n";
+    if($mm>0)echo "$i $ii $row[0] $id $mm $iii\n";
     $ii++;
   }
 }

@@ -53,7 +53,7 @@ var istat = urlParams.get('istat');
 var ser = urlParams.get('ser');
 const rr = new Uint32Array(2);
 self.crypto.getRandomValues(rr);
-ip="TEST."+rr[0].toString(16)+"."+rr[1].toString(16);
+ip="WEB."+rr[0].toString(16)+"."+rr[1].toString(16);
 if(ser===null){
   if(istat===null)ser="0000";
   else ser=istat;

@@ -1,12 +1,12 @@
 <?php
 
 include "data.php";
+$ip=$_GET["ip"];
 $des="tmp/files/$ip.des";
 $ff="tmp/files/$ip.ff";
 $bin="tmp/files/$ip.bin";
 $conn=oci_connect($p1,$p2,$p3);
 
-$ip=$_GET["ip"];
 $aux=explode(".",$ip);
 if($aux[0]=="10"){
   $aux=explode(".",$ip);

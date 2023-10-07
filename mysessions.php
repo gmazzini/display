@@ -3,7 +3,7 @@
 include "data.php";
 $conn=oci_connect($p1,$p2,$p3);
 
-$query=oci_parse($conn,"select * from mysession");
+$query=oci_parse($conn,"select ip,ser,iter,c1,c2 from mysession order by ip");
 oci_execute($query);
 for(;;){
   $row=oci_fetch_row($query);

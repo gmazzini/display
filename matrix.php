@@ -9,7 +9,6 @@ $conn=oci_connect($p1,$p2,$p3);
 
 $aux=explode(".",$ip);
 if($aux[0]=="10"){
-  $aux=explode(".",$ip);
   $id=$aux[1]*256+$aux[2];
   $query=oci_parse($conn,"select istat from idistat where '$id'>=idstart and '$id'<=idend");
   oci_execute($query);

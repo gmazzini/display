@@ -18,7 +18,7 @@ for(;;){
     oci_execute($query1);
     $row1=oci_fetch_row($query1);
     $istat=$row1[0];
-    oci_free_statement($query);
+    oci_free_statement($query1);
   }
   
   $query1=oci_parse($conn,"select sovra from idistat where istat='$istat'");

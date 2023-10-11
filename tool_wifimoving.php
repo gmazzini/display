@@ -11,8 +11,9 @@ for(;;){
   @$cc[$row[0]]++;
 }
 oci_free_statement($query);
-print_r($cc);
+for($i=1;$i<50;$i++){
+  echo $i,$cc[$i]\n";
+}
 
 oci_close($conn);
-
 ?>

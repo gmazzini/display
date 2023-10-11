@@ -12,7 +12,7 @@ for(;;){
 }
 oci_free_statement($query);
 for($i=1;$i<50;$i++){
-  echo $i,$cc[$i]\n";
+  echo "$i,$cc[$i]\n";
 }
 
 oci_close($conn);

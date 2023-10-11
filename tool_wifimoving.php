@@ -12,7 +12,8 @@ for(;;){
 }
 oci_free_statement($query);
 for($i=1;$i<50;$i++){
-  $oo=(int)$cc[$i];
+  if(isset($cc[$i]))$oo=(int)$cc[$i];
+  else $oo=0;
   echo "$i,$oo\n";
 }
 

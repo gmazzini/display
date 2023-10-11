@@ -12,7 +12,8 @@ for(;;){
 }
 oci_free_statement($query);
 for($i=1;$i<50;$i++){
-  echo "$i,$cc[$i]\n";
+  $oo=(int)$cc[$i];
+  echo "$i,$oo\n";
 }
 
 oci_close($conn);

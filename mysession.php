@@ -14,18 +14,13 @@ for(;;){
   $aux=explode(".",$row[0]);
   if($aux[0]=="10"){
     $id=$aux[1]*256+$aux[2];
-    $query1=oci_parse($conn,"select istat from idistat where '$id'>=idstart and '$id'<=idend");
+    $query1=oci_parse($conn,"select istat,sovra from idistat where '$id'>=idstart and '$id'<=idend");
     oci_execute($query1);
     $row1=oci_fetch_row($query1);
     $istat=$row1[0];
+    @$sovra=$row1[1];
     oci_free_statement($query1);
   }
-  
-  $query1=oci_parse($conn,"select sovra from idistat where istat='$istat'");
-  oci_execute($query1);
-  $row1=oci_fetch_row($query1);
-  @$sovra=$row1[0];
-  oci_free_statement($query1);
   
   echo "$row[0],$row[1],$row[2],$row[3],$row[4],$istat,$sovra\n";
 }

@@ -5,7 +5,7 @@ $conn=oci_connect($p1,$p2,$p3);
 
 echo "sel\n";
 $aux=explode("\n",file_get_contents("https://docs.google.com/spreadsheets/d/1JOdvGEDQl6L5Zr3b3ir5OO8tjJhWOfRTML5Rl4jskP4/gviz/tq?tq=select%20A%2CB&tqx=out:csv&gid=0"));
-for(;;){
+for($i=1;;$i++){
   if(!isset($aux[$i]))break;
   $aa=explode(",",$aux[$i]);
   $sel=substr($aa[0],1,strlen($aa[0])-2);
@@ -24,7 +24,7 @@ for(;;){
 
 echo "seq\n";
 $aux=explode("\n",file_get_contents("https://docs.google.com/spreadsheets/d/1JOdvGEDQl6L5Zr3b3ir5OO8tjJhWOfRTML5Rl4jskP4/gviz/tq?tq=select%20A%2CB%2CC%2CD&tqx=out:csv&gid=324624767"));
-for(;;){
+for($i=1;;$i++){
   if(!isset($aux[$i]))break;
   $aa=explode(",",$aux[$i]);
   $seq=substr($aa[0],1,strlen($aa[0])-2);

@@ -3,15 +3,6 @@
 include "/home/admgm02/data.php";
 $conn=oci_connect($p1,$p2,$p3);
 
-function mycheck($conn,$table,$istat){
-  $query=oci_parse($conn,"select count(*) from $table where istat='$istat'");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  @$zz=$row[0];
-  oci_free_statement($query);
-  return $zz; 
-}
-
 echo "sel\n";
 $aux=explode("\n",file_get_contents("https://docs.google.com/spreadsheets/d/1JOdvGEDQl6L5Zr3b3ir5OO8tjJhWOfRTML5Rl4jskP4/gviz/tq?tq=select%20A%2CB&tqx=out:csv&gid=0"));
 for($;;$){

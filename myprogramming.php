@@ -36,7 +36,7 @@ for($i=1;;$i++){
   $row=oci_fetch_row($query);
   @$zz=$row[0];
   oci_free_statement($query);
-  if($zz)$query=oci_parse($conn,"update seq set screen='$screem',time=$time where seq='$seq' and id=$id");
+  if($zz)$query=oci_parse($conn,"update seq set screen='$screen',time=$time where seq='$seq' and id=$id");
   else $query=oci_parse($conn,"insert into seq (seq,id,screen,time) values ('$seq',$id,'$screen',$time)");
   oci_execute($query);
   oci_free_statement($query);

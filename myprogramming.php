@@ -3,7 +3,13 @@
 include "/home/admgm02/data.php";
 $conn=oci_connect($p1,$p2,$p3);
 
-echo "sel\n";
+echo "<pre>";
+if($_GET["password"]!=$p4){
+  echo "Wrong password\n";
+  exit(0);
+}
+
+echo "Updating sel\n";
 $aux=explode("\n",file_get_contents("https://docs.google.com/spreadsheets/d/1JOdvGEDQl6L5Zr3b3ir5OO8tjJhWOfRTML5Rl4jskP4/gviz/tq?tq=select%20A%2CB&tqx=out:csv&gid=0"));
 for($i=1;;$i++){
   if(!isset($aux[$i]))break;
@@ -22,7 +28,7 @@ for($i=1;;$i++){
   oci_free_statement($query);
 }
 
-echo "seq\n";
+echo "Updating seq\n";
 $aux=explode("\n",file_get_contents("https://docs.google.com/spreadsheets/d/1JOdvGEDQl6L5Zr3b3ir5OO8tjJhWOfRTML5Rl4jskP4/gviz/tq?tq=select%20A%2CB%2CC%2CD&tqx=out:csv&gid=324624767"));
 for($i=1;;$i++){
   if(!isset($aux[$i]))break;

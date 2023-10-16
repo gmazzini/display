@@ -8,16 +8,16 @@ $aux=explode("\n",file_get_contents("https://docs.google.com/spreadsheets/d/1JOd
 for($i=1;;$i++){
   if(!isset($aux[$i]))break;
   $aa=explode(",",$aux[$i]);
-  $sel=substr($aa[0],1,strlen($aa[0])-2);
+  $ser=substr($aa[0],1,strlen($aa[0])-2);
   $seq=substr($aa[1],1,strlen($aa[1])-2);
   if($seq=="")$seq="0000";
-  $query=oci_parse($conn,"select count(*) from sel where sel='$sel'");
+  $query=oci_parse($conn,"select count(*) from sel where ser='$ser'");
   oci_execute($query);
   $row=oci_fetch_row($query);
   @$zz=$row[0];
   oci_free_statement($query);
-  if($zz)$query=oci_parse($conn,"update sel set seq='$seq' where sel='$sel'");
-  else $query=oci_parse($conn,"insert into sel (sel,seq) values ('$sel','$seq')");
+  if($zz)$query=oci_parse($conn,"update sel set seq='$seq' where ser='$ser'");
+  else $query=oci_parse($conn,"insert into sel (ser,seq) values ('$ser','$seq')");
   oci_execute($query);
   oci_free_statement($query);
 }

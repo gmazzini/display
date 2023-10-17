@@ -85,7 +85,7 @@ function show1($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$time,$conn){
   return;
 }
 
-function show2($base,$tot,$ip,$time,$conn){
+function show2($base,$tot,$ip,$bin,$time,$conn){
   $query=oci_parse($conn,"update mysession set c1=c1+1 where id='$ip'");
   oci_execute($query);
   oci_free_statement($query);
@@ -204,7 +204,7 @@ switch($screen){
   case "8005": shell_exec("tmp/convert3 tmp/image/L005.ff $time $bin"); break;
   case "8006": shell_exec("tmp/convert3 tmp/image/L006.ff $time $bin"); break;
 
-  case "9001": show2(1,76,$ip,$time,$conn); break;
+  case "9001": show2(1,76,$ip,$bin,$time,$conn); break;
 
   case "7001":
   $aux=mysplit($ente,12);

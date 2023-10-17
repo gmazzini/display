@@ -53,6 +53,40 @@ function mysplit($x,$len){
   }
 }
 
+function show1($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$time,$conn){
+  $query=oci_parse($conn,"select $par from $table where istat='$istat'");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  @$aux=$row[0];
+  oci_free_statement($query);
+  $query=oci_parse($conn,"select $par from $table where istat='00008'");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  @$reraux=$row[0];
+  oci_free_statement($query);
+  $fp=fopen($des,"w");
+  fprintf($fp,"000000\n");
+  fprintf($fp,"-2 00 FFFFFF 02 %s\n",$title);
+  if($sovra<>""){
+    $query=oci_parse($conn,"select $par from $table where istat='$sovra'");
+    oci_execute($query);
+    $row=oci_fetch_row($query);
+    @$sovraaux=$row[0];
+    oci_free_statement($query);
+    fprintf($fp,"-2 29 FF0000 01 Unione\n");
+    fprintf($fp,"-2 38 FF00FF 02 %s\n",number_format($sovraaux,0,",","."));
+    $delta=0;
+  }
+  else $delta=7;
+  fprintf($fp,"-2 %02d FF0000 01 Comune\n",10+$delta);
+  fprintf($fp,"-2 %02d FF00FF 02 %s\n",19+$delta,number_format($aux,0,",","."));
+  fprintf($fp,"-2 %02d FF0000 01 Regione\n",48-$delta);
+  fprintf($fp,"-2 %02d FF00ff 02 %s\n",57-$delta,number_format($reraux,0,",","."));
+  fclose($fp);
+  shell_exec("tmp/write $des 4 $ff; tmp/convert3 $ff $time $bin");
+  return;
+}
+
 function showme($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$conn){
   $query=oci_parse($conn,"select $par from $table where istat='$istat'");
   oci_execute($query);
@@ -129,7 +163,6 @@ if(substr($ser,0,1)=="S"){
   $row=oci_fetch_row($query);
   @$screen=$row[0];
   if($screen=="")$screen="0000";
-  // to be inserted time
   @$time=$row[1];
   if($time=="")$time=1;
   oci_free_statement($query);
@@ -138,20 +171,20 @@ if(substr($ser,0,1)=="S"){
 if($ser=="S0002"){
   
 switch($screen){
-  case "0002": showme("uiftth","uiftth","FTTH bianche",$istat,$sovra,$des,$ff,$bin,$conn); break;
-  case "0003": showme("areeaai","areeaai","AAI Aree",$istat,$sovra,$des,$ff,$bin,$conn); break;
-  case "0004": showme("aziendeaai","aziendeaai","AAI Aziende",$istat,$sovra,$des,$ff,$bin,$conn); break;
-  case "0005": showme("scuole","scuole","Scuole 1G",$istat,$sovra,$des,$ff,$bin,$conn); break;
-  case "0006": showme("pal","pal","PAL rete",$istat,$sovra,$des,$ff,$bin,$conn); break;
-  case "0007": showme("man","man","MAN rete",$istat,$sovra,$des,$ff,$bin,$conn); break;
-  case "0008": showme("apwifi","apwifi","Punti WiFi",$istat,$sovra,$des,$ff,$bin,$conn); break;
-  case "0009": showme("userwifi","userwifi","Utenti WiFi",$istat,$sovra,$des,$ff,$bin,$conn); break;
-  case "0010": showme("attivifse","attivi","Attivi FSE",$istat,$sovra,$des,$ff,$bin,$conn); break;
-  case "0011": showme("accessifse","accessi","Accessi FSE",$istat,$sovra,$des,$ff,$bin,$conn); break;
-  case "0012": showme("scaricatifse","scaricati","Scaricati FSE",$istat,$sovra,$des,$ff,$bin,$conn); break;
-  case "0013": showme("attivazionilepidaid","attivazioni","Attivazioni ID",$istat,$sovra,$des,$ff,$bin,$conn); break;
-  case "0014": showme("accessilepidaid","accessi","Accessi ID",$istat,$sovra,$des,$ff,$bin,$conn); break;
-  case "0015": showme("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$des,$ff,$bin,$conn); break;
+  case "0002": show1("uiftth","uiftth","FTTH bianche",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0003": show1("areeaai","areeaai","AAI Aree",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0004": show1("aziendeaai","aziendeaai","AAI Aziende",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0005": show1("scuole","scuole","Scuole 1G",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0006": show1("pal","pal","PAL rete",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0007": show1("man","man","MAN rete",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0008": show1("apwifi","apwifi","Punti WiFi",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0009": show1("userwifi","userwifi","Utenti WiFi",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0010": show1("attivifse","attivi","Attivi FSE",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0011": show1("accessifse","accessi","Accessi FSE",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0012": show1("scaricatifse","scaricati","Scaricati FSE",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0013": show1("attivazionilepidaid","attivazioni","Attivazioni ID",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0014": show1("accessilepidaid","accessi","Accessi ID",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0015": show1("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
   default: 
   $fp=fopen($des,"w");
   fprintf($fp,"000000\n");

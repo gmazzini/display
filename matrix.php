@@ -232,9 +232,10 @@ switch($screen){
   $fp=fopen($des,"w");
   fprintf($fp,"000000\n");
   fprintf($fp,"-2 00 FF0000 02 oser %s\n",$oser);
-  fprintf($fp,"-2 12 FFFF00 02 nseq %d\n",$nseq);
-  fprintf($fp,"-2 24 00FFFF 02 screen %s\n",$screen);
-  fprintf($fp,"-2 36 FF00FF 02 time %d\n",$time);
+  fprintf($fp,"-2 12 00FF00 02 seq %s\n",$seq);
+  fprintf($fp,"-2 24 0000FF 02 nseq %d\n",$nseq);
+  fprintf($fp,"-2 36 FFFF00 02 screen %s\n",$screen);
+  fprintf($fp,"-2 48 00FFFF 02 time %d\n",$time);
   fclose($fp);
   shell_exec("tmp/write $des 4 $ff; tmp/convert3 $ff 10 $bin");
   break;

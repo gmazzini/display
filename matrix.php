@@ -124,7 +124,7 @@ if(substr($ser,0,1)!="S"){
   if($nseq=="")$nseq=1;
   oci_free_statement($query);
   $mid=$iter % $nseq;
-  $query=oci_parse($conn,"select screen,time from seq where seq='$seq' ans id=$mid");
+  $query=oci_parse($conn,"select screen,time from seq where seq='$seq' and id=$mid");
   oci_execute($query);
   $row=oci_fetch_row($query);
   @$screen=$row[0];

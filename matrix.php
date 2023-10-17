@@ -205,7 +205,7 @@ switch($screen){
   case "8006": shell_exec("tmp/convert3 tmp/image/L006.ff $time $bin"); break;
 
   case "9001": show2(1,76,$ip,$bin,$time,$conn); break;
-  case "9002": show2(1001,28,$ip,$time,$conn); break;
+  case "9002": show2(1001,28,$ip,$bin,$time,$conn); break;
 
   case "7001":
   $aux=mysplit($ente,12);

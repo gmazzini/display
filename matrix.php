@@ -171,6 +171,26 @@ if(substr($ser,0,1)=="S"){
 if($ser=="S0002"){
   
 switch($screen){
+  case "0001":
+  $aux=mysplit($ente,12);
+  $fp=fopen($des,"w");
+  fprintf($fp,"000000\n");
+  fprintf($fp,"-2 00 FF0000 03 %sZ\n",date("d.m.y H:i"));
+  fprintf($fp,"-2 06 FFFFFF 03 %s %s\n",$ip,$ser);
+  fprintf($fp,"00 12 FFFF00 03 Istat\n");
+  fprintf($fp,"00 18 0000FF 03 %s\n",$istat);
+  if($sovra<>""){
+    fprintf($fp,"-1 12 00FFFF 03 Unione\n");
+    fprintf($fp,"-1 18 FF0000 03 %s\n",$sovra);
+  }
+  fprintf($fp,"-2 32 FFFFFF 02 %s\n",$aux[0]);
+  fprintf($fp,"-2 40 FFFFFF 02 %s\n",@$aux[1]);
+  fprintf($fp,"-2 48 FFFFFF 02 %s\n",@$aux[2]);
+  fprintf($fp,"-2 56 FFFFFF 02 %s\n",@$aux[3]);
+  fclose($fp);
+  shell_exec("tmp/write $des 4 $ff; tmp/convert3 $ff $time $bin");
+  break;
+  
   case "0002": show1("uiftth","uiftth","FTTH bianche",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
   case "0003": show1("areeaai","areeaai","AAI Aree",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
   case "0004": show1("aziendeaai","aziendeaai","AAI Aziende",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
@@ -185,6 +205,14 @@ switch($screen){
   case "0013": show1("attivazionilepidaid","attivazioni","Attivazioni ID",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
   case "0014": show1("accessilepidaid","accessi","Accessi ID",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
   case "0015": show1("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+
+  case "8001": shell_exec("tmp/convert3 tmp/img/L001.ff $time $bin"); break;
+  case "8002": shell_exec("tmp/convert3 tmp/img/L002.ff $time $bin"); break;
+  case "8003": shell_exec("tmp/convert3 tmp/img/L003.ff $time $bin"); break;
+  case "8004": shell_exec("tmp/convert3 tmp/img/L004.ff $time $bin"); break;
+  case "8005": shell_exec("tmp/convert3 tmp/img/L005.ff $time $bin"); break;
+  case "8006": shell_exec("tmp/convert3 tmp/img/L006.ff $time $bin"); break;
+    
   default: 
   $fp=fopen($des,"w");
   fprintf($fp,"000000\n");

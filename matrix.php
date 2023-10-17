@@ -106,8 +106,31 @@ oci_free_statement($query);
 $query=oci_parse($conn,"select iter from mysession where id='$ip'");
 oci_execute($query);
 $row=oci_fetch_row($query);
-$sel=$row[0]%22;
+$iter=$row[0];
 oci_free_statement($query);
+
+if(substr($ser,0,1)!="S"){
+  $oser=substr($ser,1,4);
+  $query=oci_parse($conn,"select seq from sel where ser='$oser'");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  $seq=$row[0];
+  if($seq=="")$seq="0000";
+  oci_free_statement($query);
+  $query=oci_parse($conn,"select count(*) from seq where seq='$seq'");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  $nseq=$row[0];
+  if($nseq=="")$nseq=1;
+  oci_free_statement($query);
+  
+}
+
+
+
+
+$sel=$iter%22;
+
 
 if($ser=="S0029"){
   $query=oci_parse($conn,"update mysession set c1=c1+1 where id='$ip'");

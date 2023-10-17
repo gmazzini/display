@@ -16,13 +16,11 @@ if($aux[0]=="10"){
   $istat=$row[0];
   oci_free_statement($query);
 }
+else $istat="";
 
 $ser=$_GET["ser"];
 if(substr($ip,0,3)=="WEB"){
-  if(strlen($ser)==4){
-    $ser="S".$ser;
-    $istat="";
-  }
+  if(strlen($ser)==4)$ser="S".$ser;
   else $istat=$ser;
 }
 else $ser="S".$ser;

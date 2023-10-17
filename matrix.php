@@ -87,6 +87,19 @@ function show1($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$time,$conn){
   return;
 }
 
+function show2($base,$tot,$ip,$time,$conn){
+  $query=oci_parse($conn,"update mysession set c1=c1+1 where id='$ip'");
+  oci_execute($query);
+  oci_free_statement($query);
+  $query=oci_parse($conn,"select c1 from mysession where id='$ip'");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  $vf=$base + $row[0] % $tot;
+  oci_free_statement($query);
+  $name=sprintf("tmp/image/%04d.ff",$vf);
+  shell_exec("tmp/convert3 $name $time $bin");
+}
+
 function showme($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$conn){
   $query=oci_parse($conn,"select $par from $table where istat='$istat'");
   oci_execute($query);
@@ -186,12 +199,14 @@ switch($screen){
   case "0013": show1("accessilepidaid","accessi","Accessi ID",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
   case "0014": show1("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
 
-  case "8001": shell_exec("tmp/convert3 tmp/img/L001.ff $time $bin"); break;
-  case "8002": shell_exec("tmp/convert3 tmp/img/L002.ff $time $bin"); break;
-  case "8003": shell_exec("tmp/convert3 tmp/img/L003.ff $time $bin"); break;
-  case "8004": shell_exec("tmp/convert3 tmp/img/L004.ff $time $bin"); break;
-  case "8005": shell_exec("tmp/convert3 tmp/img/L005.ff $time $bin"); break;
-  case "8006": shell_exec("tmp/convert3 tmp/img/L006.ff $time $bin"); break;
+  case "8001": shell_exec("tmp/convert3 tmp/image/L001.ff $time $bin"); break;
+  case "8002": shell_exec("tmp/convert3 tmp/image/L002.ff $time $bin"); break;
+  case "8003": shell_exec("tmp/convert3 tmp/image/L003.ff $time $bin"); break;
+  case "8004": shell_exec("tmp/convert3 tmp/image/L004.ff $time $bin"); break;
+  case "8005": shell_exec("tmp/convert3 tmp/image/L005.ff $time $bin"); break;
+  case "8006": shell_exec("tmp/convert3 tmp/image/L006.ff $time $bin"); break;
+
+  case "9001": show2(1,76,$ip,$time,$conn); break;
 
   case "7001":
   $aux=mysplit($ente,12);
@@ -216,9 +231,12 @@ switch($screen){
   default: 
   $fp=fopen($des,"w");
   fprintf($fp,"000000\n");
-  fprintf($fp,"-2 00 FF0000 03 oser %s\n",$oser);
+  fprintf($fp,"-2 00 FF0000 02 oser %s\n",$oser);
+  fprintf($fp,"-2 12 FFFF00 02 nseq %d\n",$nseq);
+  fprintf($fp,"-2 24 00FFFF 02 screen %s\n",$screen);
+  fprintf($fp,"-2 36 FF00FF 02 time %d\n",$time);
   fclose($fp);
-  shell_exec("tmp/write $des 4 $ff; tmp/convert3 $ff 4 $bin");
+  shell_exec("tmp/write $des 4 $ff; tmp/convert3 $ff 10 $bin");
   break;
 }
 

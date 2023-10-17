@@ -136,20 +136,20 @@ if(substr($ser,0,1)!="S"){
 }
 
 if($ser=="S0002"){
-  if(strcmp($screen,"0002))showme("uiftth","uiftth","FTTH bianche",$istat,$sovra,$des,$ff,$bin,$conn);
-  else if(strcmp($screen,"0003))showme("areeaai","areeaai","AAI Aree",$istat,$sovra,$des,$ff,$bin,$conn);
-  else if(strcmp($screen,"0004))showme("aziendeaai","aziendeaai","AAI Aziende",$istat,$sovra,$des,$ff,$bin,$conn);
-  else if(strcmp($screen,"0005))showme("scuole","scuole","Scuole 1G",$istat,$sovra,$des,$ff,$bin,$conn);
-  else if(strcmp($screen,"0006))showme("pal","pal","PAL rete",$istat,$sovra,$des,$ff,$bin,$conn);
-  else if(strcmp($screen,"0007))showme("man","man","MAN rete",$istat,$sovra,$des,$ff,$bin,$conn);
-  else if(strcmp($screen,"0008))showme("apwifi","apwifi","Punti WiFi",$istat,$sovra,$des,$ff,$bin,$conn);
-  else if(strcmp($screen,"0009))showme("userwifi","userwifi","Utenti WiFi",$istat,$sovra,$des,$ff,$bin,$conn);
-  else if(strcmp($screen,"0010))showme("attivifse","attivi","Attivi FSE",$istat,$sovra,$des,$ff,$bin,$conn);
-  else if(strcmp($screen,"0011))showme("accessifse","accessi","Accessi FSE",$istat,$sovra,$des,$ff,$bin,$conn);
-  else if(strcmp($screen,"0012))showme("scaricatifse","scaricati","Scaricati FSE",$istat,$sovra,$des,$ff,$bin,$conn);
-  else if(strcmp($screen,"0013))showme("attivazionilepidaid","attivazioni","Attivazioni ID",$istat,$sovra,$des,$ff,$bin,$conn);
-  else if(strcmp($screen,"0014))showme("accessilepidaid","accessi","Accessi ID",$istat,$sovra,$des,$ff,$bin,$conn);
-  else if(strcmp($screen,"0015))showme("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$des,$ff,$bin,$conn);
+  if(strcmp($screen,"0002"))showme("uiftth","uiftth","FTTH bianche",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0003"))showme("areeaai","areeaai","AAI Aree",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0004"))showme("aziendeaai","aziendeaai","AAI Aziende",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0005"))showme("scuole","scuole","Scuole 1G",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0006"))showme("pal","pal","PAL rete",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0007"))showme("man","man","MAN rete",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0008"))showme("apwifi","apwifi","Punti WiFi",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0009"))showme("userwifi","userwifi","Utenti WiFi",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0010"))showme("attivifse","attivi","Attivi FSE",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0011"))showme("accessifse","accessi","Accessi FSE",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0012"))showme("scaricatifse","scaricati","Scaricati FSE",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0013"))showme("attivazionilepidaid","attivazioni","Attivazioni ID",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0014"))showme("accessilepidaid","accessi","Accessi ID",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0015"))showme("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$des,$ff,$bin,$conn);
   else showme("userwifi","userwifi","Utenti WiFi",$istat,$sovra,$des,$ff,$bin,$conn);
 }
 

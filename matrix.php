@@ -109,7 +109,7 @@ $row=oci_fetch_row($query);
 $iter=$row[0];
 oci_free_statement($query);
 
-if(substr($ser,0,1)!="S"){
+if(substr($ser,0,1)=="S"){
   $oser=substr($ser,1,4);
   $query=oci_parse($conn,"select seq from sel where ser='$oser'");
   oci_execute($query);

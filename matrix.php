@@ -114,19 +114,46 @@ if(substr($ser,0,1)!="S"){
   $query=oci_parse($conn,"select seq from sel where ser='$oser'");
   oci_execute($query);
   $row=oci_fetch_row($query);
-  $seq=$row[0];
+  @$seq=$row[0];
   if($seq=="")$seq="0000";
   oci_free_statement($query);
   $query=oci_parse($conn,"select count(*) from seq where seq='$seq'");
   oci_execute($query);
   $row=oci_fetch_row($query);
-  $nseq=$row[0];
+  @$nseq=$row[0];
   if($nseq=="")$nseq=1;
   oci_free_statement($query);
-  
+  $mid=$iter % $nseq;
+  $query=oci_parse($conn,"select screen,time from seq where seq='$seq' ans id=$mid");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  @$screen=$row[0];
+  if($screen=="")$screen="0000";
+  // to be inserted time
+  @$time=$row[1];
+  if($time=="")$time=1;
+  oci_free_statement($query);
 }
 
+if($ser=="S0002"){
+  if(strcmp($screen,"0002))showme("uiftth","uiftth","FTTH bianche",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0003))showme("areeaai","areeaai","AAI Aree",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0004))showme("aziendeaai","aziendeaai","AAI Aziende",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0005))showme("scuole","scuole","Scuole 1G",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0006))showme("pal","pal","PAL rete",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0007))showme("man","man","MAN rete",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0008))showme("apwifi","apwifi","Punti WiFi",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0009))showme("userwifi","userwifi","Utenti WiFi",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0010))showme("attivifse","attivi","Attivi FSE",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0011))showme("accessifse","accessi","Accessi FSE",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0012))showme("scaricatifse","scaricati","Scaricati FSE",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0013))showme("attivazionilepidaid","attivazioni","Attivazioni ID",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0014))showme("accessilepidaid","accessi","Accessi ID",$istat,$sovra,$des,$ff,$bin,$conn);
+  else if(strcmp($screen,"0015))showme("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$des,$ff,$bin,$conn);
+  else showme("userwifi","userwifi","Utenti WiFi",$istat,$sovra,$des,$ff,$bin,$conn);
+}
 
+else {
 
 
 $sel=$iter%22;
@@ -266,6 +293,8 @@ case 21:
   break;
 
 }
+}
+
 
 $len=filesize($bin);
 header("Content-Type: application/octet-stream");

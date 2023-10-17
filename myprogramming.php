@@ -29,6 +29,9 @@ for($i=1;;$i++){
 }
 
 echo "Updating seq\n";
+$query=oci_parse($conn,"delete from seq");
+oci_execute($query);
+oci_free_statement($query);
 $aux=explode("\n",file_get_contents("https://docs.google.com/spreadsheets/d/1JOdvGEDQl6L5Zr3b3ir5OO8tjJhWOfRTML5Rl4jskP4/gviz/tq?tq=select%20A%2CB%2CC%2CD&tqx=out:csv&gid=324624767"));
 for($i=1;;$i++){
   if(!isset($aux[$i]))break;

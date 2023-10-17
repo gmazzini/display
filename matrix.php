@@ -170,8 +170,30 @@ if(substr($ser,0,1)=="S"){
 
 if($ser=="S0002"){
   
-switch($screen){
-  case "0001":
+switch($screen){ 
+  case "0001": show1("uiftth","uiftth","FTTH bianche",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0002": show1("areeaai","areeaai","AAI Aree",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0003": show1("aziendeaai","aziendeaai","AAI Aziende",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0004": show1("scuole","scuole","Scuole 1G",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0005": show1("pal","pal","PAL rete",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0006": show1("man","man","MAN rete",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0007": show1("apwifi","apwifi","Punti WiFi",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0008": show1("userwifi","userwifi","Utenti WiFi",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0009": show1("attivifse","attivi","Attivi FSE",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0010": show1("accessifse","accessi","Accessi FSE",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0011": show1("scaricatifse","scaricati","Scaricati FSE",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0012": show1("attivazionilepidaid","attivazioni","Attivazioni ID",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0013": show1("accessilepidaid","accessi","Accessi ID",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+  case "0014": show1("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
+
+  case "8001": shell_exec("tmp/convert3 tmp/img/L001.ff $time $bin"); break;
+  case "8002": shell_exec("tmp/convert3 tmp/img/L002.ff $time $bin"); break;
+  case "8003": shell_exec("tmp/convert3 tmp/img/L003.ff $time $bin"); break;
+  case "8004": shell_exec("tmp/convert3 tmp/img/L004.ff $time $bin"); break;
+  case "8005": shell_exec("tmp/convert3 tmp/img/L005.ff $time $bin"); break;
+  case "8006": shell_exec("tmp/convert3 tmp/img/L006.ff $time $bin"); break;
+
+  case "7001":
   $aux=mysplit($ente,12);
   $fp=fopen($des,"w");
   fprintf($fp,"000000\n");
@@ -190,28 +212,6 @@ switch($screen){
   fclose($fp);
   shell_exec("tmp/write $des 4 $ff; tmp/convert3 $ff $time $bin");
   break;
-  
-  case "0002": show1("uiftth","uiftth","FTTH bianche",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
-  case "0003": show1("areeaai","areeaai","AAI Aree",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
-  case "0004": show1("aziendeaai","aziendeaai","AAI Aziende",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
-  case "0005": show1("scuole","scuole","Scuole 1G",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
-  case "0006": show1("pal","pal","PAL rete",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
-  case "0007": show1("man","man","MAN rete",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
-  case "0008": show1("apwifi","apwifi","Punti WiFi",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
-  case "0009": show1("userwifi","userwifi","Utenti WiFi",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
-  case "0010": show1("attivifse","attivi","Attivi FSE",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
-  case "0011": show1("accessifse","accessi","Accessi FSE",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
-  case "0012": show1("scaricatifse","scaricati","Scaricati FSE",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
-  case "0013": show1("attivazionilepidaid","attivazioni","Attivazioni ID",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
-  case "0014": show1("accessilepidaid","accessi","Accessi ID",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
-  case "0015": show1("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
-
-  case "8001": shell_exec("tmp/convert3 tmp/img/L001.ff $time $bin"); break;
-  case "8002": shell_exec("tmp/convert3 tmp/img/L002.ff $time $bin"); break;
-  case "8003": shell_exec("tmp/convert3 tmp/img/L003.ff $time $bin"); break;
-  case "8004": shell_exec("tmp/convert3 tmp/img/L004.ff $time $bin"); break;
-  case "8005": shell_exec("tmp/convert3 tmp/img/L005.ff $time $bin"); break;
-  case "8006": shell_exec("tmp/convert3 tmp/img/L006.ff $time $bin"); break;
     
   default: 
   $fp=fopen($des,"w");

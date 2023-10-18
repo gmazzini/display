@@ -95,40 +95,6 @@ function show2($base,$tot,$ip,$bin,$time,$conn){
   shell_exec("tmp/convert3 $name $time $bin");
 }
 
-function showme($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$conn){
-  $query=oci_parse($conn,"select $par from $table where istat='$istat'");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  @$aux=$row[0];
-  oci_free_statement($query);
-  $query=oci_parse($conn,"select $par from $table where istat='00008'");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  @$reraux=$row[0];
-  oci_free_statement($query);
-  $fp=fopen($des,"w");
-  fprintf($fp,"000000\n");
-  fprintf($fp,"-2 00 FFFFFF 02 %s\n",$title);
-  if($sovra<>""){
-    $query=oci_parse($conn,"select $par from $table where istat='$sovra'");
-    oci_execute($query);
-    $row=oci_fetch_row($query);
-    @$sovraaux=$row[0];
-    oci_free_statement($query);
-    fprintf($fp,"-2 29 FF0000 01 Unione\n");
-    fprintf($fp,"-2 38 FF00FF 02 %s\n",number_format($sovraaux,0,",","."));
-    $delta=0;
-  }
-  else $delta=7;
-  fprintf($fp,"-2 %02d FF0000 01 Comune\n",10+$delta);
-  fprintf($fp,"-2 %02d FF00FF 02 %s\n",19+$delta,number_format($aux,0,",","."));
-  fprintf($fp,"-2 %02d FF0000 01 Regione\n",48-$delta);
-  fprintf($fp,"-2 %02d FF00ff 02 %s\n",57-$delta,number_format($reraux,0,",","."));
-  fclose($fp);
-  shell_exec("tmp/write $des 4 $ff; tmp/convert3 $ff 6 $bin");
-  return;
-}
-
 $query=oci_parse($conn,"select count(*) from mysession where id='$ip'");
 oci_execute($query);
 $row=oci_fetch_row($query);
@@ -173,8 +139,6 @@ if($screen=="")$screen="0000";
 if($time=="")$time=1;
 oci_free_statement($query);
 
-if($ser=="0002"){
-  
 switch($screen){ 
   case "0001": show1("uiftth","uiftth","FTTH bianche",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
   case "0002": show1("areeaai","areeaai","AAI Aree",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
@@ -235,136 +199,6 @@ switch($screen){
   shell_exec("tmp/write $des 4 $ff; tmp/convert3 $ff 10 $bin");
   break;
 }
-
-} else {
-
-$sel=$iter%22;
-
-
-switch($sel){
-
-case 0:
-  $aux=mysplit($ente,12);
-  $fp=fopen($des,"w");
-  fprintf($fp,"000000\n");
-  fprintf($fp,"-2 00 FF0000 03 %sZ\n",date("d.m.y H:i"));
-  fprintf($fp,"-2 06 FFFFFF 03 %s %s\n",$ip,$ser);
-  fprintf($fp,"00 12 FFFF00 03 Istat\n");
-  fprintf($fp,"00 18 0000FF 03 %s\n",$istat);
-  if($sovra<>""){
-    fprintf($fp,"-1 12 00FFFF 03 Unione\n");
-    fprintf($fp,"-1 18 FF0000 03 %s\n",$sovra);
-  }
-  fprintf($fp,"-2 32 FFFFFF 02 %s\n",$aux[0]);
-  fprintf($fp,"-2 40 FFFFFF 02 %s\n",@$aux[1]);
-  fprintf($fp,"-2 48 FFFFFF 02 %s\n",@$aux[2]);
-  fprintf($fp,"-2 56 FFFFFF 02 %s\n",@$aux[3]);
-  fclose($fp);
-  shell_exec("tmp/write $des 4 $ff; tmp/convert3 $ff 6 $bin");
-  break;
-
-case 1:
-  showme("uiftth","uiftth","FTTH bianche",$istat,$sovra,$des,$ff,$bin,$conn);
-  break;
-
-case 2:
-  showme("areeaai","areeaai","AAI Aree",$istat,$sovra,$des,$ff,$bin,$conn);
-  break;
-
-case 3:
-  showme("aziendeaai","aziendeaai","AAI Aziende",$istat,$sovra,$des,$ff,$bin,$conn);
-  break;
-
-case 4:
-  showme("scuole","scuole","Scuole 1G",$istat,$sovra,$des,$ff,$bin,$conn);
-  break;
-
-case 5:
-  showme("pal","pal","PAL rete",$istat,$sovra,$des,$ff,$bin,$conn);
-  break;
-
-case 6:
-  showme("man","man","MAN rete",$istat,$sovra,$des,$ff,$bin,$conn);
-  break;
-
-case 7:
-  showme("apwifi","apwifi","Punti WiFi",$istat,$sovra,$des,$ff,$bin,$conn);
-  break;
-
-case 8:
-  showme("userwifi","userwifi","Utenti WiFi",$istat,$sovra,$des,$ff,$bin,$conn);
-  break;
-
-case 9:
-  showme("attivifse","attivi","Attivi FSE",$istat,$sovra,$des,$ff,$bin,$conn);
-  break;
-
-case 10:
-  showme("accessifse","accessi","Accessi FSE",$istat,$sovra,$des,$ff,$bin,$conn);
-  break;
-
-case 11:
-  showme("scaricatifse","scaricati","Scaricati FSE",$istat,$sovra,$des,$ff,$bin,$conn);
-  break;
-
-case 12:
-  showme("attivazionilepidaid","attivazioni","Attivazioni ID",$istat,$sovra,$des,$ff,$bin,$conn);
-  break;
-
-case 13:
-  showme("accessilepidaid","accessi","Accessi ID",$istat,$sovra,$des,$ff,$bin,$conn);
-  break;
-
-case 14:
-  showme("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$des,$ff,$bin,$conn);
-  break;
-
-case 15:
-  $query=oci_parse($conn,"update mysession set c1=c1+1 where id='$ip'");
-  oci_execute($query);
-  oci_free_statement($query);
-  $query=oci_parse($conn,"select c1 from mysession where id='$ip'");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  $vf=$row[0]%76;
-  oci_free_statement($query);
-  $name=sprintf("tmp/img/%03d.ff",$vf);
-  shell_exec("tmp/convert3 $name 2 $bin");
-  break;
-
-case 16:
-  $name="tmp/img/L001.ff";
-  shell_exec("tmp/convert3 $name 2 $bin");
-  break;
-
-case 17:
-  $name="tmp/img/L002.ff";
-  shell_exec("tmp/convert3 $name 2 $bin");
-  break;
-
-case 18:
-  $name="tmp/img/L003.ff";
-  shell_exec("tmp/convert3 $name 2 $bin");
-  break;
-
-case 19:
-  $name="tmp/img/L004.ff";
-  shell_exec("tmp/convert3 $name 2 $bin");
-  break;
-
-case 20:
-  $name="tmp/img/L005.ff";
-  shell_exec("tmp/convert3 $name 2 $bin");
-  break;
-
-case 21:
-  $name="tmp/img/L006.ff";
-  shell_exec("tmp/convert3 $name 2 $bin");
-  break;
-
-}
-}
-
 
 $len=filesize($bin);
 header("Content-Type: application/octet-stream");

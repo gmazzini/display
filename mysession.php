@@ -4,7 +4,7 @@ include "data.php";
 $conn=oci_connect($p1,$p2,$p3);
 
 echo "<pre>";
-$query=oci_parse($conn,"select id,ser,iter,c1,c2 from mysession order by ser");
+$query=oci_parse($conn,"select id,ser,iter,c1,c2 from mysession order by id");
 oci_execute($query);
 for(;;){
   $row=oci_fetch_row($query);

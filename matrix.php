@@ -135,7 +135,7 @@ $row=oci_fetch_row($query);
 @$myexist=$row[0];
 oci_free_statement($query);
 if(!$myexist){
-  $query=oci_parse($conn,"insert into mysession values ('$ip','$ser',0,0,0)");
+  $query=oci_parse($conn,"insert into mysession (id,ser,iter,c1,c2) values ('$ip','$ser',0,0,0)");
   oci_execute($query);
   oci_free_statement($query);
 }

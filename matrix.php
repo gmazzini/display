@@ -1,13 +1,13 @@
 <?php
 
 include "data.php";
-$des="tmp/files/$ip.des";
-$ff="tmp/files/$ip.ff";
-$bin="tmp/files/$ip.bin";
 
 $ip=$_GET["ip"];
 @$ser=$_GET["ser"];
 if($ser=="")$ser="0000";
+$des="tmp/files/$ip.des";
+$ff="tmp/files/$ip.ff";
+$bin="tmp/files/$ip.bin";
 $conn=oci_connect($p1,$p2,$p3);
 
 $aux=explode(".",$ip);

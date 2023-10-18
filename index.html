@@ -51,13 +51,11 @@ const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 var istat = urlParams.get('istat');
 var ser = urlParams.get('ser');
+if(ser===null)ser="0000";
+if(istat===null)istat="00000";  
 const rr = new Uint32Array(2);
 self.crypto.getRandomValues(rr);
-ip="WEB."+rr[0].toString(16)+"."+rr[1].toString(16);
-if(ser===null){
-  if(istat===null)ser="0000";
-  else ser=istat;
-}
+ip="WEB."+rr[0].toString(16)+"."+rr[1].toString(16)+"."+istat;
 
 myload();
 </script>

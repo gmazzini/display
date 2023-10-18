@@ -1,10 +1,13 @@
 <?php
 
 include "data.php";
-$ip=$_GET["ip"];
 $des="tmp/files/$ip.des";
 $ff="tmp/files/$ip.ff";
 $bin="tmp/files/$ip.bin";
+
+$ip=$_GET["ip"];
+@$ser=$_GET["ser"];
+if($ser=="")$ser="0000";
 $conn=oci_connect($p1,$p2,$p3);
 
 $aux=explode(".",$ip);
@@ -16,14 +19,8 @@ if($aux[0]=="10"){
   $istat=$row[0];
   oci_free_statement($query);
 }
-else $istat="";
-
-$ser=$_GET["ser"];
-if(substr($ip,0,3)=="WEB"){
-  if(strlen($ser)==4)$ser="S".$ser;
-  else $istat=$ser;
-}
-else $ser="S".$ser;
+else if($aux[0]=="WEB")$istat=$aux[3];
+else $istat="37006";
 
 $query=oci_parse($conn,"select sovra from idistat where istat='$istat'");
 oci_execute($query);
@@ -154,32 +151,29 @@ $row=oci_fetch_row($query);
 $iter=$row[0];
 oci_free_statement($query);
 
-if(substr($ser,0,1)=="S"){
-  $oser=substr($ser,1,4);
-  $query=oci_parse($conn,"select seq from sel where ser='$oser'");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  @$seq=$row[0];
-  if($seq=="")$seq="0000";
-  oci_free_statement($query);
-  $query=oci_parse($conn,"select count(*) from seq where seq='$seq'");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  @$nseq=$row[0];
-  if($nseq=="")$nseq=1;
-  oci_free_statement($query);
-  $mid=$iter % $nseq;
-  $query=oci_parse($conn,"select screen,time from seq where seq='$seq' and id=$mid");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  @$screen=$row[0];
-  if($screen=="")$screen="0000";
-  @$time=$row[1];
-  if($time=="")$time=1;
-  oci_free_statement($query);
-}
+$query=oci_parse($conn,"select seq from sel where ser='$ser'");
+oci_execute($query);
+$row=oci_fetch_row($query);
+@$seq=$row[0];
+if($seq=="")$seq="0000";
+oci_free_statement($query);
+$query=oci_parse($conn,"select count(*) from seq where seq='$seq'");
+oci_execute($query);
+$row=oci_fetch_row($query);
+@$nseq=$row[0];
+if($nseq=="")$nseq=1;
+oci_free_statement($query);
+$mid=$iter % $nseq;
+$query=oci_parse($conn,"select screen,time from seq where seq='$seq' and id=$mid");
+oci_execute($query);
+$row=oci_fetch_row($query);
+@$screen=$row[0];
+if($screen=="")$screen="0000";
+@$time=$row[1];
+if($time=="")$time=1;
+oci_free_statement($query);
 
-if($ser=="S0002"){
+if($ser=="0002"){
   
 switch($screen){ 
   case "0001": show1("uiftth","uiftth","FTTH bianche",$istat,$sovra,$des,$ff,$bin,$time,$conn); break;
@@ -231,7 +225,7 @@ switch($screen){
   default: 
   $fp=fopen($des,"w");
   fprintf($fp,"000000\n");
-  fprintf($fp,"-2 00 FF0000 02 oser %s\n",$oser);
+  fprintf($fp,"-2 00 FF0000 02 ser %s\n",$ser);
   fprintf($fp,"-2 10 00FF00 02 seq %s\n",$seq);
   fprintf($fp,"-2 20 0000FF 02 nseq %d\n",$nseq);
   fprintf($fp,"-2 30 FFFF00 02 mid %d\n",$mid);
@@ -247,19 +241,7 @@ switch($screen){
 $sel=$iter%22;
 
 
-if($ser=="S0029"){
-  $query=oci_parse($conn,"update mysession set c1=c1+1 where id='$ip'");
-  oci_execute($query);
-  oci_free_statement($query);
-  $query=oci_parse($conn,"select c1 from mysession where id='$ip'");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  $vf=$row[0]%28;
-  oci_free_statement($query);
-  $name=sprintf("tmp/aldini/%03d.ff",$vf+1);
-  shell_exec("tmp/convert3 $name 10 $bin");
-}
-else switch($sel){
+switch($sel){
 
 case 0:
   $aux=mysplit($ente,12);

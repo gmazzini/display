@@ -3,7 +3,7 @@
 include "data.php";
 $conn=oci_connect($p1,$p2,$p3);
 
-echo "<pre>";
+echo "<pre><table>";
 $query=oci_parse($conn,"select id,ser,iter,c1,c2 from mysession order by ser");
 oci_execute($query);
 for(;;){
@@ -26,10 +26,11 @@ for(;;){
   $row1=oci_fetch_row($query1);
   @$sovra=$row1[0];
   oci_free_statement($query1);
-  
-  echo "$row[0],$row[1],$row[2],$row[3],$row[4],$istat,$sovra\n";
+
+  echo "<tr><td>$row[0]</td><td>$row[1]</td><td>$row[2]</td><td>$row[3]</td><td>$row[4]</td><td>$istat</td><td>$sovra</td></tr>";
 }
 oci_free_statement($query);
+echo "</table>";
 
 oci_close($conn);
 

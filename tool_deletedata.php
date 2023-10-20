@@ -28,5 +28,4 @@ mydelete($conn,"userwifi");
 
 oci_close($conn);
 
-
 ?>

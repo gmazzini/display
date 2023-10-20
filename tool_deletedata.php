@@ -7,6 +7,7 @@ $conn=oci_connect($p1,$p2,$p3);
 function mydelete($conn,$table){
   $query=oci_parse($conn,"delete from $table");
   oci_execute($query);
+  oci_free_statement($query);
 }
 
 mydelete($conn,"idistat");

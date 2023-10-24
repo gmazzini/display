@@ -34,14 +34,22 @@ for($m1=2;$m1<=1000;$m1++){
         }
         if($p<=$m)continue;
         if($m % 4 ==0 && $a % 4 != 1)continue;
-        
+        echo "insert rnd2 m=$m\n";
         $query=oci_parse($conn,"insert into rnd2 (m,id,a,c) values ($m,$cc,$a,$c)");
         oci_execute($query);
         oci_free_statement($query);
         $cc++;
       }
     }
-    if($cc>0)break;
+    if($cc>0){
+      for(;$m1<=$m;$m1++){
+        echo "insert rnd1 o=$m1\n";
+        $query=oci_parse($conn,"insert into rnd1 (p,m,num) values ($m1,$m,$cc)");
+        oci_execute($query);
+        oci_free_statement($query);
+      }
+      break;
+    }
   }
 }
 oci_close($conn);

@@ -47,6 +47,7 @@ for($m1=2;$m1<=1000;$m1++){
         oci_execute($query);
         oci_free_statement($query);
       }
+      m1--;
       break;
     }
   }

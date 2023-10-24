@@ -2,7 +2,7 @@
 
 // https://dspace.library.uvic.ca/bitstream/handle/1828/3142/Random_Number_Generators.pdf?sequence=3
 
-$start=319;
+$start=2;
 $end=1000;
 
 include "data.php";

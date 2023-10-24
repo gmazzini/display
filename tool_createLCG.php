@@ -2,11 +2,10 @@
 
 // https://dspace.library.uvic.ca/bitstream/handle/1828/3142/Random_Number_Generators.pdf?sequence=3
 
+$end=5000;
+
 include "data.php";
 $conn=oci_connect($p1,$p2,$p3);
-
-// $qq="create table rnd1 (p integer,m integer,num integer,primary key (p))";
-// $qq="create table rnd2 (m integer,id integer,a integer,c integer,primary key (m,id))";
 
 $query=oci_parse($conn,"delete from rnd1");
 oci_execute($query);
@@ -15,12 +14,12 @@ $query=oci_parse($conn,"delete from rnd2");
 oci_execute($query);
 oci_free_statement($query);
 
-$m1=1000;
-$m2=2*$m1;
+$m1=$end;
+$m2=10*$m1;
 for($i=2;$i<=$m2;$i++)$f[$i]=1;
 for($i=2;$i<=$m2;$i++)if($f[$i])for($j=$i+$i;$j<=$m2;$j+=$i)$f[$j]=0;
 
-for($m1=2;$m1<=1000;$m1++){
+for($m1=2;$m1<=$end;$m1++){
   for($m=$m1;$m<$m2;$m++){
     unset($q);
     for($i=2;$i<=$m;$i++)$q[$i]=($f[$i])?(($m%$i==0)?1:0):0;

@@ -109,7 +109,7 @@ function show3($base,$tot,$ip,$bin,$time,$conn){
   $num=$row[1];
   oci_free_statement($query);
   $id=floor($c1 / $m) % $num;
-  query=oci_parse($conn,"select a,c from rnd2 where m=$m and id=$id");
+  $query=oci_parse($conn,"select a,c from rnd2 where m=$m and id=$id");
   oci_execute($query);
   $row=oci_fetch_row($query);
   $a=$row[0];

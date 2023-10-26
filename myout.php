@@ -2,8 +2,13 @@
 
 include "data.php";
 $istat=$argv[1];
-$sovra="";
+$query=oci_parse($conn,"select sovra from idistat where istat='$istat'");
+oci_execute($query);
+$row=oci_fetch_row($query);
+@$sovra=$row[0];
+oci_free_statement($query);
 $comune="  \"comune\":{\n";
+$unione="  \"unione\":{\n";
 $regione="  \"regione\":{\n";
 
 function show1($table,$par,$title,$istat,$sovra,$conn){
@@ -14,6 +19,12 @@ function show1($table,$par,$title,$istat,$sovra,$conn){
   @$aux=(int)$row[0];
   oci_free_statement($query);
   $comune.="    \"$table\":$aux,\n";
+  $query=oci_parse($conn,"select $par from $table where istat='$sovra'");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  @$aux=(int)$row[0];
+  oci_free_statement($query);
+  $unione.="    \"table\":$aux,\n";
   $query=oci_parse($conn,"select $par from $table where istat='00008'");
   oci_execute($query);
   $row=oci_fetch_row($query);
@@ -40,9 +51,11 @@ show1("accessilepidaid","accessi","Accessi ID",$istat,$sovra,$conn);
 show1("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$conn);
 
 $comune.="    \"istat\":\"$istat\"\n  }\n";
+$unione.="    \"istat\":\"$sovra\"\n  }\n";
 $regione.="    \"istat\":\"00008\"\n  }\n";
 echo "{\n";
 echo $comune;
+echo $unione;
 echo $regione;
 echo "}\n";
 

@@ -20,6 +20,13 @@ $row=oci_fetch_row($query);
 oci_free_statement($query);
 $comune.="    \"ente\":\"$ente\",\n";
 
+$query=oci_parse($conn,"select ente from istatente where istat='$sovra'");
+oci_execute($query);
+$row=oci_fetch_row($query);
+@$ente=$row[0];
+oci_free_statement($query);
+$unione.="    \"ente\":\"$ente\",\n";
+
 
 function show1($table,$par,$title,$istat,$sovra,$conn){
   global $comune,$unione,$regione;

@@ -32,8 +32,10 @@ show1("attivazionilepidaid","attivazioni","Attivazioni ID",$istat,$sovra,$conn);
 show1("accessilepidaid","accessi","Accessi ID",$istat,$sovra,$conn);
 show1("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$conn);
 
-$comune.="    \"istat\":\"$istat\"\n";
+$comune.="    \"istat\":\"$istat\"\n  }\n";
+echo "{\n";
 echo $comune;
+echo "}\n";
 
 oci_close($conn);
 

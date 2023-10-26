@@ -6,6 +6,7 @@ $sovra="";
 $comune="  \"comune\":{\n";
 
 function show1($table,$par,$title,$istat,$sovra,$conn){
+  global $comune;
   $query=oci_parse($conn,"select $par from $table where istat='$istat'");
   oci_execute($query);
   $row=oci_fetch_row($query);

@@ -193,8 +193,8 @@ switch($screen){
 
   case "9001": show2(1,76,$ip,$bin,$time,$conn); break;
   case "9002": show2(1001,28,$ip,$bin,$time,$conn); break;
-  case "9003": show2(2001,258,$ip,$bin,$time,$conn); break;
-  case "9103": show3(2001,258,$ip,$bin,$time,$conn); break;
+  case "9003": show2(2001,580,$ip,$bin,$time,$conn); break;
+  case "9103": show3(2001,580,$ip,$bin,$time,$conn); break;
 
   case "7001":
   $aux=mysplit($ente,12);

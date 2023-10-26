@@ -2,6 +2,8 @@
 
 include "data.php";
 $istat=$argv[1];
+$conn=oci_connect($p1,$p2,$p3);
+
 $query=oci_parse($conn,"select sovra from idistat where istat='$istat'");
 oci_execute($query);
 $row=oci_fetch_row($query);
@@ -32,8 +34,6 @@ function show1($table,$par,$title,$istat,$sovra,$conn){
   oci_free_statement($query);
   $regione.="    \"table\":$aux,\n";
 }
-
-$conn=oci_connect($p1,$p2,$p3);
 
 show1("uiftth","uiftth","FTTH bianche",$istat,$sovra,$conn);
 show1("areeaai","areeaai","AAI Aree",$istat,$sovra,$conn);

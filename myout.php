@@ -50,13 +50,17 @@ show1("attivazionilepidaid","attivazioni","Attivazioni ID",$istat,$sovra,$conn);
 show1("accessilepidaid","accessi","Accessi ID",$istat,$sovra,$conn);
 show1("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$conn);
 
-$comune.="    \"istat\":\"$istat\"\n  }\n";
-$unione.="    \"istat\":\"$sovra\"\n  }\n";
-$regione.="    \"istat\":\"00008\"\n  }\n";
+$comune.="    \"istat\":\"$istat\"\n  },\n";
+$regione.="    \"istat\":\"00008\"\n  }";
+if($sovra=="")$regione.="\n";
+else {
+  $regione.=",\n";
+  $unione.="    \"istat\":\"$sovra\"\n  }\n";
+}
 echo "{\n";
 echo $comune;
-if($sovra<>"")echo $unione;
 echo $regione;
+if($sovra<>"")echo $unione;
 echo "}\n";
 
 oci_close($conn);

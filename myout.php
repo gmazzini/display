@@ -3,14 +3,14 @@
 include "data.php";
 $istat="37001";
 $sovra="";
-
+echo "{\n";
 function show1($table,$par,$title,$istat,$sovra,$conn){
   $query=oci_parse($conn,"select $par from $table where istat='$istat'");
   oci_execute($query);
   $row=oci_fetch_row($query);
   @$aux=$row[0];
   oci_free_statement($query);
-  echo "\"$par\":\"$aux\"\n";
+  echo "  \"$par\":\"$aux\"\n";
 }
 
 $conn=oci_connect($p1,$p2,$p3);
@@ -30,6 +30,8 @@ show1("attivazionilepidaid","attivazioni","Attivazioni ID",$istat,$sovra,$conn);
 show1("accessilepidaid","accessi","Accessi ID",$istat,$sovra,$conn);
 show1("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$conn);
 
+echo "  \"istat\":\"$istat\"\n";
+echo "}\n";
 oci_close($conn);
 
 ?>

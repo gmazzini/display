@@ -3,15 +3,15 @@
 include "data.php";
 $istat=$argv[1];
 $sovra="";
+$comune="  \"comune\":{\n";
 
-echo "{\n";
 function show1($table,$par,$title,$istat,$sovra,$conn){
   $query=oci_parse($conn,"select $par from $table where istat='$istat'");
   oci_execute($query);
   $row=oci_fetch_row($query);
   @$aux=(int)$row[0];
   oci_free_statement($query);
-  echo "  \"$par\":$aux,\n";
+  $comune.="    \"$par\":$aux,\n";
 }
 
 $conn=oci_connect($p1,$p2,$p3);
@@ -31,8 +31,9 @@ show1("attivazionilepidaid","attivazioni","Attivazioni ID",$istat,$sovra,$conn);
 show1("accessilepidaid","accessi","Accessi ID",$istat,$sovra,$conn);
 show1("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$conn);
 
-echo "  \"istat\":\"$istat\"\n";
-echo "}\n";
+$comune.="    \"istat\":\"$istat\"\n";
+echo $comune;
+
 oci_close($conn);
 
 ?>

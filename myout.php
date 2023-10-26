@@ -55,7 +55,7 @@ $unione.="    \"istat\":\"$sovra\"\n  }\n";
 $regione.="    \"istat\":\"00008\"\n  }\n";
 echo "{\n";
 echo $comune;
-echo $unione;
+if($sovra<>"")echo $unione;
 echo $regione;
 echo "}\n";
 

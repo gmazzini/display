@@ -2,6 +2,7 @@
 
 include "data.php";
 $istat="37001";
+$sovra="";
 
 function show1($table,$par,$title,$istat,$sovra,$conn){
   $query=oci_parse($conn,"select $par from $table where istat='$istat'");
@@ -9,7 +10,7 @@ function show1($table,$par,$title,$istat,$sovra,$conn){
   $row=oci_fetch_row($query);
   @$aux=$row[0];
   oci_free_statement($query);
-  echo "\"par\":\"$aux\"\n";
+  echo "\"$par\":\"$aux\"\n";
 }
 
 $conn=oci_connect($p1,$p2,$p3);

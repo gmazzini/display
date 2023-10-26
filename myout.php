@@ -1,8 +1,9 @@
 <?php
 
 include "data.php";
-$istat="37001";
+$istat=$argv[1];
 $sovra="";
+
 echo "{\n";
 function show1($table,$par,$title,$istat,$sovra,$conn){
   $query=oci_parse($conn,"select $par from $table where istat='$istat'");

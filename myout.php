@@ -19,7 +19,7 @@ function show1($table,$par,$title,$istat,$sovra,$conn){
   $row=oci_fetch_row($query);
   @$aux=(int)$row[0];
   oci_free_statement($query);
-  $regione.="    \"yable\":$aux,\n";
+  $regione.="    \"table\":$aux,\n";
 }
 
 $conn=oci_connect($p1,$p2,$p3);

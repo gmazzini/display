@@ -7,13 +7,19 @@ $comune="  \"comune\":{\n";
 $regione="  \"regione\":{\n";
 
 function show1($table,$par,$title,$istat,$sovra,$conn){
-  global $comune;
+  global $comune,$regione;
   $query=oci_parse($conn,"select $par from $table where istat='$istat'");
   oci_execute($query);
   $row=oci_fetch_row($query);
   @$aux=(int)$row[0];
   oci_free_statement($query);
   $comune.="    \"$par\":$aux,\n";
+  $query=oci_parse($conn,"select $par from $table where istat='00008'");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  @$aux=(int)$row[0];
+  oci_free_statement($query);
+  $regione.="    \"$par\":$aux,\n";
 }
 
 $conn=oci_connect($p1,$p2,$p3);

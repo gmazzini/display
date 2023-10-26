@@ -9,7 +9,7 @@ function show1($table,$par,$title,$istat,$sovra,$conn){
   $query=oci_parse($conn,"select $par from $table where istat='$istat'");
   oci_execute($query);
   $row=oci_fetch_row($query);
-  @$aux=$row[0];
+  $aux=(int)$row[0];
   oci_free_statement($query);
   echo "  \"$par\":$aux,\n";
 }

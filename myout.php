@@ -4,6 +4,7 @@ include "data.php";
 $istat=$argv[1];
 $sovra="";
 $comune="  \"comune\":{\n";
+$regione="  \"regione\":{\n";
 
 function show1($table,$par,$title,$istat,$sovra,$conn){
   global $comune;
@@ -33,8 +34,10 @@ show1("accessilepidaid","accessi","Accessi ID",$istat,$sovra,$conn);
 show1("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$conn);
 
 $comune.="    \"istat\":\"$istat\"\n  }\n";
+$regione.="    \"istat\":\"00008\"\n  }\n";
 echo "{\n";
 echo $comune;
+echo $regione;
 echo "}\n";
 
 oci_close($conn);

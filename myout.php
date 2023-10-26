@@ -26,13 +26,13 @@ function show1($table,$par,$title,$istat,$sovra,$conn){
   $row=oci_fetch_row($query);
   @$aux=(int)$row[0];
   oci_free_statement($query);
-  $unione.="    \"table\":$aux,\n";
+  $unione.="    \"$table\":$aux,\n";
   $query=oci_parse($conn,"select $par from $table where istat='00008'");
   oci_execute($query);
   $row=oci_fetch_row($query);
   @$aux=(int)$row[0];
   oci_free_statement($query);
-  $regione.="    \"table\":$aux,\n";
+  $regione.="    \"$table\":$aux,\n";
 }
 
 show1("uiftth","uiftth","FTTH bianche",$istat,$sovra,$conn);

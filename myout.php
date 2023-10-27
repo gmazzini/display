@@ -1,7 +1,7 @@
 <?php
 
 include "data.php";
-$istat=$argv[1];
+$istat=$_GET["istat"];;
 $conn=oci_connect($p1,$p2,$p3);
 
 $query=oci_parse($conn,"select sovra from idistat where istat='$istat'");

@@ -73,7 +73,7 @@ else {
   $unione.="    \"istat\":\"$sovra\"\n  }\n";
 }
 echo "{\n";
-echo "  \"time\":".time().",\n";
+echo "  \"epoch\":".time().",\n";
 echo $comune;
 echo $regione;
 if($sovra<>"")echo $unione;

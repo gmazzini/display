@@ -16,7 +16,7 @@ void line1(unsigned char *F,int x1,int y1,int x2,int y2,int dr,int dg,int db){
   double a,b,len,dx,x,y;
   if(x1==x2){
     if(y1>y2){a=y1; y1=y2; y2=a;}
-    for(y=y1;y<=y2;y++)point1(F,(int)x1,(int)y);
+    for(y=y1;y<=y2;y++)point1(F,(int)x1,(int)y,dr,dg,db);
     return;
   }
   if(x1>x2){a=x1; x1=x2; x2=a; a=y1; y1=y2; y2=a;}
@@ -26,7 +26,7 @@ void line1(unsigned char *F,int x1,int y1,int x2,int y2,int dr,int dg,int db){
   dx=(x2-x1)/len/2;
   for(x=x1;x<=x2;x+=dx){
     y=a*x+b;
-    point1(F,(int)x,(int)y);
+    point1(F,(int)x,(int)y,dr,dg,db);
   }
   return;
 }

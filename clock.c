@@ -36,6 +36,7 @@ int main(int argc,char **argv){
   FILE *fp;
   time_t now;
   struct tm *now_tm;
+  double hr,mr;
   int hh,mm;
 
   // read ff file
@@ -47,10 +48,11 @@ int main(int argc,char **argv){
   now_tm=localtime(&now);
   hh=now_tm->tm_hour;
   mm=now_tm->tm_min;
-  printf("%d %d\n",hh,mm);
   if(hh>11)hh-=12;
-  line1(F,31,31,(int)floor(31+15*cos(M_PI/6*hh)),(int)floor(31+15+sin(M_PI/6*hh)));
-  line1(F,31,31,(int)floor(31+25*cos(M_PI/6*mm)),(int)floor(31+25+sin(M_PI/6*mm)));
+  hr=(90-30*hh)*2*M_PI/360;
+  mr=(90-6+mm)*2*M_PI/360;
+  line1(F,31,31,(int)floor(31+15*cos(hr)),(int)floor(31+15+sin(hr)));
+  line1(F,31,31,(int)floor(31+25*cos(mr)),(int)floor(31+25+sin(mr)));
   
    // write ff file
   fp=fopen(argv[2],"wb");

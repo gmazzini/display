@@ -47,6 +47,7 @@ int main(int argc,char **argv){
   now_tm=localtime(&now);
   hh=now_tm->tm_hour;
   mm=now_tm->tm_min;
+  printf("%d %d\n",hh,mm);
   if(hh>11)hh-=12;
   line1(F,31,31,(int)floor(31+15*cos(M_PI/6*hh)),(int)floor(31+15+sin(M_PI/6*hh)));
   line1(F,31,31,(int)floor(31+25*cos(M_PI/6*mm)),(int)floor(31+25+sin(M_PI/6*mm)));

@@ -33,16 +33,23 @@ void line1(unsigned char *F,int x1,int y1,int x2,int y2){
 int main(int argc,char **argv){
   unsigned char F[32784];
   FILE *fp;
+  time_t now;
+  struct tm *now_tm;
+  int hh,mm;
 
-   // read ff file
+  // read ff file
   fp=fopen(argv[1],"rb");
   fread(F,32784,1,fp);
   fclose(fp);
 
- line1(F,10,10,40,50);
-  line1(F,30,30,25,0);
-  line1(F,30,30,30,50);
-
+  now=time(NULL);
+  now_tm=localtime(&now);
+  hh=now_tm->tm_hour;
+  mm=now_tm->tm_min;
+  if(hh>11)hh-=12;
+  line1(F,31,31,(int)floor(31+15*cos(M_PI/6*hh)),(int)floor(31+15+sin(M_PI/6*hh)));
+  line1(F,31,31,(int)floor(31+25*cos(M_PI/6*mm)),(int)floor(31+25+sin(M_PI/6*mm)));
+  
    // write ff file
   fp=fopen(argv[2],"wb");
   fwrite(F,32784,1,fp);

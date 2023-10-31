@@ -3,12 +3,19 @@
 #include "math.h"
 #include "time.h"
 
+void function inc(char *a,int v){
+  if(((int)*a)+v>255){*a=255; return;}
+  if(((int)*a)+v<0){*a=0; return;}
+  *a+=v;
+  return;
+}
+
 void point1(unsigned char *F,int x,int y,int dr,int dg,int db){
   unsigned char *a;
   a=F+16+(x+y*64)*8;
-  *a=dr;
-  *(a+2)=dg;
-  *(a+4)=db;
+  inc(a,dr);
+  inc(a+2,dg);
+  inc(a+4,db);
   return;
 }
 
@@ -52,7 +59,7 @@ int main(int argc,char **argv){
   hr=(90-30*hh)*2*M_PI/360;
   mr=(90-6*mm)*2*M_PI/360;
   line1(F,31,31,(int)floor(31+20*cos(hr)),(int)floor(31+20+sin(hr)),255,0,0);
-  line1(F,31,31,(int)floor(31+25*cos(mr)),(int)floor(31+25+sin(mr)),0,255,0);
+  line1(F,31,31,(int)floor(31+30*cos(mr)),(int)floor(31+30+sin(mr)),0,255,0);
   
    // write ff file
   fp=fopen(argv[2],"wb");

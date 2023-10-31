@@ -102,7 +102,7 @@ int main(int argc,char **argv){
   mm=now_tm->tm_min;
   if(hh>11)hh-=12;
 
-  hr=(90.0-30.0*(hh+mm/60))*2.0*M_PI/360.0;
+  hr=(90.0-30.0*(hh+mm/60.0))*2.0*M_PI/360.0;
   mr=(90.0-6.0*mm)*2.0*M_PI/360.0;
 
   ave1(F,ooo,31,31,31+18*cos(hr),63-31-18*sin(hr),1);

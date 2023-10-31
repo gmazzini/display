@@ -1,6 +1,6 @@
 #include "stdio.h"
 #include "stdlib.h"
-#include "string.h"
+#include "math.h"
 
 void point1(unsigned char *F,int x,int y){
   unsigned char *a;

@@ -16,7 +16,7 @@ int main(int argc,char **argv){
 
    // read ff file
   fp=fopen(argv[1],"rb");
-  fwrite(F,32784,1,fp);
+  fread(F,32784,1,fp);
   fclose(fp);
 
   pp1(F,10,10);

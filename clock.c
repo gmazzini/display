@@ -11,7 +11,7 @@ void pp1(unsigned char *F,int x,int y){
 }
 
 int main(int argc,char **argv){
-  unsigned char F[32784],*a;
+  unsigned char F[32784];
   FILE *fp;
 
    // read ff file

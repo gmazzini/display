@@ -57,8 +57,11 @@ int main(int argc,char **argv){
   mm=now_tm->tm_min;
   if(hh>11)hh-=12;
   hr=(90-30*hh)*2*M_PI/360;
-  mm=45;
   mr=(90-6*mm)*2*M_PI/360;
+
+  printf("%d %d %d %d\n",(int)floor(31+20*cos(hr)),(int)floor(31+20+sin(hr)),(int)floor(31+30*cos(mr)),(int)floor(31+30+sin(mr)));
+
+  
   line1(F,31,31,(int)floor(31+20*cos(hr)),(int)floor(31+20+sin(hr)),30,0,0);
   line1(F,31,31,(int)floor(31+30*cos(mr)),(int)floor(31+30+sin(mr)),0,30,0);
   

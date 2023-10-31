@@ -59,11 +59,11 @@ int main(int argc,char **argv){
   hr=(90-30*hh)*2*M_PI/360;
   mr=(90-6*mm)*2*M_PI/360;
 
-  printf("%f %d %d %f %d %d\n",hr,(int)floor(31+20*cos(hr)),(int)floor(31+20*sin(hr)),mr,(int)floor(31+30*cos(mr)),(int)floor(31+30*sin(mr)));
+  printf("%f %d %d %f %d %d\n",hr,31+(int)(20*cos(hr)),63-31-(int)(20*sin(hr)),mr,31+(int)(30*cos(mr)),63-31-(int)(30*sin(mr)));
 
   
-  line1(F,31,31,31+(int)(20*cos(hr)),63-31-(int)(20*sin(hr)),60,0,0);
-  line1(F,31,31,31+(int)(30*cos(mr)),63-31-(int)(30*sin(mr)),0,60,0);
+  line1(F,31,31,31+(int)(20*cos(hr)),63-31-(int)(20*sin(hr)),100,0,0);
+  line1(F,31,31,31+(int)(30*cos(mr)),63-31-(int)(30*sin(mr)),0,100,0);
   
    // write ff file
   fp=fopen(argv[2],"wb");

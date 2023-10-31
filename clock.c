@@ -38,7 +38,7 @@ void line1(unsigned char *F,unsigned char *ooo,double x1,double y1,double x2,dou
   return;
 }
 
-void *read1(unsigned char *F,unsigned char *rr,double x,double y){
+void read1(unsigned char *F,unsigned char *rr,double x,double y){
   unsigned char *a;
   if(x>63)x=63;
   if(x<0)x=0;
@@ -51,7 +51,7 @@ void *read1(unsigned char *F,unsigned char *rr,double x,double y){
   return;
 }
 
-void *ave1(unsigned char *F,unsigned char *ooo,double x1,double y1,double x2,double y2,int v){
+void ave1(unsigned char *F,unsigned char *ooo,double x1,double y1,double x2,double y2,int v){
   double a,b,len,dx,x,y,rrr[3];
   unsigned char rr[3];
   int cc;
@@ -88,7 +88,7 @@ int main(int argc,char **argv){
   FILE *fp;
   time_t now;
   struct tm *now_tm;
-  double hr,mr,dd;
+  double hr,mr;
   int hh,mm;
 
   // read ff file

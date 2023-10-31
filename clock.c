@@ -11,11 +11,11 @@ void point1(unsigned char *F,int x,int y){
 }
 
 void line1(unsigned char *F,int x1,int y1,int x2,int y2){
-  float a,b,len,dx,x,y;
+  double a,b,len,dx,x,y;
   // x1<x2 x1=x2
   a=(y1-y2)/(x1-x2);
   b=y1-a*x1;
-  len=sqrt(pow(x1-x2),2)+pow(y1-y2),2));
+  len=sqrt(pow(x1-x2,2)+pow(y1-y2,2));
   dx=(x2-x1)/len/2;
   for(x=x1;x<=x2;x+=dx){
     y=a*x+b;

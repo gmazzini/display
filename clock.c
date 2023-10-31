@@ -58,8 +58,8 @@ int main(int argc,char **argv){
   if(hh>11)hh-=12;
   hr=(90-30*hh)*2*M_PI/360;
   mr=(90-6*mm)*2*M_PI/360;
-  line1(F,31,31,(int)floor(31+20*cos(hr)),(int)floor(31+20+sin(hr)),255,0,0);
-  line1(F,31,31,(int)floor(31+30*cos(mr)),(int)floor(31+30+sin(mr)),0,255,0);
+  line1(F,31,31,(int)floor(31+20*cos(hr)),(int)floor(31+20+sin(hr)),30,0,0);
+  line1(F,31,31,(int)floor(31+30*cos(mr)),(int)floor(31+30+sin(mr)),0,30,0);
   
    // write ff file
   fp=fopen(argv[2],"wb");

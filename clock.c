@@ -3,7 +3,7 @@
 #include "math.h"
 #include "time.h"
 
-void  inc(char *a,int v){
+void  inc(unsigned char *a,int v){
   if(((int)*a)+v>255){*a=255; return;}
   if(((int)*a)+v<0){*a=0; return;}
   *a+=v;

@@ -8,11 +8,16 @@ void point1(unsigned char *F,int x,int y){
   *a=255;
   *(a+2)=255;
   *(a+4)=255;
+  return;
 }
 
 void line1(unsigned char *F,int x1,int y1,int x2,int y2){
   double a,b,len,dx,x,y;
-  // x1=x2
+  if(x1==x2){
+    if(y1>y2){a=y1; y1=y2; y2=a;}
+    for(y=y1;y<=y2;y++)point1(F,(int)x1,(int)y);
+    return;
+  }
   if(x1>x2){a=x1; x1=x2; x2=a; a=y1; y1=y2; y2=a;}
   a=(y1-y2)/(x1-x2);
   b=y1-a*x1;
@@ -22,6 +27,7 @@ void line1(unsigned char *F,int x1,int y1,int x2,int y2){
     y=a*x+b;
     point1(F,(int)x,(int)y);
   }
+  return;
 }
 
 int main(int argc,char **argv){
@@ -35,6 +41,7 @@ int main(int argc,char **argv){
 
  line1(F,10,10,40,50);
   line1(F,30,30,25,0);
+  line1(F,30,30,30,50);
 
    // write ff file
   fp=fopen(argv[2],"wb");

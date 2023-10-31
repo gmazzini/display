@@ -20,6 +20,9 @@ int main(int argc,char **argv){
   fclose(fp);
 
   pp1(F,10,10);
+  pp1(F,0,0);
+  pp1(F,60,60);
+  pp1(F,0,63);
 
    // write ff file
   fp=fopen(argv[2],"wb");

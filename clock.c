@@ -59,7 +59,7 @@ int main(int argc,char **argv){
   hr=(90-30*hh)*2*M_PI/360;
   mr=(90-6*mm)*2*M_PI/360;
  
-  line1(F,31,31,31+(int)(18*cos(hr)),63-31-(int)(18*sin(hr)),120,0,0);
+  line1(F,31,31,31+(int)(18*cos(hr)),63-31-(int)(18*sin(hr)),180,0,0);
   line1(F,31,31,31+(int)(25*cos(mr)),63-31-(int)(25*sin(mr)),0,120,0);
   
    // write ff file

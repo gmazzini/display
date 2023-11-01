@@ -121,8 +121,8 @@ int main(int argc,char **argv){
   double hr,mr,ih,Ih,im,Im;
   int hh,mm;
 
-  ih=3.0; iH=18.0;
-  im=3.0; iM=28.0;
+  ih=3.0; Ih=18.0;
+  im=3.0; Im=28.0;
   
   fp=fopen(argv[1],"rb");
   fread(F,32784,1,fp);

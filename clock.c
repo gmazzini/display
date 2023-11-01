@@ -131,7 +131,7 @@ int main(int argc,char **argv){
   mm=now_tm->tm_min;
   if(hh>11)hh-=12;
 
-  hh=0; mm=1;
+  hh=5; mm=59;
   hr=(90.0-30.0*(hh+mm/60.0))*2.0*M_PI/360.0;
   mr=(90.0-6.0*mm)*2.0*M_PI/360.0;
 

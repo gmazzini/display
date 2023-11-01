@@ -138,7 +138,7 @@ int main(int argc,char **argv){
   mr=(90.0-6.0*mm)*2.0*M_PI/360.0;
 
   ave1(F,ooo,31.0+ih*cos(hr),63.0-31.0-ih*sin(hr),31.0+Ih*cos(hr),63.0-31.0-Ih*sin(hr),1);
-  line1(F,ooo,31.0+ih*cos(hr),63,0-31.0-ih*sin(hr),31.0+Ih*cos(hr),63.0-31.0-Ih*sin(hr),1);
+  line1(F,ooo,31.0+ih*cos(hr),63.0-31.0-ih*sin(hr),31.0+Ih*cos(hr),63.0-31.0-Ih*sin(hr),1);
   ave1(F,ooo,31.0+im*cos(mr),63.0-31.0-im*sin(mr),31.0+Im*cos(mr),63.0-31.0-Im*sin(mr),2);
   line1(F,ooo,31.0+im*cos(mr),63.0-31.0-im*sin(mr),31.0+Im*cos(mr),63.0-31.0-Im*sin(mr),2);
 

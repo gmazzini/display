@@ -110,7 +110,6 @@ int main(int argc,char **argv){
   double hr,mr;
   int hh,mm;
 
-  // read ff file
   fp=fopen(argv[1],"rb");
   fread(F,32784,1,fp);
   fclose(fp);
@@ -121,6 +120,7 @@ int main(int argc,char **argv){
   mm=now_tm->tm_min;
   if(hh>11)hh-=12;
 
+  hh=0;
   hr=(90.0-30.0*(hh+mm/60.0))*2.0*M_PI/360.0;
   mr=(90.0-6.0*mm)*2.0*M_PI/360.0;
 
@@ -129,7 +129,6 @@ int main(int argc,char **argv){
   ave1(F,ooo,31,31,31+28*cos(mr),63-31-28*sin(mr),2);
   line1(F,ooo,31,31,31+28*cos(mr),63-31-28*sin(mr),2);
 
-  // write ff file
   fp=fopen(argv[2],"wb");
   fwrite(F,32784,1,fp);
   fclose(fp);

@@ -5,34 +5,53 @@
 
 void point1(unsigned char *F,double x,double y,unsigned char *ooo){
   unsigned char *a;
-  if(x>63)x=63;
-  if(x<0)x=0;
-  if(y>63)y=63;
-  if(y<0)y=0;
+  if(x>63.0)x=63.0;
+  if(x<0.0)x=0.0;
+  if(y>63.0)y=63.0;
+  if(y<0.0)y=0.0;
   a=F+16+((int)x+((int)y)*64)*8;
-
-  *a=255-*ooo;;
-  *(a+2)=255-*(ooo+1);
-  *(a+4)=255-*(ooo+2);
-
+  a[0]=255-ooo[0];;
+  a[2]=255-ooo[1];
+  a[4]=255-ooo[2];
   return;
 }
 
 void line1(unsigned char *F,unsigned char *ooo,double x1,double y1,double x2,double y2,int v){
-  double a,b,len,dx,x,y;
-  if(x1>x2){a=x1; x1=x2; x2=a; a=y1; y1=y2; y2=a;}
-  a=(y1-y2)/(x1-x2);
-  b=y1-a*x1;
+  double a,b,len,dd,x,y;
+  int c;
   len=sqrt(pow(x1-x2,2)+pow(y1-y2,2));
-  dx=(x2-x1)/len/2;
-  for(x=x1;x<=x2;x+=dx){
-    y=a*x+b;
-    point1(F,x,y,ooo);
-    if(v==1){
-      point1(F,x+1,y,ooo);
-      point1(F,x-1,y,ooo);
-      point1(F,x,y+1,ooo);
-      point1(F,x,y-1,ooo);
+  if(fabs(x2-x1)<20){
+    if(y1>y2){a=y1; y1=y2; y2=a; a=x1; x1=x2; x2=a;}
+    a=(x1-x2)/(y1-y2);
+    b=x1-a*y1;
+    dd=(y2-y1)/len/2;
+    for(c=0,y=y1;y<=y2;y+=dd,c++){
+      if(c>100)break;
+      x=a*y+b;
+      point1(F,x,y,ooo);
+      if(v==1){
+        point1(F,x+1,y,ooo);
+        point1(F,x-1,y,ooo);
+        point1(F,x,y+1,ooo);
+        point1(F,x,y-1,ooo);
+      }
+    }
+  }
+  else {
+    if(x1>x2){a=x1; x1=x2; x2=a; a=y1; y1=y2; y2=a;}
+    a=(y1-y2)/(x1-x2);
+    b=y1-a*x1;
+    dd=(x2-x1)/len/2;
+    for(c=0,x=x1;x<=x2;x+=dd,c++){
+      if(c>100)break;
+      y=a*x+b;
+      point1(F,x,y,ooo);
+      if(v==1){
+        point1(F,x+1,y,ooo);
+        point1(F,x-1,y,ooo);
+        point1(F,x,y+1,ooo);
+        point1(F,x,y-1,ooo);
+      }
     }
   }
   return;

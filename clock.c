@@ -118,9 +118,12 @@ int main(int argc,char **argv){
   FILE *fp;
   time_t now;
   struct tm *now_tm;
-  double hr,mr;
+  double hr,mr,ih,Ih,im,Im;
   int hh,mm;
 
+  ih=3.0; iH=18.0;
+  im=3.0; iM=28.0;
+  
   fp=fopen(argv[1],"rb");
   fread(F,32784,1,fp);
   fclose(fp);
@@ -131,14 +134,13 @@ int main(int argc,char **argv){
   mm=now_tm->tm_min;
   if(hh>11)hh-=12;
 
-  hh=5; mm=59;
   hr=(90.0-30.0*(hh+mm/60.0))*2.0*M_PI/360.0;
   mr=(90.0-6.0*mm)*2.0*M_PI/360.0;
 
-  ave1(F,ooo,31,31,31+18*cos(hr),63-31-18*sin(hr),1);
-  line1(F,ooo,31,31,31+18*cos(hr),63-31-18*sin(hr),1);
-  ave1(F,ooo,31,31,31+28*cos(mr),63-31-28*sin(mr),2);
-  line1(F,ooo,31,31,31+28*cos(mr),63-31-28*sin(mr),2);
+  ave1(F,ooo,31.0+ih*cos(hr),63.0-31.0-ih*sin(hr),31.0+Ih*cos(hr),63.0-31.0-Ih*sin(hr),1);
+  line1(F,ooo,31.0+ih*cos(hr),63,0-31.0-ih*sin(hr),31.0+Ih*cos(hr),63.0-31.0-Ih*sin(hr),1);
+  ave1(F,ooo,31.0+im*cos(mr),63.0-31.0-im*sin(mr),31.0+Im*cos(mr),63.0-31.0-Im*sin(mr),2);
+  line1(F,ooo,31.0+im*cos(mr),63.0-31.0-im*sin(mr),31.0+Im*cos(mr),63.0-31.0-Im*sin(mr),2);
 
   fp=fopen(argv[2],"wb");
   fwrite(F,32784,1,fp);

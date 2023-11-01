@@ -122,7 +122,7 @@ int main(int argc,char **argv){
   int hh,mm;
 
   ih=3.0; Ih=18.0;
-  im=3.0; Im=28.0;
+  im=3.0; Im=29.0;
   
   fp=fopen(argv[1],"rb");
   fread(F,32784,1,fp);

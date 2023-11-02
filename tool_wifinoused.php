@@ -3,7 +3,7 @@
 include "data.php";
 $conn=oci_connect($p1,$p2,$p3);
 $te=(int)(time()/86400);
-$ts=$te-7;
+$ts=$te-30;
 
 $query=oci_parse($conn,"select idstart,idend,eistat from idistat");
 oci_execute($query);

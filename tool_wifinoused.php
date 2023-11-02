@@ -5,7 +5,7 @@ $conn=oci_connect($p1,$p2,$p3);
 $te=(int)(time()/86400);
 $ts=$te-30;
 
-$query=oci_parse($conn,"select idstart,idend,eistat from idistat");
+$query=oci_parse($conn,"select idstart,idend,eistat from idistat order by idstart");
 oci_execute($query);
 for($cc=0;;$cc++){
   $row=oci_fetch_row($query);

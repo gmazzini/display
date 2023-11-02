@@ -27,7 +27,10 @@ for($c=0;$c<$cc;$c++){
   $row=oci_fetch_row($query);
   $enn=(int)$row[0];
   oci_free_statement($query);
-  if($enn==0)echo "$idstart[$c],$idend[$c],$eistat[$c],$ente[$c]\n";
+  if($enn==0){
+    $ip=sprintf("10.%d.%d.0",(int)$idstart[$c]/256,$idstart[$c]%256);
+    echo "$ip,$idstart[$c],$idend[$c],$eistat[$c],$ente[$c]\n";
+  }
 }
 
 oci_close($conn);

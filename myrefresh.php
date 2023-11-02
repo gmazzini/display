@@ -13,13 +13,14 @@ function mycheck($conn,$table,$istat){
 }
 
 echo "idistat\n";
-$aux=explode("\n",file_get_contents("https://docs.google.com/spreadsheets/d/1DTngQUDqQgcYhA4S1iOW3jGuj-nOO-98opbXeUC-ffA/gviz/tq?tq=select%20D%2CA%2CB&tqx=out:csv&gid=644800101"));
+$aux=explode("\n",file_get_contents("https://docs.google.com/spreadsheets/d/1DTngQUDqQgcYhA4S1iOW3jGuj-nOO-98opbXeUC-ffA/gviz/tq?tq=select%20D%2CA%2CB%2CC&tqx=out:csv&gid=644800101"));
 for($i=1;;$i++){
   if(!isset($aux[$i]))break;
   $aa=explode(",",$aux[$i]);
   if(strlen($aa[0])<5)continue;
   $kk=substr($aa[0],1,5);
   if(!is_numeric($kk))continue;
+  $eistat=substr($aa[3],1,5);
   $vv=substr($aa[1],1,strlen($aa[1])-2);
   $qq=substr($aa[2],1,strlen($aa[2])-2);
   $query=oci_parse($conn,"select count(*) from idistat where idstart=$vv and idend=$qq");
@@ -27,8 +28,8 @@ for($i=1;;$i++){
   $row=oci_fetch_row($query);
   @$zz=$row[0];
   oci_free_statement($query);
-  if(!$zz)$query=oci_parse($conn,"insert into idistat (idstart,idend,istat,sovra) values ($vv,$qq,'$kk','')");
-  else $query=oci_parse($conn,"update idistat set istat='$kk' where idstart=$vv and idend=$qq");
+  if(!$zz)$query=oci_parse($conn,"insert into idistat (idstart,idend,istat,sovra,eistat) values ($vv,$qq,'$kk','','$eistat')");
+  else $query=oci_parse($conn,"update idistat set istat='$kk',eistat='$eistat' where idstart=$vv and idend=$qq");
   oci_execute($query);
   oci_free_statement($query);
 }

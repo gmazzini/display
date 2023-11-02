@@ -13,7 +13,7 @@ for($cc=0;;$cc++){
   $idstart[$cc]=(int)$row[0];
   $idend[$cc]=(int)$row[1];
   $eistat[$cc]=$row[2];
-  $query1=oci_parse($conn,"select ente from istatente where istat='$eistat'");
+  $query1=oci_parse($conn,"select ente from istatente where istat='$eistat[$cc]'");
   oci_execute($query1);
   $row1=oci_fetch_row($query1);
   $ente[$cc]=$row1[0];

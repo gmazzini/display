@@ -7,7 +7,7 @@ $ts=$te-$argv[1];
 $istat=$argv[2];
 
 for($tt=$ts;$tt<$te;$tt++){
-  $query=oci_parse($conn,"select count(distinct id) from dhcpwifi where istat='$kk' and tt=");
+  $query=oci_parse($conn,"select count(distinct id) from dhcpwifi where istat='$istat' and tt=");
   oci_execute($query);
   $row=oci_fetch_row($query);
   $nn=(int)$row[0];

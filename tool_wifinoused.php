@@ -16,7 +16,7 @@ for($cc=0;;$cc++){
   $query1=oci_parse($conn,"select ente from istatente where istat='$eistat'");
   oci_execute($query1);
   $row1=oci_fetch_row($query1);
-  $ente[$c]=$row1[0];
+  $ente[$cc]=$row1[0];
   oci_free_statement($query1);
 }
 oci_free_statement($query);

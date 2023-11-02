@@ -27,11 +27,10 @@ for($i=1;;$i++){
   $row=oci_fetch_row($query);
   @$zz=$row[0];
   oci_free_statement($query);
-  if(!$zz){
-    $query=oci_parse($conn,"insert into idistat (idstart,idend,istat,sovra) values ($vv,$qq,'$kk','')");
-    oci_execute($query);
-    oci_free_statement($query);
-  }
+  if(!$zz)$query=oci_parse($conn,"insert into idistat (idstart,idend,istat,sovra) values ($vv,$qq,'$kk','')");
+  else $query=oci_parse($conn,"update idistat set istat='$kk' where idstart=$vv and idend=$qq");
+  oci_execute($query);
+  oci_free_statement($query);
 }
 
 echo "istatente\n";

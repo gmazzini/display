@@ -34,18 +34,21 @@ function show1($table,$par,$title,$istat,$sovra,$conn){
   oci_execute($query);
   $row=oci_fetch_row($query);
   @$aux=(int)$row[0];
+  if($aux<3)$aux="*";
   oci_free_statement($query);
   $comune.="    \"$table\":$aux,\n";
   $query=oci_parse($conn,"select $par from $table where istat='$sovra'");
   oci_execute($query);
   $row=oci_fetch_row($query);
   @$aux=(int)$row[0];
+  if($aux<3)$aux="*";
   oci_free_statement($query);
   $unione.="    \"$table\":$aux,\n";
   $query=oci_parse($conn,"select $par from $table where istat='00008'");
   oci_execute($query);
   $row=oci_fetch_row($query);
   @$aux=(int)$row[0];
+  if($aux<3)$aux="*";
   oci_free_statement($query);
   $regione.="    \"$table\":$aux,\n";
 }

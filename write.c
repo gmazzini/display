@@ -5,12 +5,14 @@
 #include "font_1.h"
 #include "font_2.h"
 #include "font_3.h"
+#include "font_4.h"
 
 unsigned int *mf[]={
   &font_0[0][0],
   &font_1[0][0],
   &font_2[0][0],
-  &font_3[0][0]
+  &font_3[0][0],
+  &font_4[0][0]
 };
 
 char hextable[] = {

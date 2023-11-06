@@ -77,7 +77,7 @@ oci_free_statement($query);
 
 echo "userwifi\n";
 $tt=(int)(time()/86400)-365;
-$query="delete from dhcpwifi where tt<$tt";
+query=oci_parse($conn,"delete from dhcpwifi where tt<$tt");
 oci_execute($query);
 oci_free_statement($query);
 $table="userwifi";

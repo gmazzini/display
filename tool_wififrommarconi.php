@@ -25,7 +25,7 @@ for($j=0;$j<$i;$j++){
 oci_free_statement($query);
 
 // arsort($aux);
-foreach($aux as $kk => $vv){
+foreach($istat as $kk => $vv){
   echo "$kk,$vv\n";
 }
 

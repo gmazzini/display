@@ -20,6 +20,7 @@ for($j=0;$j<$i;$i++){
     $row=oci_fetch_row($query);
     if($row==null)break;
     @$istat[$row[0]]++;
+  }
 }
 oci_free_statement($query);
 

@@ -14,7 +14,7 @@ for($i=0;;$i++){
 }
 oci_free_statement($query);
 
-for($j=0;$j<$i;$i++){
+for($j=0;$j<$i;$j++){
   $query=oci_parse($conn,"select istat from dhcpwifi where id='$id[$j]' and tt>=$tts and tt<=$tte");
   for(;;){
     $row=oci_fetch_row($query);

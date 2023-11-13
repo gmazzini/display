@@ -16,18 +16,16 @@ oci_free_statement($query);
 echo "user: $i\n";
 
 for($j=0;$j<$i;$j++){
-  $aux=$id[$j];
-  $query=oci_parse($conn,"select istat from dhcpwifi where id='$aux' and tt>=$tts and tt<=$tte");
+  $query=oci_parse($conn,"select istat from dhcpwifi where id='$id[$j]' and tt>=$tts and tt<=$tte");
+  oci_execute($query);
   for(;;){
     $row=oci_fetch_row($query);
     if($row==null)break;
     @$istat[$row[0]]++;
   }
-  echo "$aux -- select istat from dhcpwifi where id='$aux' and tt>=$tts and tt<=$tte";
-  
-  exit(1);
+  oci_free_statement($query);
 }
-oci_free_statement($query);
+
 
 // arsort($aux);
 foreach($istat as $kk => $vv){

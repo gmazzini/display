@@ -26,10 +26,9 @@ for($j=0;$j<$i;$j++){
   oci_free_statement($query);
 }
 
-
-// arsort($aux);
+arsort($istat);
 foreach($istat as $kk => $vv){
-  echo "$kk,$vv\n";
+  if($vv>=3)echo "$kk,$vv\n";
 }
 
 oci_close($conn);

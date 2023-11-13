@@ -1,4 +1,4 @@
-it<?php
+<?php
 
 include "data.php";
 $conn=oci_connect($p1,$p2,$p3);

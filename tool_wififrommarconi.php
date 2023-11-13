@@ -1,4 +1,4 @@
-<?php
+it<?php
 
 include "data.php";
 $conn=oci_connect($p1,$p2,$p3);
@@ -23,6 +23,9 @@ for($j=0;$j<$i;$j++){
     if($row==null)break;
     @$istat[$row[0]]++;
   }
+  echo "$aux -- select istat from dhcpwifi where id='$aux' and tt>=$tts and tt<=$tte";
+  
+  exit(1);
 }
 oci_free_statement($query);
 

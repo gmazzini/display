@@ -18,7 +18,7 @@ echo "user: $i\n";
 for($tt=$tts+1;$tt<=$tte;$tt++){
   $ret[$tt]=0;
   for($j=0;$j<$i;$j++){
-    $query=oci_parse($conn,"select count(distint id) from dhcpwifi where id='$id[$j]' and tt=$tt and (ip>=14016 and ip<=14047)");
+    $query=oci_parse($conn,"select count(distinct id) from dhcpwifi where id='$id[$j]' and tt=$tt and (ip>=14016 and ip<=14047)");
     oci_execute($query);
     $row=oci_fetch_row($query);
     if($row[0]>0)$ret[$tt]++;

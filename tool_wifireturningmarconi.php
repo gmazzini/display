@@ -27,7 +27,7 @@ for($tt=$tts+1;$tt<=$tte;$tt++){
 }
 
 for($tt=$tts+1;$tt<=$tte;$tt++){
-  if($ret[$tt]>=3)printf("%d,%d,%4.1f%%\n",$tt,$ret[$tt],(100.0*$ret[$tt])/$i);
+  if($ret[$tt]>=3)printf("%d,%d,%04.1f%%\n",$tt,$ret[$tt],(100.0*$ret[$tt])/$i);
 }
 
 oci_close($conn);

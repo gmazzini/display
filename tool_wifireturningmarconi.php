@@ -26,7 +26,9 @@ for($tt=$tts+1;$tt<=$tte;$tt++){
   }
 }
 
-for($tt=$tts+1;$tt<=$tte;$tt++)echo "$tt,$ret[$tt]\n";
+for($tt=$tts+1;$tt<=$tte;$tt++){
+  if($ret[$tt]>=3)printf("%d,$%d,%4.1f\n",$tt,$ret[$tt],((double)$ret[$tt])/$i);
+}
 
 oci_close($conn);
 

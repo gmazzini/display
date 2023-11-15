@@ -29,7 +29,7 @@ foreach($id as $k => $v){
   oci_free_statement($query);
 }
 $tot2=count($id);
-echo "--- $cc users below $thr on $tts: $tot1\n";
+echo "--- $cc users below $thr on $tts: $tot2\n";
 
 exit(1);
 

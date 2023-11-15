@@ -40,7 +40,7 @@ foreach($id as $k => $v){
 
 arsort($istat);
 foreach($istat as $kk => $vv){
-  if($vv>=3)echo "$vv,$istat\n";
+  if($vv>=3)echo "$vv,$kk\n";
 }
 
 oci_close($conn);

@@ -17,19 +17,15 @@ oci_free_statement($query);
 $tot1=count($id);
 echo "users on $tts: $tot1\n";
 
-$cc=0;
 foreach($id as $k => $v){
   $query=oci_parse($conn,"select count(distinct tt) from dhcpwifi where id='$k' and (tt>=$tts and tt<=$tte) and (ip>=14016 and ip<=14047)");
   oci_execute($query);
   $row=oci_fetch_row($query);
-  if($row[0]>=$thr){
-    $cc++;
-    unset($id[$k]);
-  }
+  if($row[0]>=$thr)unset($id[$k]);
   oci_free_statement($query);
 }
 $tot2=count($id);
-echo "--- $cc users below $thr on $tts: $tot2\n";
+echo "users below $thr on $tts: $tot2\n";
 
 exit(1);
 

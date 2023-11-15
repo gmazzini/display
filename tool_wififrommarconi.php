@@ -21,7 +21,6 @@ foreach($id as $k => $v){
   $query=oci_parse($conn,"select count(distinct id) from dhcpwifi where id='$k' and (tt>=$tts and tt<=$tte) and (ip>=14016 and ip<=14047)");
   oci_execute($query);
   $row=oci_fetch_row($query);
-  echo "$k $row[0] .. ";
   if(((double)$row[0])/($tte-$tts)>$thr)unset($id[$k]);
   oci_free_statement($query);
 }

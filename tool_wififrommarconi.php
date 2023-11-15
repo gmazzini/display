@@ -17,7 +17,7 @@ oci_free_statement($query);
 $tot1=count($id);
 echo "users on $tts: $tot1\n";
 
-foreach($id as $k){
+foreach($id as $k => $v){
   $query=oci_parse($conn,"select count(distinct id) from dhcpwifi where id='$k' and (tt>=$tts and tt<=$tte) and (ip>=14016 and ip<=14047)");
   oci_execute($query);
   $row=oci_fetch_row($query);

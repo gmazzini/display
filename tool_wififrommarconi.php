@@ -4,7 +4,7 @@ include "data.php";
 $conn=oci_connect($p1,$p2,$p3);
 $tts=$argv[1];
 $tte=$argv[2];
-$thr=$argv[3]/100.0;
+$thr=$argv[3];
 
 $query=oci_parse($conn,"select distinct id from dhcpwifi where (ip>=14016 and ip<=14047) and tt=$tts");
 oci_execute($query);
@@ -22,7 +22,7 @@ foreach($id as $k => $v){
   $query=oci_parse($conn,"select count(distinct id) from dhcpwifi where id='$k' and (tt>=$tts and tt<=$tte) and (ip>=14016 and ip<=14047)");
   oci_execute($query);
   $row=oci_fetch_row($query);
-  if($row[0]>($tte-$tts)*$thr){
+  if($row[0]>=$thr){
     $cc++;
     unset($id[$k]);
   }

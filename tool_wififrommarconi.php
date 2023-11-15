@@ -27,11 +27,8 @@ foreach($id as $k => $v){
 $tot2=count($id);
 echo "users below $thr on $tts: $tot2\n";
 
-exit(1);
-
-
-for($j=0;$j<$i;$j++){
-  $query=oci_parse($conn,"select istat from dhcpwifi where id='$id[$j]' and (tt>=$tts and tt<=$tte) and not (ip>=14016 and ip<=14047)");
+foreach($id as $k => $v){
+  $query=oci_parse($conn,"select istat from dhcpwifi where id='$k' and (tt>=$tts and tt<=$tte) and not (ip>=14016 and ip<=14047)");
   oci_execute($query);
   for(;;){
     $row=oci_fetch_row($query);
@@ -43,7 +40,7 @@ for($j=0;$j<$i;$j++){
 
 arsort($istat);
 foreach($istat as $kk => $vv){
-  if($vv>=3)echo "$kk,$vv\n";
+  if($vv>=3)echo "$vv,$istat\n";
 }
 
 oci_close($conn);

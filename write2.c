@@ -66,7 +66,7 @@ int main(int argc,char **argv){
     if(feof(fp))break;
     t=*buf;
 
-    if(t=="c"){
+    if(t=='c'){
       *(buf+4)='\0';
       x=atoi(buf);
       *(buf+7)='\0';
@@ -127,7 +127,7 @@ int main(int argc,char **argv){
       }
     }
 
-    else if(c=="b"){
+    else if(c=='b'){
     }
   }
   fclose(fp);

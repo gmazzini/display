@@ -32,7 +32,7 @@ char hextable[] = {
 int mask[]={0,0b10000000,0b11000000,0b11100000,0b11110000,0b11111000,0b11111100,0b11111110,0b11111111};
 
 int main(int argc,char **argv){
-  unsigned char F[32784],*a;
+  unsigned char F[32784],*a,t;
   char buf[100];
   FILE *fp;
   unsigned int y,n,m,r,g,b,l,k,v,w,rb,gb,bb,ml,ax,cc,*c,yy,ty,bit,mymask;
@@ -64,30 +64,32 @@ int main(int argc,char **argv){
   for(;;){
     fgets(buf,100,fp);
     if(feof(fp))break;
+    t=*buf;
     
-    *(buf+2)='\0';
+    *(buf+4)='\0';
     x=atoi(buf);
-    *(buf+5)='\0';
-    y=atoi(buf+3);
-    r=(hextable[*(buf+6)]<<4|hextable[*(buf+7)])&mymask;
-    g=(hextable[*(buf+8)]<<4|hextable[*(buf+9)])&mymask;
-    b=(hextable[*(buf+10)]<<4|hextable[*(buf+11)])&mymask;
-
-    rb=(hextable[*(buf+13)]<<4|hextable[*(buf+14)])&mymask;
-    gb=(hextable[*(buf+15)]<<4|hextable[*(buf+16)])&mymask;
-    bb=(hextable[*(buf+17)]<<4|hextable[*(buf+18)])&mymask;
-    *(buf+22)='\0';
-    ty=atoi(buf+20);
-    yy=*(mf[ty]+1);
-    l=strlen(buf+23)-1;
     
-    printf("%02d %02d %02x%02x%02x %02x%02x%02x %02d %02d\n",x,y,r,g,b,rb,gb,bb,ty,l);
+    *(buf+7)='\0';
+    y=atoi(buf+5);
+    r=(hextable[*(buf+8)]<<4|hextable[*(buf+9)])&mymask;
+    g=(hextable[*(buf+10)]<<4|hextable[*(buf+11)])&mymask;
+    b=(hextable[*(buf+12)]<<4|hextable[*(buf+13)])&mymask;
+
+    rb=(hextable[*(buf+15)]<<4|hextable[*(buf+16)])&mymask;
+    gb=(hextable[*(buf+17)]<<4|hextable[*(buf+18)])&mymask;
+    bb=(hextable[*(buf+19)]<<4|hextable[*(buf+20)])&mymask;
+    *(buf+24)='\0';
+    ty=atoi(buf+22);
+    yy=*(mf[ty]+1);
+    l=strlen(buf+25)-1;
+    
+    printf("%c %02d %02d %02x%02x%02x %02x%02x%02x %02d %02d\n",t,x,y,r,g,b,rb,gb,bb,ty,l);
 
     // justification
     if(x<0){
       ml=0;
       for(k=0;k<l;k++){
-        n=(*(buf+23+k)-31)&0x7f;
+        n=(*(buf+25+k)-31)&0x7f;
         ml+=*(mf[ty]+n*(yy+1))+1;
       }
       if(x==-1)x=64-ml;
@@ -97,7 +99,7 @@ int main(int argc,char **argv){
     // processing
     ax=0;
     for(k=0;k<l;k++){
-      n=(*(buf+23+k)-31)&0x7f;
+      n=(*(buf+25+k)-31)&0x7f;
       c=mf[ty]+n*(yy+1);
       ml=*c;
       

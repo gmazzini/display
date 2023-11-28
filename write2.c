@@ -87,7 +87,7 @@ int main(int argc,char **argv){
     if(x<0){
       ml=0;
       for(k=0;k<l;k++){
-        n=(*(buf+16+k)-31)&0x7f;
+        n=(*(buf+23+k)-31)&0x7f;
         ml+=*(mf[ty]+n*(yy+1))+1;
       }
       if(x==-1)x=64-ml;
@@ -97,7 +97,7 @@ int main(int argc,char **argv){
     // processing
     ax=0;
     for(k=0;k<l;k++){
-      n=(*(buf+16+k)-31)&0x7f;
+      n=(*(buf+23+k)-31)&0x7f;
       c=mf[ty]+n*(yy+1);
       ml=*c;
       

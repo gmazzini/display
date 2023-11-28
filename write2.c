@@ -45,22 +45,7 @@ int main(int argc,char **argv){
   bit=atoi(argv[2]);
   mymask=mask[bit];
 
-  fp=fopen(argv[1],"rb");
-  fgets(buf,100,fp);
-  
-  // background
-  rb=(hextable[*(buf+0)]<<4|hextable[*(buf+1)])&mymask;
-  gb=(hextable[*(buf+2)]<<4|hextable[*(buf+3)])&mymask;
-  bb=(hextable[*(buf+4)]<<4|hextable[*(buf+5)])&mymask;
-  a=F+16;
-  for(n=0;n<4096;n++){
-    *(a++)=rb; *(a++)=0x00;
-    *(a++)=gb; *(a++)=0x00;
-    *(a++)=bb; *(a++)=0x00;
-    *(a++)=0xff; *(a++)=0xff;
-  }
-  printf("%02x%02x%02x\n",rb,gb,bb);
-  
+  fp=fopen(argv[1],"rb"); 
   for(;;){
     fgets(buf,100,fp);
     if(feof(fp))break;
@@ -113,11 +98,13 @@ int main(int argc,char **argv){
                 *(a+0)=r; *(a+1)=0;
                 *(a+2)=g; *(a+3)=0;
                 *(a+4)=b; *(a+5)=0;
+                *(a+6)=255; *(a+7)=255;
               }
               else {
                 *(a+0)=rb; *(a+1)=0;
                 *(a+2)=gb; *(a+3)=0;
                 *(a+4)=bb; *(a+5)=0;
+                *(a+6)=255; *(a+7)=255;
               }
             }
             cc<<=1;
@@ -146,6 +133,7 @@ int main(int argc,char **argv){
           *(a+0)=r; *(a+1)=0;
           *(a+2)=g; *(a+3)=0;
           *(a+4)=b; *(a+5)=0;
+          *(a+6)=255; *(a+7)=255;
         }
       }
       

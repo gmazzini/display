@@ -127,7 +127,7 @@ int main(int argc,char **argv){
       }
     }
 
-    else if(c=='b'){
+    else if(t=='b'){
       *(buf+4)='\0';
       x=atoi(buf+2);
       *(buf+7)='\0';

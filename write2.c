@@ -36,7 +36,7 @@ int main(int argc,char **argv){
   char buf[100];
   FILE *fp;
   unsigned int y,n,m,r,g,b,l,k,v,w,rb,gb,bb,ml,ax,cc,*c,yy,ty,bit,mymask;
-  int x;
+  int x,xx;
   
   // name.des bit out.ff
   memcpy(F,"farbfeld",8);
@@ -68,7 +68,7 @@ int main(int argc,char **argv){
 
     if(t=='c'){
       *(buf+4)='\0';
-      x=atoi(buf);
+      x=atoi(buf+2);
       *(buf+7)='\0';
       y=atoi(buf+5);
       r=(hextable[*(buf+8)]<<4|hextable[*(buf+9)])&mymask;
@@ -128,6 +128,20 @@ int main(int argc,char **argv){
     }
 
     else if(c=='b'){
+      *(buf+4)='\0';
+      x=atoi(buf+2);
+      *(buf+7)='\0';
+      xx=atoi(buf+5);
+      *(buf+10)='\0';
+      y=atoi(buf+8);
+      *(buf+13)='\0';
+      yy=atoi(buf+11);
+      r=(hextable[*(buf+14]<<4|hextable[*(buf+15)])&mymask;
+      g=(hextable[*(buf+16)]<<4|hextable[*(buf+17)])&mymask;
+      b=(hextable[*(buf+18)]<<4|hextable[*(buf+19)])&mymask;
+      printf("%c %02d %02d %02d %02d %02x%02x%02x\n",t,x,xx,y,yy,r,g,b);
+
+      
     }
   }
   fclose(fp);

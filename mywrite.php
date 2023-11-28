@@ -12,5 +12,4 @@ header("Content-Type: application/octet-stream");
 header("Content-Length: $len");
 readfile("/home/www/www.chaos.cc/qq.bin");
 
-
 ?>

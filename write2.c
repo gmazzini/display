@@ -140,7 +140,14 @@ int main(int argc,char **argv){
       g=(hextable[*(buf+16)]<<4|hextable[*(buf+17)])&mymask;
       b=(hextable[*(buf+18)]<<4|hextable[*(buf+19)])&mymask;
       printf("%c %02d %02d %02d %02d %02x%02x%02x\n",t,x,xx,y,yy,r,g,b);
-
+      for(w=y;w<=yy;w++){
+        for(v=x;v<=xx;v++){
+          a=F+16+(w*64+v)*8;
+          *(a+0)=r; *(a+1)=0;
+          *(a+2)=g; *(a+3)=0;
+          *(a+4)=b; *(a+5)=0;
+        }
+      }
       
     }
   }

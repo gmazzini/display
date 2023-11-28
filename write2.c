@@ -136,7 +136,7 @@ int main(int argc,char **argv){
       y=atoi(buf+8);
       *(buf+13)='\0';
       yy=atoi(buf+11);
-      r=(hextable[*(buf+14]<<4|hextable[*(buf+15)])&mymask;
+      r=(hextable[*(buf+14])<<4|hextable[*(buf+15)])&mymask;
       g=(hextable[*(buf+16)]<<4|hextable[*(buf+17)])&mymask;
       b=(hextable[*(buf+18)]<<4|hextable[*(buf+19)])&mymask;
       printf("%c %02d %02d %02d %02d %02x%02x%02x\n",t,x,xx,y,yy,r,g,b);

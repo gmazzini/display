@@ -65,66 +65,69 @@ int main(int argc,char **argv){
     fgets(buf,100,fp);
     if(feof(fp))break;
     t=*buf;
-    
-    *(buf+4)='\0';
-    x=atoi(buf);
-    
-    *(buf+7)='\0';
-    y=atoi(buf+5);
-    r=(hextable[*(buf+8)]<<4|hextable[*(buf+9)])&mymask;
-    g=(hextable[*(buf+10)]<<4|hextable[*(buf+11)])&mymask;
-    b=(hextable[*(buf+12)]<<4|hextable[*(buf+13)])&mymask;
 
-    rb=(hextable[*(buf+15)]<<4|hextable[*(buf+16)])&mymask;
-    gb=(hextable[*(buf+17)]<<4|hextable[*(buf+18)])&mymask;
-    bb=(hextable[*(buf+19)]<<4|hextable[*(buf+20)])&mymask;
-    *(buf+24)='\0';
-    ty=atoi(buf+22);
-    yy=*(mf[ty]+1);
-    l=strlen(buf+25)-1;
+    if(t=="c"){
+      *(buf+4)='\0';
+      x=atoi(buf);
+      *(buf+7)='\0';
+      y=atoi(buf+5);
+      r=(hextable[*(buf+8)]<<4|hextable[*(buf+9)])&mymask;
+      g=(hextable[*(buf+10)]<<4|hextable[*(buf+11)])&mymask;
+      b=(hextable[*(buf+12)]<<4|hextable[*(buf+13)])&mymask;
+      rb=(hextable[*(buf+15)]<<4|hextable[*(buf+16)])&mymask;
+      gb=(hextable[*(buf+17)]<<4|hextable[*(buf+18)])&mymask;
+      bb=(hextable[*(buf+19)]<<4|hextable[*(buf+20)])&mymask;
+      *(buf+24)='\0';
+      ty=atoi(buf+22);
+      yy=*(mf[ty]+1);
+      l=strlen(buf+25)-1;
     
-    printf("%c %02d %02d %02x%02x%02x %02x%02x%02x %02d %02d\n",t,x,y,r,g,b,rb,gb,bb,ty,l);
+      printf("%c %02d %02d %02x%02x%02x %02x%02x%02x %02d %02d\n",t,x,y,r,g,b,rb,gb,bb,ty,l);
+      
+      // justification
+      if(x<0){
+        ml=0;
+        for(k=0;k<l;k++){
+          n=(*(buf+25+k)-31)&0x7f;
+          ml+=*(mf[ty]+n*(yy+1))+1;
+        }
+        if(x==-1)x=64-ml;
+        else if(x==-2)x=(64-ml)/2;
+      }
 
-    // justification
-    if(x<0){
-      ml=0;
+      // processing
+      ax=0;
       for(k=0;k<l;k++){
         n=(*(buf+25+k)-31)&0x7f;
-        ml+=*(mf[ty]+n*(yy+1))+1;
+        c=mf[ty]+n*(yy+1);
+        ml=*c;
+      
+        for(n=1;n<=yy;n++){
+          cc=*(c+n);
+          for(m=0;m<ml;m++){
+            v=x+m+ax;
+            w=y+n-1;
+            if(v<64&&w<64){
+              a=F+16+(w*64+v)*8;
+              if(cc&0x8000){
+                *(a+0)=r; *(a+1)=0;
+                *(a+2)=g; *(a+3)=0;
+                *(a+4)=b; *(a+5)=0;
+              }
+              else {
+                *(a+0)=rb; *(a+1)=0;
+                *(a+2)=gb; *(a+3)=0;
+                *(a+4)=bb; *(a+5)=0;
+              }
+            }
+            cc<<=1;
+          }
+        }
+        ax+=(ml+1);
       }
-      if(x==-1)x=64-ml;
-      else if(x==-2)x=(64-ml)/2;
     }
 
-    // processing
-    ax=0;
-    for(k=0;k<l;k++){
-      n=(*(buf+25+k)-31)&0x7f;
-      c=mf[ty]+n*(yy+1);
-      ml=*c;
-      
-      for(n=1;n<=yy;n++){
-        cc=*(c+n);
-        for(m=0;m<ml;m++){
-          v=x+m+ax;
-          w=y+n-1;
-          if(v<64&&w<64){
-            a=F+16+(w*64+v)*8;
-            if(cc&0x8000){
-              *(a+0)=r; *(a+1)=0;
-              *(a+2)=g; *(a+3)=0;
-              *(a+4)=b; *(a+5)=0;
-            }
-            else {
-              *(a+0)=rb; *(a+1)=0;
-              *(a+2)=gb; *(a+3)=0;
-              *(a+4)=bb; *(a+5)=0;
-            }
-          }
-          cc<<=1;
-        }
-      }
-      ax+=(ml+1);
+    else if(c=="b"){
     }
   }
   fclose(fp);

@@ -66,7 +66,7 @@ int main(int argc,char **argv){
         ty=atoi(buf+22);
         yy=*(mf[ty]+1);
         l=strlen(buf+25)-1;
-        printf("%c %02d %02d %02x%02x%02x %02x%02x%02x %02d %02d\n",t,x,y,r,g,b,rb,gb,bb,ty,l);
+        printf("1 %02d %02d %02x%02x%02x %02x%02x%02x %02d %02d\n",x,y,r,g,b,rb,gb,bb,ty,l);
       
         // justification
         if(x<0){
@@ -126,7 +126,7 @@ int main(int argc,char **argv){
         r=(hextable[*(buf+14)]<<4|hextable[*(buf+15)])&mymask;
         g=(hextable[*(buf+16)]<<4|hextable[*(buf+17)])&mymask;
         b=(hextable[*(buf+18)]<<4|hextable[*(buf+19)])&mymask;
-        printf("%c %02d %02d %02d %02d %02x%02x%02x\n",t,x,xx,y,yy,r,g,b);
+        printf("2 %02d %02d %02d %02d %02x%02x%02x\n",x,xx,y,yy,r,g,b);
         for(w=y;w<=yy;w++){
           for(v=x;v<=xx;v++){
             a=F+16+(w*64+v)*8;

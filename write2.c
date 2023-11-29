@@ -1,6 +1,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
+#include "math.h"
 #include "font_0.h"
 #include "font_1.h"
 #include "font_2.h"

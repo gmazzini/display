@@ -31,7 +31,7 @@ function mymy(){
   var vv = mydes.value;
   vv = vv.replace(/\r?\n/g,"\\");
 
-  xmlHttp.open("GET","https://www.chaos.cc/mywrite.php?des="+vv,false);
+  xmlHttp.open("GET","https://www.chaos.cc/dev/mywrite.php?des="+vv,false);
   xmlHttp.send(null);
   var x = xmlHttp.response;
   var c = document.getElementById("myCanvas");

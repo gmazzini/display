@@ -37,6 +37,7 @@ int main(int argc,char **argv){
   FILE *fp;
   unsigned int y,n,m,r,g,b,l,k,v,w,rb,gb,bb,ml,ax,cc,*c,yy,ty,bit,mymask;
   int x,xx;
+  double len,x1,x2,y1,y2,aa,b,dd,yd,xd;
   
   // name.des bit out.ff
   memcpy(F,"farbfeld",8);
@@ -130,6 +131,56 @@ int main(int argc,char **argv){
         for(w=y;w<=yy;w++){
           for(v=x;v<=xx;v++){
             a=F+16+(w*64+v)*8;
+            a[0]=r; a[1]=0;
+            a[2]=g; a[3]=0;
+            a[4]=b; a[5]=0;
+            a[6]=255; a[7]=255;
+          }
+        }
+        break;
+
+      case '3':
+        buf[4]='\0';
+        x=atoi(buf+2);
+        buf[7]='\0';
+        y=atoi(buf+5);
+        buf[10]='\0';
+        xx=atoi(buf+8);
+        buf[13]='\0';
+        yy=atoi(buf+11);
+        r=(hextable[*(buf+14)]<<4|hextable[*(buf+15)])&mymask;
+        g=(hextable[*(buf+16)]<<4|hextable[*(buf+17)])&mymask;
+        b=(hextable[*(buf+18)]<<4|hextable[*(buf+19)])&mymask;
+        printf("3 %02d %02d %02d %02d %02x%02x%02x\n",x,y,xx,yy,r,g,b);
+        
+        x1=(double)x; x2=(double)xx; y1=(double)y; y2=(double)yy;
+        len=sqrt(pow(x1-x2,2)+pow(y1-y2,2));
+        if(fabs(x2-x1)<20){
+          if(y1>y2){aa=y1; y1=y2; y2=aa; aa=x1; x1=x2; x2=aa;}
+          aa=(x1-x2)/(y1-y2);
+          b=x1-aa*y1;
+          dd=(y2-y1)/len/2;
+          for(v=0,yd=y1;yd<=y2;yd+=dd,v++){
+            if(v>100)break;
+            xd=aa*yd+b;
+            if(xd>63.0)xd=63.0; if(xd<0.0)xd=0.0; if(yd>63.0)yd=63.0; if(yd<0.0)yd=0.0;
+            a=F+16+((int)xd+((int)yd)*64)*8;
+            a[0]=r; a[1]=0;
+            a[2]=g; a[3]=0;
+            a[4]=b; a[5]=0;
+            a[6]=255; a[7]=255;
+          }
+        }
+        else {
+          if(x1>x2){aa=x1; x1=x2; x2=aa; aa=y1; y1=y2; y2=aa;}
+          aa=(y1-y2)/(x1-x2);
+          b=y1-aa*x1;
+          dd=(x2-x1)/len/2;
+          for(v=0,xd=x1;xd<=x2;xd+=dd,v++){
+            if(v>100)break;
+            yd=aa*xd+b;
+            if(xd>63.0)xd=63.0; if(xd<0.0)xd=0.0; if(yd>63.0)yd=63.0; if(yd<0.0)yd=0.0;
+            a=F+16+((int)xd+((int)yd)*64)*8;
             a[0]=r; a[1]=0;
             a[2]=g; a[3]=0;
             a[4]=b; a[5]=0;

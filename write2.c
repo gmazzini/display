@@ -118,12 +118,12 @@ int main(int argc,char **argv){
         buf[4]='\0';
         x=atoi(buf+2);
         buf[7]='\0';
-        xx=atoi(buf+5);
-        if(xx<x){v=xx; xx=x; x=v;};
+        y=atoi(buf+5);
         buf[10]='\0';
-        y=atoi(buf+8);
+        xx=atoi(buf+8);
         buf[13]='\0';
         yy=atoi(buf+11);
+        if(xx<x){v=xx; xx=x; x=v;};
         if(yy<y){v=yy; yy=y; y=v;};
         r=(hextable[*(buf+14)]<<4|hextable[*(buf+15)])&mymask;
         g=(hextable[*(buf+16)]<<4|hextable[*(buf+17)])&mymask;

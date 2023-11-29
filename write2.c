@@ -175,7 +175,7 @@ int main(int argc,char **argv){
         else {
           if(x1>x2){ad=x1; x1=x2; x2=ad; ad=y1; y1=y2; y2=ad;}
           ad=(y1-y2)/(x1-x2);
-          b=y1-ad*x1;
+          bd=y1-ad*x1;
           dd=(x2-x1)/len/2;
           for(v=0,xd=x1;xd<=x2;xd+=dd,v++){
             if(v>100)break;

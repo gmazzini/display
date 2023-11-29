@@ -53,9 +53,9 @@ int main(int argc,char **argv){
     switch(t){
       
       case 1:
-        *(buf+4)='\0';
+        buf[4]='\0';
         x=atoi(buf+2);
-        *(buf+7)='\0';
+        buf[7]='\0';
         y=atoi(buf+5);
         r=(hextable[*(buf+8)]<<4|hextable[*(buf+9)])&mymask;
         g=(hextable[*(buf+10)]<<4|hextable[*(buf+11)])&mymask;
@@ -63,7 +63,7 @@ int main(int argc,char **argv){
         rb=(hextable[*(buf+15)]<<4|hextable[*(buf+16)])&mymask;
         gb=(hextable[*(buf+17)]<<4|hextable[*(buf+18)])&mymask;
         bb=(hextable[*(buf+19)]<<4|hextable[*(buf+20)])&mymask;
-        *(buf+24)='\0';
+        buf[24]='\0';
         ty=atoi(buf+22);
         yy=*(mf[ty]+1);
         l=strlen(buf+25)-1;
@@ -94,16 +94,16 @@ int main(int argc,char **argv){
               if(v<64&&w<64){
                 a=F+16+(w*64+v)*8;
                 if(cc&0x8000){
-                  *(a+0)=r; *(a+1)=0;
-                  *(a+2)=g; *(a+3)=0;
-                  *(a+4)=b; *(a+5)=0;
-                  *(a+6)=255; *(a+7)=255;
+                  a[0]=r; a[1]=0;
+                  a[2]=g; a[3]=0;
+                  a[4]=b; a[5]=0;
+                  a[6]=255; a[7]=255;
                 }
                 else {
-                  *(a+0)=rb; *(a+1)=0;
-                  *(a+2)=gb; *(a+3)=0;
-                  *(a+4)=bb; *(a+5)=0;
-                  *(a+6)=255; *(a+7)=255;
+                  a[0]=rb; a[1]=0;
+                  a[2]=gb; a[3]=0;
+                  a[4]=bb; a[5]=0;
+                  a[6]=255; a[7]=255;
                 }
               }
               cc<<=1;
@@ -114,14 +114,16 @@ int main(int argc,char **argv){
         break;
 
       case 2:
-        *(buf+4)='\0';
+        buf[4]='\0';
         x=atoi(buf+2);
-        *(buf+7)='\0';
+        buf[7]='\0';
         xx=atoi(buf+5);
-        *(buf+10)='\0';
+        if(xx<x){v=xx; xx=x; x=v;};
+        buf[10]='\0';
         y=atoi(buf+8);
-        *(buf+13)='\0';
+        buf[13]='\0';
         yy=atoi(buf+11);
+        if(yy<y){v=yy; yy=y; y=v;};
         r=(hextable[*(buf+14)]<<4|hextable[*(buf+15)])&mymask;
         g=(hextable[*(buf+16)]<<4|hextable[*(buf+17)])&mymask;
         b=(hextable[*(buf+18)]<<4|hextable[*(buf+19)])&mymask;
@@ -129,10 +131,10 @@ int main(int argc,char **argv){
         for(w=y;w<=yy;w++){
           for(v=x;v<=xx;v++){
             a=F+16+(w*64+v)*8;
-            *(a+0)=r; *(a+1)=0;
-            *(a+2)=g; *(a+3)=0;
-            *(a+4)=b; *(a+5)=0;
-            *(a+6)=255; *(a+7)=255;
+            a[0]=r; a[1]=0;
+            a[2]=g; a[3]=0;
+            a[4]=b; a[5]=0;
+            a[6]=255; a[7]=255;
           }
         }
         break;

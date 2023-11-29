@@ -38,7 +38,7 @@ int main(int argc,char **argv){
   FILE *fp;
   unsigned int y,n,m,r,g,b,l,k,v,w,rb,gb,bb,ml,ax,cc,*c,yy,ty,bit,mymask;
   int x,xx;
-  double len,x1,x2,y1,y2,aa,b,dd,yd,xd;
+  double len,x1,x2,y1,y2,ad,bd,dd,yd,xd;
   
   // name.des bit out.ff
   memcpy(F,"farbfeld",8);
@@ -157,13 +157,13 @@ int main(int argc,char **argv){
         x1=(double)x; x2=(double)xx; y1=(double)y; y2=(double)yy;
         len=sqrt(pow(x1-x2,2)+pow(y1-y2,2));
         if(fabs(x2-x1)<20){
-          if(y1>y2){aa=y1; y1=y2; y2=aa; aa=x1; x1=x2; x2=aa;}
-          aa=(x1-x2)/(y1-y2);
-          b=x1-aa*y1;
+          if(y1>y2){ad=y1; y1=y2; y2=ad; ad=x1; x1=x2; x2=ad;}
+          ad=(x1-x2)/(y1-y2);
+          bd=x1-ad*y1;
           dd=(y2-y1)/len/2;
           for(v=0,yd=y1;yd<=y2;yd+=dd,v++){
             if(v>100)break;
-            xd=aa*yd+b;
+            xd=aa*yd+bd;
             if(xd>63.0)xd=63.0; if(xd<0.0)xd=0.0; if(yd>63.0)yd=63.0; if(yd<0.0)yd=0.0;
             a=F+16+((int)xd+((int)yd)*64)*8;
             a[0]=r; a[1]=0;
@@ -173,13 +173,13 @@ int main(int argc,char **argv){
           }
         }
         else {
-          if(x1>x2){aa=x1; x1=x2; x2=aa; aa=y1; y1=y2; y2=aa;}
+          if(x1>x2){ad=x1; x1=x2; x2=ad; ad=y1; y1=y2; y2=ad;}
           aa=(y1-y2)/(x1-x2);
-          b=y1-aa*x1;
+          b=y1-ad*x1;
           dd=(x2-x1)/len/2;
           for(v=0,xd=x1;xd<=x2;xd+=dd,v++){
             if(v>100)break;
-            yd=aa*xd+b;
+            yd=ad*xd+bd;
             if(xd>63.0)xd=63.0; if(xd<0.0)xd=0.0; if(yd>63.0)yd=63.0; if(yd<0.0)yd=0.0;
             a=F+16+((int)xd+((int)yd)*64)*8;
             a[0]=r; a[1]=0;

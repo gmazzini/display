@@ -113,9 +113,6 @@ int main(int argc,char **argv){
         break;
 
       case '2':
-
-
-        printf("ciaoooo\n");
         buf[4]='\0';
         x=atoi(buf+2);
         buf[7]='\0';

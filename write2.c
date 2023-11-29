@@ -52,7 +52,7 @@ int main(int argc,char **argv){
     t=*buf;
     switch(t){
       
-      case 1:
+      case '1':
         buf[4]='\0';
         x=atoi(buf+2);
         buf[7]='\0';
@@ -113,7 +113,7 @@ int main(int argc,char **argv){
         }
         break;
 
-      case 2:
+      case '2':
         buf[4]='\0';
         x=atoi(buf+2);
         buf[7]='\0';

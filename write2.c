@@ -34,17 +34,11 @@ int mask[]={0,0b10000000,0b11000000,0b11100000,0b11110000,0b11111000,0b11111100,
 
 int main(int argc,char **argv){
   unsigned char F[32784],*a;
-  char buf[100];
+  char buf[100],buf1[100];
   FILE *fp,*fp2;
   unsigned int y,n,m,r,g,b,l,k,v,w,rb,gb,bb,ml,ax,cc,*c,yy,ty,bit,mymask;
   int x,xx;
   double len,x1,x2,y1,y2,ad,bd,dd,yd,xd;
-
-//   fp=fopen("/home/www/www.chaos.cc/dev/image/L005.ff","rb");
-fp=fopen("image/L004.ff","rb");
-  
-        fread(F,32784,1,fp);
-        fclose(fp);
   
   // name.des bit out.ff
   memcpy(F,"farbfeld",8);
@@ -213,8 +207,11 @@ fp=fopen("image/L004.ff","rb");
         break;
       
       case '5':
-//        buf[6]='.'; buf[7]='.'; buf[8]='f'; buf[9]='f'; buf[10]='\0';
-        fp2=fopen("/home/www/www.chaos.cc/dev/image/L001.ff","rb");
+        buf[6]='\0';
+        strcpy(buf1,"image/");
+        strcat(buf1,buf+2);
+        strcat(buf1,".ff");
+        fp2=fopen(buf1,"rb");
         fread(F,32784,1,fp2);
         fclose(fp2);
         break;

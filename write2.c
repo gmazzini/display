@@ -190,6 +190,22 @@ int main(int argc,char **argv){
         }
         break;
       
+      case '4':
+        buf[4]='\0';
+        x=atoi(buf+2);
+        buf[7]='\0';
+        y=atoi(buf+5);
+        r=(hextable[*(buf+8)]<<4|hextable[*(buf+9)])&mymask;
+        g=(hextable[*(buf+10)]<<4|hextable[*(buf+11)])&mymask;
+        b=(hextable[*(buf+12)]<<4|hextable[*(buf+12)])&mymask;
+        printf("4 %02d %02d %02x%02x%02x\n",x,y,r,g,b);
+        a=F+16+(y*64+x)*8;
+        a[0]=r; a[1]=0;
+        a[2]=g; a[3]=0;
+        a[4]=b; a[5]=0;
+        a[6]=255; a[7]=255;
+        break;
+      
     }
   }
   fclose(fp);

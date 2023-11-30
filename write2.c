@@ -30,17 +30,15 @@ char hextable[] = {
   -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 };
 
-int mask[]={0,0b10000000,0b11000000,0b11100000,0b11110000,0b11111000,0b11111100,0b11111110,0b11111111};
-
 int main(int argc,char **argv){
   unsigned char F[32784],*a;
   char buf[100],buf1[100];
   FILE *fp,*fp2;
-  unsigned int y,n,m,r,g,b,t,l,k,v,w,rb,gb,bb,tb,ml,ax,cc,*c,yy,ty,bit,mymask;
+  unsigned int y,n,m,r,g,b,t,l,k,v,w,rb,gb,bb,tb,ml,ax,cc,*c,yy,ty,bit;
   int x,xx;
   double len,x1,x2,y1,y2,ad,bd,dd,yd,xd;
   
-  // name.des bit out.ff
+  // name.des out.ff
   memcpy(F,"farbfeld",8);
   memcpy(F+8,"\x00\x00\x00\x40",4);
   memcpy(F+12,"\x00\x00\x00\x40",4);
@@ -52,9 +50,6 @@ int main(int argc,char **argv){
     a[6]=255; a[7]=255;
   }
   
-  bit=atoi(argv[2]);
-  mymask=mask[bit];
-
   fp=fopen(argv[1],"rb"); 
   for(;;){
     fgets(buf,100,fp);
@@ -100,15 +95,15 @@ int main(int argc,char **argv){
               if(v<64&&w<64){
                 a=F+16+(w*64+v)*8;
                 if(cc&0x8000){
-                  a[0]=(unsigned char)((unsigned int)r*t/255+(unsigned int)a[0]*(255-t)/255)&mymask; a[1]=0;
-                  a[2]=(unsigned char)((unsigned int)g*t/255+(unsigned int)a[2]*(255-t)/255)&mymask; a[3]=0;
-                  a[4]=(unsigned char)((unsigned int)b*t/255+(unsigned int)a[4]*(255-t)/255)&mymask; a[5]=0;
+                  a[0]=(unsigned char)((unsigned int)r*t/255+(unsigned int)a[0]*(255-t)/255); a[1]=0;
+                  a[2]=(unsigned char)((unsigned int)g*t/255+(unsigned int)a[2]*(255-t)/255); a[3]=0;
+                  a[4]=(unsigned char)((unsigned int)b*t/255+(unsigned int)a[4]*(255-t)/255); a[5]=0;
                   a[6]=255; a[7]=255;
                 }
                 else {
-                  a[0]=(unsigned char)((unsigned int)rb*tb/255+(unsigned int)a[0]*(255-tb)/255)&mymask; a[1]=0;
-                  a[2]=(unsigned char)((unsigned int)gb*tb/255+(unsigned int)a[2]*(255-tb)/255)&mymask; a[3]=0;
-                  a[4]=(unsigned char)((unsigned int)bb*tb/255+(unsigned int)a[4]*(255-tb)/255)&mymask; a[5]=0;
+                  a[0]=(unsigned char)((unsigned int)rb*tb/255+(unsigned int)a[0]*(255-tb)/255); a[1]=0;
+                  a[2]=(unsigned char)((unsigned int)gb*tb/255+(unsigned int)a[2]*(255-tb)/255); a[3]=0;
+                  a[4]=(unsigned char)((unsigned int)bb*tb/255+(unsigned int)a[4]*(255-tb)/255); a[5]=0;
                   a[6]=255; a[7]=255;
                 }
               }
@@ -137,9 +132,9 @@ int main(int argc,char **argv){
         for(w=y;w<=yy;w++){
           for(v=x;v<=xx;v++){
             a=F+16+(w*64+v)*8;
-            a[0]=(unsigned char)((unsigned int)r*t/255+(unsigned int)a[0]*(255-t)/255)&mymask; a[1]=0;
-            a[2]=(unsigned char)((unsigned int)g*t/255+(unsigned int)a[2]*(255-t)/255)&mymask; a[3]=0;
-            a[4]=(unsigned char)((unsigned int)b*t/255+(unsigned int)a[4]*(255-t)/255)&mymask; a[5]=0;
+            a[0]=(unsigned char)((unsigned int)r*t/255+(unsigned int)a[0]*(255-t)/255); a[1]=0;
+            a[2]=(unsigned char)((unsigned int)g*t/255+(unsigned int)a[2]*(255-t)/255); a[3]=0;
+            a[4]=(unsigned char)((unsigned int)b*t/255+(unsigned int)a[4]*(255-t)/255); a[5]=0;
             a[6]=255; a[7]=255;
           }
         }
@@ -170,9 +165,9 @@ int main(int argc,char **argv){
             xd=ad*yd+bd;
             if(xd>63.0)xd=63.0; if(xd<0.0)xd=0.0; if(yd>63.0)yd=63.0; if(yd<0.0)yd=0.0;
             a=F+16+((int)xd+((int)yd)*64)*8;
-            a[0]=(unsigned char)((unsigned int)r*t/255+(unsigned int)a[0]*(255-t)/255)&mymask; a[1]=0;
-            a[2]=(unsigned char)((unsigned int)g*t/255+(unsigned int)a[2]*(255-t)/255)&mymask; a[3]=0;
-            a[4]=(unsigned char)((unsigned int)b*t/255+(unsigned int)a[4]*(255-t)/255)&mymask; a[5]=0;
+            a[0]=(unsigned char)((unsigned int)r*t/255+(unsigned int)a[0]*(255-t)/255); a[1]=0;
+            a[2]=(unsigned char)((unsigned int)g*t/255+(unsigned int)a[2]*(255-t)/255); a[3]=0;
+            a[4]=(unsigned char)((unsigned int)b*t/255+(unsigned int)a[4]*(255-t)/255); a[5]=0;
             a[6]=255; a[7]=255;
           }
         }
@@ -186,9 +181,9 @@ int main(int argc,char **argv){
             yd=ad*xd+bd;
             if(xd>63.0)xd=63.0; if(xd<0.0)xd=0.0; if(yd>63.0)yd=63.0; if(yd<0.0)yd=0.0;
             a=F+16+((int)xd+((int)yd)*64)*8;
-            a[0]=(unsigned char)((unsigned int)r*t/255+(unsigned int)a[0]*(255-t)/255)&mymask; a[1]=0;
-            a[2]=(unsigned char)((unsigned int)g*t/255+(unsigned int)a[2]*(255-t)/255)&mymask; a[3]=0;
-            a[4]=(unsigned char)((unsigned int)b*t/255+(unsigned int)a[4]*(255-t)/255)&mymask; a[5]=0;
+            a[0]=(unsigned char)((unsigned int)r*t/255+(unsigned int)a[0]*(255-t)/255); a[1]=0;
+            a[2]=(unsigned char)((unsigned int)g*t/255+(unsigned int)a[2]*(255-t)/255); a[3]=0;
+            a[4]=(unsigned char)((unsigned int)b*t/255+(unsigned int)a[4]*(255-t)/255); a[5]=0;
             a[6]=255; a[7]=255;
           }
         }
@@ -204,9 +199,9 @@ int main(int argc,char **argv){
         b=hextable[*(buf+12)]<<4|hextable[*(buf+13)];
         t=hextable[*(buf+14)]<<4|hextable[*(buf+15)];
         a=F+16+(y*64+x)*8;
-        a[0]=(unsigned char)((unsigned int)r*t/255+(unsigned int)a[0]*(255-t)/255)&mymask; a[1]=0;
-        a[2]=(unsigned char)((unsigned int)g*t/255+(unsigned int)a[2]*(255-t)/255)&mymask; a[3]=0;
-        a[4]=(unsigned char)((unsigned int)b*t/255+(unsigned int)a[4]*(255-t)/255)&mymask; a[5]=0;
+        a[0]=(unsigned char)((unsigned int)r*t/255+(unsigned int)a[0]*(255-t)/255); a[1]=0;
+        a[2]=(unsigned char)((unsigned int)g*t/255+(unsigned int)a[2]*(255-t)/255); a[3]=0;
+        a[4]=(unsigned char)((unsigned int)b*t/255+(unsigned int)a[4]*(255-t)/255); a[5]=0;
         a[6]=255; a[7]=255;
         break;
       

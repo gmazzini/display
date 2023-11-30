@@ -34,8 +34,8 @@ int main(int argc,char **argv){
   unsigned char F[32784],F2[32784],*a,*a2;
   char buf[100],buf1[100];
   FILE *fp,*fp2;
-  unsigned int y,n,m,r,g,b,t,l,k,v,w,rb,gb,bb,tb,ml,ax,cc,*c,yy,ty;
-  int x,xx;
+  unsigned int y,n,m,r,g,b,t,l,k,v,vv,w,ww,rb,gb,bb,tb,ml,ax,cc,*c,yy,ty,xx,xxx,yyy;
+  int x;
   double len,x1,x2,y1,y2,ad,bd,dd,yd,xd;
   
   // name.des out.ff
@@ -214,6 +214,40 @@ int main(int argc,char **argv){
           a[0]=(unsigned char)((unsigned int)a2[0]*t/255+(unsigned int)a[0]*(255-t)/255);
           a[2]=(unsigned char)((unsigned int)a2[2]*t/255+(unsigned int)a[2]*(255-t)/255);
           a[4]=(unsigned char)((unsigned int)a2[4]*t/255+(unsigned int)a[4]*(255-t)/255);
+        }
+        break;
+
+      case '6':
+        buf[6]='\0';
+        t=hextable[*(buf+7)]<<4|hextable[*(buf+8)];
+        buf[12]='\0';
+        x=atoi(buf+10);
+        buf[15]='\0';
+        y=atoi(buf+13);
+        buf[18]='\0';
+        xx=atoi(buf+16);
+        buf[21]='\0';
+        yy=atoi(buf+19);
+        buf[24]='\0';
+        xxx=atoi(buf+22);
+        buf[27]='\0';
+        yyy=atoi(buf+25);
+        strcpy(buf1,"image/");
+        strcat(buf1,buf+2);
+        strcat(buf1,".ff");
+        fp2=fopen(buf1,"rb");
+        fread(F2,32784,1,fp2);
+        fclose(fp2);
+        for(w=y;w<=yy;w++){
+          for(v=x;v<=xx;v++){
+            ww=w+yyy; vv=v+xxx;
+            if(ww>63 || vv>63)continue; 
+            a2=F+16+(w*64+v)*8;
+            a=F+16+(ww*64+vv)*8;
+            a[0]=(unsigned char)((unsigned int)a2[0]*t/255+(unsigned int)a[0]*(255-t)/255);
+            a[2]=(unsigned char)((unsigned int)a2[2]*t/255+(unsigned int)a[2]*(255-t)/255);
+            a[4]=(unsigned char)((unsigned int)a2[4]*t/255+(unsigned int)a[4]*(255-t)/255);
+          }
         }
         break;
       

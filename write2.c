@@ -40,7 +40,9 @@ int main(int argc,char **argv){
   int x,xx;
   double len,x1,x2,y1,y2,ad,bd,dd,yd,xd;
 
-   fp=fopen("/home/www/www.chaos.cc/dev/image/L005.ff","rb");
+//   fp=fopen("/home/www/www.chaos.cc/dev/image/L005.ff","rb");
+fp=fopen("image/L004.ff","rb");
+  
         fread(F,32784,1,fp);
         fclose(fp);
   

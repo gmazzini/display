@@ -44,6 +44,14 @@ int main(int argc,char **argv){
   memcpy(F,"farbfeld",8);
   memcpy(F+8,"\x00\x00\x00\x40",4);
   memcpy(F+12,"\x00\x00\x00\x40",4);
+  for(w=0;w<4096;w++){
+    a=F+16+w*8;
+    a[0]=0; a[1]=0;
+    a[2]=0; a[3]=0;
+    a[4]=0; a[5]=0;
+    a[6]=255; a[7]=255;
+  }
+  
   bit=atoi(argv[2]);
   mymask=mask[bit];
 

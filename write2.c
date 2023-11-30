@@ -140,9 +140,9 @@ int main(int argc,char **argv){
         for(w=y;w<=yy;w++){
           for(v=x;v<=xx;v++){
             a=F+16+(w*64+v)*8;
-            a[0]=(unsigned char)(((unsigned int)r*t)/255+((unsigned int)a[0]*(255-t))/255); a[1]=0;
-            a[2]=(unsigned char)(((unsigned int)g*t)/255+((unsigned int)a[2]*(255-t))/255); a[3]=0;
-            a[4]=(unsigned char)(((unsigned int)b*t)/255+((unsigned int)a[4]*(255-t))/255); a[5]=0;
+            a[0]=(unsigned char)((unsigned int)r*t/255+(unsigned int)a[0]*(255-t)/255)&mymask; a[1]=0;
+            a[2]=(unsigned char)((unsigned int)g*t/255+(unsigned int)a[2]*(255-t)/255)&mymask; a[3]=0;
+            a[4]=(unsigned char)((unsigned int)b*t/255+(unsigned int)a[4]*(255-t)/255)&mymask; a[5]=0;
             a[6]=255; a[7]=255;
           }
         }

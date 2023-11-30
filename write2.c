@@ -242,7 +242,7 @@ int main(int argc,char **argv){
           for(v=x;v<=xx;v++){
             ww=w+yyy; vv=v+xxx;
             if(ww>63 || vv>63)continue; 
-            a2=F+16+(w*64+v)*8;
+            a2=F2+16+(w*64+v)*8;
             a=F+16+(ww*64+vv)*8;
             a[0]=(unsigned char)((unsigned int)a2[0]*t/255+(unsigned int)a[0]*(255-t)/255);
             a[2]=(unsigned char)((unsigned int)a2[2]*t/255+(unsigned int)a[2]*(255-t)/255);

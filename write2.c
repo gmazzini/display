@@ -206,6 +206,13 @@ int main(int argc,char **argv){
         a[6]=255; a[7]=255;
         break;
       
+      case '5':
+        buf[6]=' '; buf[7]='f'; buf[8]='f'; buf[9]='\0';
+        fp=fopen(bu+2,"rb");
+        fread(F,32784,1,fp);
+        fclose(fp);
+        break;
+      
     }
   }
   fclose(fp);

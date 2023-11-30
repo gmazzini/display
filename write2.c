@@ -40,7 +40,7 @@ int main(int argc,char **argv){
   int x,xx;
   double len,x1,x2,y1,y2,ad,bd,dd,yd,xd;
 
-   fp=fopen("/home/www/www.chaos.cc/dev/image/L001.ff","rb");
+   fp=fopen("/home/www/www.chaos.cc/dev/image/L005.ff","rb");
         fread(F,32784,1,fp);
         fclose(fp);
   
@@ -211,7 +211,7 @@ int main(int argc,char **argv){
         break;
       
       case '5':
-        buf[6]=' '; buf[7]='f'; buf[8]='f'; buf[9]='\0';
+//        buf[6]=' '; buf[7]='.'; buf[8]='f'; buf[9]='f'; buf[10]='\0';
         fp=fopen("/home/www/www.chaos.cc/dev/image/L001.ff","rb");
         fread(F,32784,1,fp);
         fclose(fp);

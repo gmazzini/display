@@ -202,14 +202,14 @@ int main(int argc,char **argv){
         x=atoi(buf+2);
         buf[7]='\0';
         y=atoi(buf+5);
-        r=(hextable[*(buf+8)]<<4|hextable[*(buf+9)])&mymask;
-        g=(hextable[*(buf+10)]<<4|hextable[*(buf+11)])&mymask;
-        b=(hextable[*(buf+12)]<<4|hextable[*(buf+12)])&mymask;
-        printf("4 %02d %02d %02x%02x%02x\n",x,y,r,g,b);
+        r=hextable[*(buf+8)]<<4|hextable[*(buf+9)];
+        g=hextable[*(buf+10)]<<4|hextable[*(buf+11)];
+        b=hextable[*(buf+12)]<<4|hextable[*(buf+13)];
+        t=hextable[*(buf+14)]<<4|hextable[*(buf+15)];
         a=F+16+(y*64+x)*8;
-        a[0]=r; a[1]=0;
-        a[2]=g; a[3]=0;
-        a[4]=b; a[5]=0;
+        a[0]=(unsigned char)((unsigned int)r*t/255+(unsigned int)a[0]*(255-t)/255)&mymask; a[1]=0;
+        a[2]=(unsigned char)((unsigned int)g*t/255+(unsigned int)a[2]*(255-t)/255)&mymask; a[3]=0;
+        a[4]=(unsigned char)((unsigned int)b*t/255+(unsigned int)a[4]*(255-t)/255)&mymask; a[5]=0;
         a[6]=255; a[7]=255;
         break;
       

@@ -73,7 +73,7 @@ int main(int argc,char **argv){
         rb=hextable[*(buf+17)]<<4|hextable[*(buf+18)];
         gb=hextable[*(buf+19)]<<4|hextable[*(buf+20)];
         bb=hextable[*(buf+21)]<<4|hextable[*(buf+22)];
-        tb=hextable[*(buf+23]<<4|hextable[*(buf+24)];
+        tb=hextable[*(buf+23)]<<4|hextable[*(buf+24)];
         buf[28]='\0';
         ty=atoi(buf+26);
         yy=*(mf[ty]+1);

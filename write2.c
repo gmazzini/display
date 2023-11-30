@@ -34,7 +34,7 @@ int main(int argc,char **argv){
   unsigned char F[32784],*a;
   char buf[100],buf1[100];
   FILE *fp,*fp2;
-  unsigned int y,n,m,r,g,b,t,l,k,v,w,rb,gb,bb,tb,ml,ax,cc,*c,yy,ty,bit;
+  unsigned int y,n,m,r,g,b,t,l,k,v,w,rb,gb,bb,tb,ml,ax,cc,*c,yy,ty;
   int x,xx;
   double len,x1,x2,y1,y2,ad,bd,dd,yd,xd;
   

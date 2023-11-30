@@ -208,7 +208,7 @@ int main(int argc,char **argv){
       
       case '5':
         buf[6]=' '; buf[7]='f'; buf[8]='f'; buf[9]='\0';
-        fp=fopen("/home/www/www.chaos.cc/dev/image/L0001.ff","rb");
+        fp=fopen("/home/www/www.chaos.cc/dev/image/L001.ff","rb");
         fread(F,32784,1,fp);
         fclose(fp);
         break;

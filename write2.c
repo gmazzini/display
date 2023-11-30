@@ -157,11 +157,10 @@ int main(int argc,char **argv){
         xx=atoi(buf+8);
         buf[13]='\0';
         yy=atoi(buf+11);
-        r=(hextable[*(buf+14)]<<4|hextable[*(buf+15)])&mymask;
-        g=(hextable[*(buf+16)]<<4|hextable[*(buf+17)])&mymask;
-        b=(hextable[*(buf+18)]<<4|hextable[*(buf+19)])&mymask;
-        printf("3 %02d %02d %02d %02d %02x%02x%02x\n",x,y,xx,yy,r,g,b);
-        
+        r=hextable[*(buf+14)]<<4|hextable[*(buf+15)];
+        g=hextable[*(buf+16)]<<4|hextable[*(buf+17)];
+        b=hextable[*(buf+18)]<<4|hextable[*(buf+19)];
+        t=hextable[*(buf+20)]<<4|hextable[*(buf+21)];
         x1=(double)x; x2=(double)xx; y1=(double)y; y2=(double)yy;
         len=sqrt(pow(x1-x2,2)+pow(y1-y2,2));
         if(fabs(x2-x1)<20){
@@ -174,9 +173,9 @@ int main(int argc,char **argv){
             xd=ad*yd+bd;
             if(xd>63.0)xd=63.0; if(xd<0.0)xd=0.0; if(yd>63.0)yd=63.0; if(yd<0.0)yd=0.0;
             a=F+16+((int)xd+((int)yd)*64)*8;
-            a[0]=r; a[1]=0;
-            a[2]=g; a[3]=0;
-            a[4]=b; a[5]=0;
+            a[0]=(unsigned char)((unsigned int)r*t/255+(unsigned int)a[0]*(255-t)/255)&mymask; a[1]=0;
+            a[2]=(unsigned char)((unsigned int)g*t/255+(unsigned int)a[2]*(255-t)/255)&mymask; a[3]=0;
+            a[4]=(unsigned char)((unsigned int)b*t/255+(unsigned int)a[4]*(255-t)/255)&mymask; a[5]=0;
             a[6]=255; a[7]=255;
           }
         }
@@ -190,9 +189,9 @@ int main(int argc,char **argv){
             yd=ad*xd+bd;
             if(xd>63.0)xd=63.0; if(xd<0.0)xd=0.0; if(yd>63.0)yd=63.0; if(yd<0.0)yd=0.0;
             a=F+16+((int)xd+((int)yd)*64)*8;
-            a[0]=r; a[1]=0;
-            a[2]=g; a[3]=0;
-            a[4]=b; a[5]=0;
+            a[0]=(unsigned char)((unsigned int)r*t/255+(unsigned int)a[0]*(255-t)/255)&mymask; a[1]=0;
+            a[2]=(unsigned char)((unsigned int)g*t/255+(unsigned int)a[2]*(255-t)/255)&mymask; a[3]=0;
+            a[4]=(unsigned char)((unsigned int)b*t/255+(unsigned int)a[4]*(255-t)/255)&mymask; a[5]=0;
             a[6]=255; a[7]=255;
           }
         }

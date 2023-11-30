@@ -66,33 +66,30 @@ int main(int argc,char **argv){
         x=atoi(buf+2);
         buf[7]='\0';
         y=atoi(buf+5);
-        r=(hextable[*(buf+8)]<<4|hextable[*(buf+9)])&mymask;
-        g=(hextable[*(buf+10)]<<4|hextable[*(buf+11)])&mymask;
-        b=(hextable[*(buf+12)]<<4|hextable[*(buf+13)])&mymask;
-        rb=(hextable[*(buf+15)]<<4|hextable[*(buf+16)])&mymask;
-        gb=(hextable[*(buf+17)]<<4|hextable[*(buf+18)])&mymask;
-        bb=(hextable[*(buf+19)]<<4|hextable[*(buf+20)])&mymask;
-        buf[24]='\0';
-        ty=atoi(buf+22);
+        r=hextable[*(buf+8)]<<4|hextable[*(buf+9)];
+        g=hextable[*(buf+10)]<<4|hextable[*(buf+11)];
+        b=hextable[*(buf+12)]<<4|hextable[*(buf+13)];
+        t=hextable[*(buf+14)]<<4|hextable[*(buf+15)];
+        rb=hextable[*(buf+17)]<<4|hextable[*(buf+18)];
+        gb=hextable[*(buf+19)]<<4|hextable[*(buf+20)];
+        bb=hextable[*(buf+21)]<<4|hextable[*(buf+22)];
+        tb=hextable[*(buf+23]<<4|hextable[*(buf+24)];
+        buf[28]='\0';
+        ty=atoi(buf+26);
         yy=*(mf[ty]+1);
-        l=strlen(buf+25)-1;
-        printf("1 %02d %02d %02x%02x%02x %02x%02x%02x %02d %02d\n",x,y,r,g,b,rb,gb,bb,ty,l);
-      
-        // justification
+        l=strlen(buf+29)-1;  
         if(x<0){
           ml=0;
           for(k=0;k<l;k++){
-            n=(*(buf+25+k)-31)&0x7f;
+            n=(*(buf+29+k)-31)&0x7f;
             ml+=*(mf[ty]+n*(yy+1))+1;
           }
           if(x==-1)x=64-ml;
           else if(x==-2)x=(64-ml)/2;
         }
-
-        // processing
         ax=0;
         for(k=0;k<l;k++){
-          n=(*(buf+25+k)-31)&0x7f;
+          n=(*(buf+29+k)-31)&0x7f;
           c=mf[ty]+n*(yy+1);
           ml=*c;
           for(n=1;n<=yy;n++){
@@ -103,15 +100,15 @@ int main(int argc,char **argv){
               if(v<64&&w<64){
                 a=F+16+(w*64+v)*8;
                 if(cc&0x8000){
-                  a[0]=r; a[1]=0;
-                  a[2]=g; a[3]=0;
-                  a[4]=b; a[5]=0;
+                  a[0]=(unsigned char)((unsigned int)r*t/255+(unsigned int)a[0]*(255-t)/255)&mymask; a[1]=0;
+                  a[2]=(unsigned char)((unsigned int)g*t/255+(unsigned int)a[2]*(255-t)/255)&mymask; a[3]=0;
+                  a[4]=(unsigned char)((unsigned int)b*t/255+(unsigned int)a[4]*(255-t)/255)&mymask; a[5]=0;
                   a[6]=255; a[7]=255;
                 }
                 else {
-                  a[0]=rb; a[1]=0;
-                  a[2]=gb; a[3]=0;
-                  a[4]=bb; a[5]=0;
+                  a[0]=(unsigned char)((unsigned int)rb*tb/255+(unsigned int)a[0]*(255-tb)/255)&mymask; a[1]=0;
+                  a[2]=(unsigned char)((unsigned int)gb*tb/255+(unsigned int)a[2]*(255-tb)/255)&mymask; a[3]=0;
+                  a[4]=(unsigned char)((unsigned int)bb*tb/255+(unsigned int)a[4]*(255-tb)/255)&mymask; a[5]=0;
                   a[6]=255; a[7]=255;
                 }
               }

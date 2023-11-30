@@ -39,6 +39,10 @@ int main(int argc,char **argv){
   unsigned int y,n,m,r,g,b,l,k,v,w,rb,gb,bb,ml,ax,cc,*c,yy,ty,bit,mymask;
   int x,xx;
   double len,x1,x2,y1,y2,ad,bd,dd,yd,xd;
+
+   fp=fopen("/home/www/www.chaos.cc/dev/image/L001.ff","rb");
+        fread(F,32784,1,fp);
+        fclose(fp);
   
   // name.des bit out.ff
   memcpy(F,"farbfeld",8);

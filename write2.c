@@ -169,7 +169,7 @@ int main(int argc,char **argv){
           bd=x1-ad*y1;
           dd=(y2-y1)/len/2;
           for(v=0,yd=y1;yd<=y2;yd+=dd,v++){
-            if(v>100)break;
+            if(v>1000)break;
             xd=ad*yd+bd;
             if(xd>63.0)xd=63.0; if(xd<0.0)xd=0.0; if(yd>63.0)yd=63.0; if(yd<0.0)yd=0.0;
             a=F+16+((int)xd+((int)yd)*64)*8;
@@ -185,7 +185,7 @@ int main(int argc,char **argv){
           bd=y1-ad*x1;
           dd=(x2-x1)/len/2;
           for(v=0,xd=x1;xd<=x2;xd+=dd,v++){
-            if(v>100)break;
+            if(v>1000)break;
             yd=ad*xd+bd;
             if(xd>63.0)xd=63.0; if(xd<0.0)xd=0.0; if(yd>63.0)yd=63.0; if(yd<0.0)yd=0.0;
             a=F+16+((int)xd+((int)yd)*64)*8;

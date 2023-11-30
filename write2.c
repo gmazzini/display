@@ -240,7 +240,7 @@ int main(int argc,char **argv){
         fclose(fp2);
         for(w=y;w<=yy;w++){
           for(v=x;v<=xx;v++){
-            ww=w+yyy; vv=v+xxx;
+            ww=yyy+w-y; vv=xxx+v-x;
             if(ww>63 || vv>63)continue; 
             a2=F2+16+(w*64+v)*8;
             a=F+16+(ww*64+vv)*8;

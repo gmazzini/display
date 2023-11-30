@@ -220,7 +220,7 @@ int main(int argc,char **argv){
   fclose(fp);
   
   // write ff file
-  fp=fopen(argv[3],"wb");
+  fp=fopen(argv[2],"wb");
   fwrite(F,32784,1,fp);
   fclose(fp);
 }

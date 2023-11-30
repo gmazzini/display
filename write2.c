@@ -36,7 +36,7 @@ int main(int argc,char **argv){
   unsigned char F[32784],*a;
   char buf[100],buf1[100];
   FILE *fp,*fp2;
-  unsigned int y,n,m,r,g,b,l,k,v,w,rb,gb,bb,ml,ax,cc,*c,yy,ty,bit,mymask;
+  unsigned int y,n,m,r,g,b,t,l,k,v,w,rb,gb,bb,tb,ml,ax,cc,*c,yy,ty,bit,mymask;
   int x,xx;
   double len,x1,x2,y1,y2,ad,bd,dd,yd,xd;
   
@@ -133,16 +133,16 @@ int main(int argc,char **argv){
         yy=atoi(buf+11);
         if(xx<x){v=xx; xx=x; x=v;};
         if(yy<y){v=yy; yy=y; y=v;};
-        r=(hextable[*(buf+14)]<<4|hextable[*(buf+15)])&mymask;
-        g=(hextable[*(buf+16)]<<4|hextable[*(buf+17)])&mymask;
-        b=(hextable[*(buf+18)]<<4|hextable[*(buf+19)])&mymask;
-        printf("2 %02d %02d %02d %02d %02x%02x%02x\n",x,xx,y,yy,r,g,b);
+        r=hextable[*(buf+14)]<<4|hextable[*(buf+15)];
+        g=hextable[*(buf+16)]<<4|hextable[*(buf+17)];
+        b=hextable[*(buf+18)]<<4|hextable[*(buf+19)];
+        t=hextable[*(buf+20)]<<4|hextable[*(buf+21)];
         for(w=y;w<=yy;w++){
           for(v=x;v<=xx;v++){
             a=F+16+(w*64+v)*8;
-            a[0]=r; a[1]=0;
-            a[2]=g; a[3]=0;
-            a[4]=b; a[5]=0;
+            a[0]=(unsigned char)(((unsigned int)r*t)/255+((unsigned int)a[0]*(255-t))/255); a[1]=0;
+            a[2]=(unsigned char)(((unsigned int)g*t)/255+((unsigned int)a[2]*(255-t))/255); a[3]=0;
+            a[4]=(unsigned char)(((unsigned int)b*t)/255+((unsigned int)a[4]*(255-t))/255); a[5]=0;
             a[6]=255; a[7]=255;
           }
         }

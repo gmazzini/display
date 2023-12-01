@@ -46,21 +46,21 @@ int myparse(char *ss,int n,...){
     switch(ty){
       case 1:
         for(;*a==' ';a++){};
-        for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0';  a++;
+        for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0'; a++;
         pi=va_arg(args,int *);
         *pi=atoi(b);
         i+=2;
         break;
      case 2:
         for(;*a==' ';a++){};
-        for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0';  a++;
+        for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0'; a++;
         pui=va_arg(args,unsigned int *);
         *pui=atoi(b);
         i+=2;
         break;
      case 3:
         for(;*a==' ';a++){};
-        for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0';  a++;
+        for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0'; a++;
         pui=va_arg(args,unsigned int *);
         *pui=hextable[*(b+0)]<<4|hextable[*(b+1)];
         pui=va_arg(args,unsigned int *);
@@ -73,7 +73,7 @@ int myparse(char *ss,int n,...){
         break;
       case 4:
         for(;*a==' ';a++){};
-        for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0';  a++;
+        for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0'; a++;
         puc=va_arg(args,unsigned char *);
         strcpy(puc,b);
         i+=2;

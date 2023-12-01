@@ -44,7 +44,7 @@ int myparse(char *ss,int n,...){
     ty=va_arg(args,int);
     switch(ty){
       case 1:
-        for(;*a==' ';a++){};c
+        for(;*a==' ';a++){};
         for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0';  a++;
         pi=va_arg(args,int *);
         *pi=atoi(b);

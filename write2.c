@@ -74,6 +74,12 @@ int myparse(char *ss,int n,...){
         puc=va_arg(args,unsigned char *);
         strcpy(puc,b);
         break;
+      case 5:
+        for(;*a==' ';a++){};
+        for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0'; a++;
+        pui=va_arg(args,unsigned int *);
+        *pui=hextable[*(b+0)]<<4|hextable[*(b+1)];
+        break;
     }
   }
   va_end(args);
@@ -209,10 +215,7 @@ int main(int argc,char **argv){
         break;
       
       case '5':
-        myparse(buf+1,2,4,img,2,&t);
-        // t=255;
-
-
+        myparse(buf+1,2,4,img,5,&t);
         strcpy(buf1,"image/");
         strcat(buf1,img);
         strcat(buf1,".ff");

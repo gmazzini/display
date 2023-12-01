@@ -232,22 +232,9 @@ int main(int argc,char **argv){
         break;
 
       case '6':
-        buf[6]='\0';
-        t=hextable[*(buf+7)]<<4|hextable[*(buf+8)];
-        buf[12]='\0';
-        x=atoi(buf+10);
-        buf[15]='\0';
-        y=atoi(buf+13);
-        buf[18]='\0';
-        xx=atoi(buf+16);
-        buf[21]='\0';
-        yy=atoi(buf+19);
-        buf[24]='\0';
-        xxx=atoi(buf+22);
-        buf[27]='\0';
-        yyy=atoi(buf+25);
+        myparse(buf+1,2,4,img,5,&t,1,&x,2,&y,2,&xx,2,&yy,2,&xxx,2,&yyy);
         strcpy(buf1,"image/");
-        strcat(buf1,buf+2);
+        strcat(buf1,img);
         strcat(buf1,".ff");
         fp2=fopen(buf1,"rb");
         fread(F2,32784,1,fp2);
@@ -263,8 +250,7 @@ int main(int argc,char **argv){
             a[4]=(unsigned char)((unsigned int)a2[4]*t/255+(unsigned int)a[4]*(255-t)/255);
           }
         }
-        break;
-      
+        break;   
     }
   }
   fclose(fp);

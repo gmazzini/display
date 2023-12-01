@@ -1,6 +1,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
+#include "stdarg.h"
 #include "math.h"
 #include "font_0.h"
 #include "font_1.h"
@@ -29,6 +30,51 @@ char hextable[] = {
   -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
   -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 };
+
+int myparse(char *ss,int n,...){
+  char *a,*b,buf[50];
+  int i,ty;  
+  int *pi;
+  unsigned int *pui;
+  strcpy(buf,ss);
+  va_list args;
+  va_start(args,n);
+  a=buf;
+  for(i=0;i<n;){
+    ty=va_arg(args,int);
+    switch(ty){
+      case 1:
+        for(;*a==' ';a++){};c
+        for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0';  a++;
+        pi=va_arg(args,int *);
+        *pi=atoi(b);
+        i+=2;
+        break;
+     case 2:
+        for(;*a==' ';a++){};
+        for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0';  a++;
+        pui=va_arg(args,unsigned int *);
+        *pui=atoi(b);
+        i+=2;
+        break;
+     case 3:
+        for(;*a==' ';a++){};
+        for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0';  a++;
+        pui=va_arg(args,unsigned int *);
+        *pui=hextable[*(b+0)]<<4|hextable[*(b+1)];
+        pui=va_arg(args,unsigned int *);
+        *pui=hextable[*(b+2)]<<4|hextable[*(b+3)];
+        pui=va_arg(args,unsigned int *);
+        *pui=hextable[*(b+4)]<<4|hextable[*(b+5)];
+        pui=va_arg(args,unsigned int *);
+        *pui=hextable[*(b+6)]<<4|hextable[*(b+7)];
+        i+=5;
+        break;
+    }
+  }
+  va_end(args);
+  return a-buf;
+}
 
 int main(int argc,char **argv){
   unsigned char F[32784],F2[32784],*a,*a2;
@@ -185,14 +231,7 @@ int main(int argc,char **argv){
         break;
       
       case '4':
-        buf[4]='\0';
-        x=atoi(buf+2);
-        buf[7]='\0';
-        y=atoi(buf+5);
-        r=hextable[*(buf+8)]<<4|hextable[*(buf+9)];
-        g=hextable[*(buf+10)]<<4|hextable[*(buf+11)];
-        b=hextable[*(buf+12)]<<4|hextable[*(buf+13)];
-        t=hextable[*(buf+14)]<<4|hextable[*(buf+15)];
+        myparse(buf+1,9,1,&x,2,&y,3,&r,&g,&b,&t);
         a=F+16+(y*64+x)*8;
         a[0]=(unsigned char)((unsigned int)r*t/255+(unsigned int)a[0]*(255-t)/255);
         a[2]=(unsigned char)((unsigned int)g*t/255+(unsigned int)a[2]*(255-t)/255);

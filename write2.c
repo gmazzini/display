@@ -77,7 +77,7 @@ int myparse(char *ss,int n,...){
 }
 
 int main(int argc,char **argv){
-  unsigned char F[32784],F2[32784],*a,*a2;
+  unsigned char F[32784],F2[32784],*a,*a2,*ss;
   char buf[100],buf1[100];
   FILE *fp,*fp2;
   unsigned int y,n,m,r,g,b,t,l,k,v,vv,w,ww,rb,gb,bb,tb,ml,ax,cc,*c,yy,ty,xx,xxx,yyy;
@@ -103,26 +103,14 @@ int main(int argc,char **argv){
     switch(buf[0]){
       
       case '1':
-        buf[4]='\0';
-        x=atoi(buf+2);
-        buf[7]='\0';
-        y=atoi(buf+5);
-        r=hextable[*(buf+8)]<<4|hextable[*(buf+9)];
-        g=hextable[*(buf+10)]<<4|hextable[*(buf+11)];
-        b=hextable[*(buf+12)]<<4|hextable[*(buf+13)];
-        t=hextable[*(buf+14)]<<4|hextable[*(buf+15)];
-        rb=hextable[*(buf+17)]<<4|hextable[*(buf+18)];
-        gb=hextable[*(buf+19)]<<4|hextable[*(buf+20)];
-        bb=hextable[*(buf+21)]<<4|hextable[*(buf+22)];
-        tb=hextable[*(buf+23)]<<4|hextable[*(buf+24)];
-        buf[28]='\0';
-        ty=atoi(buf+26);
+        v=myparse(buf+1,16,1,&x,2,&y,3,&r,&g,&b,&t,3,&rb,&gb,&bb,&tb,2,$ty);
+        ss=buf+1+v;
         yy=*(mf[ty]+1);
-        l=strlen(buf+29)-1;  
+        l=strlen(ss)-1;  
         if(x<0){
           ml=0;
           for(k=0;k<l;k++){
-            n=(*(buf+29+k)-31)&0x7f;
+            n=(*(ss+k)-31)&0x7f;
             ml+=*(mf[ty]+n*(yy+1))+1;
           }
           if(x==-1)x=64-ml;
@@ -130,7 +118,7 @@ int main(int argc,char **argv){
         }
         ax=0;
         for(k=0;k<l;k++){
-          n=(*(buf+29+k)-31)&0x7f;
+          n=(*(ss+k)-31)&0x7f;
           c=mf[ty]+n*(yy+1);
           ml=*c;
           for(n=1;n<=yy;n++){

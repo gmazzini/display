@@ -41,7 +41,7 @@ int myparse(char *ss,int n,...){
   va_list args;
   va_start(args,n);
   a=buf;
-  for(i=0;i<n;){
+  for(i=0;i<n;i++){
     ty=va_arg(args,int);
     switch(ty){
       case 1:
@@ -49,14 +49,12 @@ int myparse(char *ss,int n,...){
         for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0'; a++;
         pi=va_arg(args,int *);
         *pi=atoi(b);
-        i+=2;
         break;
      case 2:
         for(;*a==' ';a++){};
         for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0'; a++;
         pui=va_arg(args,unsigned int *);
         *pui=atoi(b);
-        i+=2;
         break;
      case 3:
         for(;*a==' ';a++){};
@@ -69,14 +67,12 @@ int myparse(char *ss,int n,...){
         *pui=hextable[*(b+4)]<<4|hextable[*(b+5)];
         pui=va_arg(args,unsigned int *);
         *pui=hextable[*(b+6)]<<4|hextable[*(b+7)];
-        i+=5;
         break;
       case 4:
         for(;*a==' ';a++){};
         for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0'; a++;
         puc=va_arg(args,unsigned char *);
         strcpy(puc,b);
-        i+=2;
         break;
     }
   }
@@ -111,7 +107,7 @@ int main(int argc,char **argv){
     switch(buf[0]){
       
       case '1':
-        v=myparse(buf+1,16,1,&x,2,&y,3,&r,&g,&b,&t,3,&rb,&gb,&bb,&tb,2,&ty);
+        v=myparse(buf+1,5,1,&x,2,&y,3,&r,&g,&b,&t,3,&rb,&gb,&bb,&tb,2,&ty);
         ss=buf+1+v;
         yy=*(mf[ty]+1);
         l=strlen(ss)-1;  
@@ -155,7 +151,7 @@ int main(int argc,char **argv){
         break;
 
       case '2':
-        myparse(buf+1,11,1,&x,2,&y,2,&xx,2,&yy,3,&r,&g,&b,&t);
+        myparse(buf+1,5,1,&x,2,&y,2,&xx,2,&yy,3,&r,&g,&b,&t);
         if(xx<x){v=xx; xx=x; x=v;};
         if(yy<y){v=yy; yy=y; y=v;};
         for(w=y;w<=yy;w++){
@@ -169,7 +165,7 @@ int main(int argc,char **argv){
         break;
 
       case '3':
-        myparse(buf+1,11,1,&x,2,&y,2,&xx,2,&yy,3,&r,&g,&b,&t);
+        myparse(buf+1,5,1,&x,2,&y,2,&xx,2,&yy,3,&r,&g,&b,&t);
         x1=(double)x; x2=(double)xx; y1=(double)y; y2=(double)yy;
         len=sqrt(pow(x1-x2,2)+pow(y1-y2,2));
         if(fabs(x2-x1)<20){
@@ -205,7 +201,7 @@ int main(int argc,char **argv){
         break;
       
       case '4':
-        myparse(buf+1,9,1,&x,2,&y,3,&r,&g,&b,&t);
+        myparse(buf+1,3,1,&x,2,&y,3,&r,&g,&b,&t);
         a=F+16+(y*64+x)*8;
         a[0]=(unsigned char)((unsigned int)r*t/255+(unsigned int)a[0]*(255-t)/255);
         a[2]=(unsigned char)((unsigned int)g*t/255+(unsigned int)a[2]*(255-t)/255);
@@ -213,7 +209,7 @@ int main(int argc,char **argv){
         break;
       
       case '5':
-        myparse(buf+1,4,4,img,2,&t);
+        myparse(buf+1,2,4,img,2,&t);
         t=255;
 
 

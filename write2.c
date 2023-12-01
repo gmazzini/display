@@ -152,7 +152,18 @@ int main(int argc,char **argv){
               cc<<=1;
             }
           }
-          ax+=(ml+1);
+          ax+=ml;
+          for(n=1;n<=yy;n++){
+            v=x+ax;
+            w=y+n-1;
+            if(v<64 && w<64){
+              a=F+16+(w*64+v)*8;
+              a[0]=(unsigned char)((unsigned int)rb*tb/255+(unsigned int)a[0]*(255-tb)/255);
+              a[2]=(unsigned char)((unsigned int)gb*tb/255+(unsigned int)a[2]*(255-tb)/255);
+              a[4]=(unsigned char)((unsigned int)bb*tb/255+(unsigned int)a[4]*(255-tb)/255);
+            }
+          }
+          ax++;
         }
         break;
 

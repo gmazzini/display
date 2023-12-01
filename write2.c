@@ -115,7 +115,7 @@ int main(int argc,char **argv){
       case '1':
         v=myparse(buf+1,5,1,&x,2,&y,3,&r,&g,&b,&t,3,&rb,&gb,&bb,&tb,2,&ty);
         ss=buf+1+v;
-        yy=*(mf[ty]+1);
+        yy=mf[ty][1];
         l=strlen(ss)-1;  
         if(x<0){
           ml=0;

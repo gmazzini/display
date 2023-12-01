@@ -215,6 +215,8 @@ int main(int argc,char **argv){
       case '5':
         myparse(buf+1,4,4,img,2,&t);
         strcpy(img,"0001");
+        t=255;
+
 
         strcpy(buf1,"image/");
         strcat(buf1,img);

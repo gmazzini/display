@@ -120,7 +120,7 @@ int main(int argc,char **argv){
         if(x<0){
           ml=0;
           for(k=0;k<l;k++){
-            n=(*(ss+k)-31)&0x7f;
+            n=(ss[k]-31)&0x7f;
             ml+=*(mf[ty]+n*(yy+1))+1;
           }
           if(x==-1)x=64-ml;
@@ -128,15 +128,15 @@ int main(int argc,char **argv){
         }
         ax=0;
         for(k=0;k<l;k++){
-          n=(*(ss+k)-31)&0x7f;
+          n=(ss[k]-31)&0x7f;
           c=mf[ty]+n*(yy+1);
-          ml=*c;
+          ml=c[0];
           for(n=1;n<=yy;n++){
-            cc=*(c+n);
+            cc=c[n];
             for(m=0;m<ml;m++){
               v=x+m+ax;
               w=y+n-1;
-              if(v<64&&w<64){
+              if(v<64 && w<64){
                 a=F+16+(w*64+v)*8;
                 if(cc&0x8000){
                   a[0]=(unsigned char)((unsigned int)r*t/255+(unsigned int)a[0]*(255-t)/255);

@@ -118,13 +118,16 @@ int main(int argc,char **argv){
         yy=mf[ty][1];
         l=strlen(ss)-1;  
         if(x<0){
-          ml=0;
+          ax=0;
           for(k=0;k<l;k++){
             n=(ss[k]-31)&0x7f;
-            ml+=*(mf[ty]+n*(yy+1))+1;
+            c=mf[ty]+n*(yy+1);
+            ml=c[0];
+            ax+=ml;
+            if(k<l-1)ax++;
           }
-          if(x==-1)x=64-ml;
-          else if(x==-2)x=(64-ml)/2;
+          if(x==-1)x=64-ax;
+          else if(x==-2)x=(64-ax)/2;
         }
         ax=0;
         for(k=0;k<l;k++){

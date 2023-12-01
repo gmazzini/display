@@ -213,7 +213,7 @@ int main(int argc,char **argv){
         break;
       
       case '5':
-        myparse(buf+1,9,4,img,2,%t);
+        myparse(buf+1,4,4,img,2,&t);
         strcpy(buf1,"image/");
         strcat(buf1,img);
         strcat(buf1,".ff");

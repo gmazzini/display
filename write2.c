@@ -36,7 +36,7 @@ int myparse(char *ss,int n,...){
   int i,ty;  
   int *pi;
   unsigned int *pui;
-  unsigned char **puc;
+  unsigned char *puc;
   strcpy(buf,ss);
   va_list args;
   va_start(args,n);
@@ -74,8 +74,8 @@ int myparse(char *ss,int n,...){
       case 4:
         for(;*a==' ';a++){};
         for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0'; a++;
-        puc=va_arg(args,unsigned char **);
-        strcpy(*puc,b);
+        puc=va_arg(args,unsigned char *);
+        strcpy(puc,b);
         i+=2;
         break;
     }
@@ -213,7 +213,7 @@ int main(int argc,char **argv){
         break;
       
       case '5':
-        myparse(buf+1,4,4,&img,2,&t);
+        myparse(buf+1,4,4,img,2,&t);
         strcpy(buf1,"image/");
         strcat(buf1,img);
         strcat(buf1,".ff");

@@ -36,7 +36,7 @@ int myparse(char *ss,int n,...){
   int i,ty;  
   int *pi;
   unsigned int *pui;
-  unsigned char *puc;
+  unsigned char **puc;
   strcpy(buf,ss);
   va_list args;
   va_start(args,n);

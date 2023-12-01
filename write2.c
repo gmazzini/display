@@ -36,6 +36,7 @@ int myparse(char *ss,int n,...){
   int i,ty;  
   int *pi;
   unsigned int *pui;
+  unsigned char *puc;
   strcpy(buf,ss);
   va_list args;
   va_start(args,n);
@@ -70,6 +71,13 @@ int myparse(char *ss,int n,...){
         *pui=hextable[*(b+6)]<<4|hextable[*(b+7)];
         i+=5;
         break;
+      case 4:
+        for(;*a==' ';a++){};
+        for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0';  a++;
+        puc=va_arg(args,unsigned char *);
+        strcpy(puc,b);
+        i+=2;
+        break;
     }
   }
   va_end(args);
@@ -77,7 +85,7 @@ int myparse(char *ss,int n,...){
 }
 
 int main(int argc,char **argv){
-  unsigned char F[32784],F2[32784],*a,*a2,*ss;
+  unsigned char F[32784],F2[32784],*a,*a2,*ss,img[10];
   char buf[100],buf1[100];
   FILE *fp,*fp2;
   unsigned int y,n,m,r,g,b,t,l,k,v,vv,w,ww,rb,gb,bb,tb,ml,ax,cc,*c,yy,ty,xx,xxx,yyy;
@@ -205,10 +213,9 @@ int main(int argc,char **argv){
         break;
       
       case '5':
-        buf[6]='\0';
-        t=hextable[*(buf+7)]<<4|hextable[*(buf+8)];
+        myparse(buf+1,9,4,img,2,%t);
         strcpy(buf1,"image/");
-        strcat(buf1,buf+2);
+        strcat(buf1,img);
         strcat(buf1,".ff");
         fp2=fopen(buf1,"rb");
         fread(F2,32784,1,fp2);

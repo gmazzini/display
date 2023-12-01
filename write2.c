@@ -232,7 +232,7 @@ int main(int argc,char **argv){
         break;
 
       case '6':
-        myparse(buf+1,2,4,img,5,&t,1,&x,2,&y,2,&xx,2,&yy,2,&xxx,2,&yyy);
+        myparse(buf+1,8,4,img,5,&t,1,&x,2,&y,2,&xx,2,&yy,2,&xxx,2,&yyy);
         strcpy(buf1,"image/");
         strcat(buf1,img);
         strcat(buf1,".ff");

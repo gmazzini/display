@@ -210,7 +210,7 @@ int main(int argc,char **argv){
       
       case '5':
         myparse(buf+1,2,4,img,2,&t);
-        t=255;
+        // t=255;
 
 
         strcpy(buf1,"image/");

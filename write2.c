@@ -159,20 +159,9 @@ int main(int argc,char **argv){
         break;
 
       case '2':
-        buf[4]='\0';
-        x=atoi(buf+2);
-        buf[7]='\0';
-        y=atoi(buf+5);
-        buf[10]='\0';
-        xx=atoi(buf+8);
-        buf[13]='\0';
-        yy=atoi(buf+11);
+        myparse(buf+1,11,1,&x,2,&y,2,&xx,2,&yy,3,&r,&g,&b,&t);
         if(xx<x){v=xx; xx=x; x=v;};
         if(yy<y){v=yy; yy=y; y=v;};
-        r=hextable[*(buf+14)]<<4|hextable[*(buf+15)];
-        g=hextable[*(buf+16)]<<4|hextable[*(buf+17)];
-        b=hextable[*(buf+18)]<<4|hextable[*(buf+19)];
-        t=hextable[*(buf+20)]<<4|hextable[*(buf+21)];
         for(w=y;w<=yy;w++){
           for(v=x;v<=xx;v++){
             a=F+16+(w*64+v)*8;

@@ -113,6 +113,7 @@ int main(int argc,char **argv){
   unsigned int y,n,m,r,g,b,t,l,k,v,vv,w,ww,rb,gb,bb,tb,ml,ax,cc,*c,yy,ty,xx,xxx,yyy;
   int x;
   double len,x1,x2,y1,y2,ad,bd,dd,yd,xd;
+  unsigned long rl,gl,bl,al;
   
   // name.des out.ff
   memcpy(F,"farbfeld",8);
@@ -292,6 +293,23 @@ int main(int argc,char **argv){
         myparse(buf+1,3,1,&x,2,&y,6,&t);
         a=F+16+(y*64+x)*8;
         sprintf(V[t],"%02hhX%02hhX%02hhX",a[0],a[2],a[4]);
+        break;
+
+      case '8':
+        myparse(buf+1,5,1,&x,2,&y,2,&xx,2,&yy,6,&t);
+        if(xx<x){v=xx; xx=x; x=v;};
+        if(yy<y){v=yy; yy=y; y=v;};
+        rl=gl=bl=al=0;
+        for(w=y;w<=yy;w++){
+          for(v=x;v<=xx;v++){
+            a=F+16+(w*64+v)*8;
+            rl+=a[0];
+            gl+=a[2];
+            bl+=a[4];
+            al++;
+          }
+        }
+        sprintf(V[t],"%02hhX%02hhX%02hhX",rl/al,gl/al,bl/al);
         break;
       
     }

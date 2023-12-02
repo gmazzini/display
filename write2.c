@@ -9,6 +9,7 @@
 #include "font_3.h"
 #include "font_4.h"
 
+unsigned char V[10][20];
 unsigned int *mf[]={
   &font_0[0][0],
   &font_1[0][0],
@@ -33,7 +34,7 @@ char hextable[] = {
 
 int myparse(char *ss,int n,...){
   char *a,*b,buf[50];
-  int i,ty;  
+  int i,ty,j;  
   int *pi;
   unsigned int *pui;
   unsigned char *puc;
@@ -59,14 +60,27 @@ int myparse(char *ss,int n,...){
      case 3:
         for(;*a==' ';a++){};
         for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0'; a++;
-        pui=va_arg(args,unsigned int *);
-        *pui=hextable[b[0]]<<4|hextable[b[1]];
-        pui=va_arg(args,unsigned int *);
-        *pui=hextable[b[2]]<<4|hextable[b[3]];
-        pui=va_arg(args,unsigned int *);
-        *pui=hextable[b[4]]<<4|hextable[b[5]];
-        pui=va_arg(args,unsigned int *);
-        *pui=hextable[b[6]]<<4|hextable[b[7]];
+        if(b[0]=='V'){
+          j=b[1]-'0';
+          pui=va_arg(args,unsigned int *);
+          *pui=hextable[V[j][0]]<<4|hextable[V[j][1]];
+          pui=va_arg(args,unsigned int *);
+          *pui=hextable[V[j][2]]<<4|hextable[V[j][3]];
+          pui=va_arg(args,unsigned int *);
+          *pui=hextable[V[j][4]]<<4|hextable[V[j][5]];
+          pui=va_arg(args,unsigned int *);
+          *pui=hextable[b[2]]<<4|hextable[b[3]];
+        }
+        else {
+          pui=va_arg(args,unsigned int *);
+          *pui=hextable[b[0]]<<4|hextable[b[1]];
+          pui=va_arg(args,unsigned int *);
+          *pui=hextable[b[2]]<<4|hextable[b[3]];
+          pui=va_arg(args,unsigned int *);
+          *pui=hextable[b[4]]<<4|hextable[b[5]];
+          pui=va_arg(args,unsigned int *);
+          *pui=hextable[b[6]]<<4|hextable[b[7]];
+        }
         break;
       case 4:
         for(;*a==' ';a++){};
@@ -93,7 +107,7 @@ int myparse(char *ss,int n,...){
 }
 
 int main(int argc,char **argv){
-  unsigned char F[32784],F2[32784],*a,*a2,*ss,img[10],V[10][20];
+  unsigned char F[32784],F2[32784],*a,*a2,*ss,img[10];
   char buf[100],buf1[100];
   FILE *fp,*fp2;
   unsigned int y,n,m,r,g,b,t,l,k,v,vv,w,ww,rb,gb,bb,tb,ml,ax,cc,*c,yy,ty,xx,xxx,yyy;

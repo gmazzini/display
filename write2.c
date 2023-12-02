@@ -60,13 +60,13 @@ int myparse(char *ss,int n,...){
         for(;*a==' ';a++){};
         for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0'; a++;
         pui=va_arg(args,unsigned int *);
-        *pui=hextable[*(b+0)]<<4|hextable[*(b+1)];
+        *pui=hextable[b[0]]<<4|hextable[b[1]];
         pui=va_arg(args,unsigned int *);
-        *pui=hextable[*(b+2)]<<4|hextable[*(b+3)];
+        *pui=hextable[b[2]]<<4|hextable[b[3]];
         pui=va_arg(args,unsigned int *);
-        *pui=hextable[*(b+4)]<<4|hextable[*(b+5)];
+        *pui=hextable[b[4]]<<4|hextable[b[5]];
         pui=va_arg(args,unsigned int *);
-        *pui=hextable[*(b+6)]<<4|hextable[*(b+7)];
+        *pui=hextable[b[6]]<<4|hextable[b[7]];
         break;
       case 4:
         for(;*a==' ';a++){};
@@ -78,7 +78,13 @@ int myparse(char *ss,int n,...){
         for(;*a==' ';a++){};
         for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0'; a++;
         pui=va_arg(args,unsigned int *);
-        *pui=hextable[*(b+0)]<<4|hextable[*(b+1)];
+        *pui=hextable[b[0]]<<4|hextable[b[1]];
+        break;
+      case 6:
+        for(;*a==' ';a++){};
+        for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0'; a++;
+        pui=va_arg(args,unsigned int *);
+        *pui=atoi(b+1);
         break;
     }
   }
@@ -87,7 +93,7 @@ int myparse(char *ss,int n,...){
 }
 
 int main(int argc,char **argv){
-  unsigned char F[32784],F2[32784],*a,*a2,*ss,img[10];
+  unsigned char F[32784],F2[32784],*a,*a2,*ss,img[10],V[10][20];
   char buf[100],buf1[100];
   FILE *fp,*fp2;
   unsigned int y,n,m,r,g,b,t,l,k,v,vv,w,ww,rb,gb,bb,tb,ml,ax,cc,*c,yy,ty,xx,xxx,yyy;
@@ -266,7 +272,14 @@ int main(int argc,char **argv){
             a[4]=(unsigned char)((unsigned int)a2[4]*t/255+(unsigned int)a[4]*(255-t)/255);
           }
         }
-        break;   
+        break;
+
+      case '7':
+        myparse(buf+1,3,1,&x,2,&y,6,&t);
+        a=F+16+(y*64+x)*8;
+        sprintf(V[t],"%02hhX%02hhX%02hhX",a[0],a[2],a[4]);
+        break;
+      
     }
   }
   fclose(fp);

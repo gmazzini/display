@@ -303,9 +303,43 @@ int main(int argc,char **argv){
         for(w=y;w<=yy;w++){
           for(v=x;v<=xx;v++){
             a=F+16+(w*64+v)*8;
-            rl+=a[0];
-            gl+=a[2];
-            bl+=a[4];
+            rl+=a[0]; gl+=a[2]; bl+=a[4];
+            al++;
+          }
+        }
+        sprintf(V[t],"%02hhX%02hhX%02hhX",rl/al,gl/al,bl/al);
+        break;
+
+      case '9':
+        myparse(buf+1,5,1,&x,2,&y,2,&xx,2,&yy,6,&t);
+        x1=(double)x; x2=(double)xx; y1=(double)y; y2=(double)yy;
+        len=sqrt(pow(x1-x2,2)+pow(y1-y2,2));
+        rl=gl=bl=al=0;
+        if(fabs(x2-x1)<20){
+          if(y1>y2){ad=y1; y1=y2; y2=ad; ad=x1; x1=x2; x2=ad;}
+          ad=(x1-x2)/(y1-y2);
+          bd=x1-ad*y1;
+          dd=(y2-y1)/len/2;
+          for(v=0,yd=y1;yd<=y2;yd+=dd,v++){
+            if(v>1000)break;
+            xd=ad*yd+bd;
+            if(xd>63.0)xd=63.0; if(xd<0.0)xd=0.0; if(yd>63.0)yd=63.0; if(yd<0.0)yd=0.0;
+            a=F+16+((int)xd+((int)yd)*64)*8;
+            rl+=a[0]; gl+=a[2]; bl+=a[4];
+            al++;
+          }
+        }
+        else {
+          if(x1>x2){ad=x1; x1=x2; x2=ad; ad=y1; y1=y2; y2=ad;}
+          ad=(y1-y2)/(x1-x2);
+          bd=y1-ad*x1;
+          dd=(x2-x1)/len/2;
+          for(v=0,xd=x1;xd<=x2;xd+=dd,v++){
+            if(v>1000)break;
+            yd=ad*xd+bd;
+            if(xd>63.0)xd=63.0; if(xd<0.0)xd=0.0; if(yd>63.0)yd=63.0; if(yd<0.0)yd=0.0;
+            a=F+16+((int)xd+((int)yd)*64)*8;
+            rl+=a[0]; gl+=a[2]; bl+=a[4];
             al++;
           }
         }

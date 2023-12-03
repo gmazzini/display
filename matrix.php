@@ -48,7 +48,7 @@ function mysplit($x,$len){
   }
 }
 
-function show1($table,$par,$title,$istat,$sovra,$,$ff,$bin,$time,$conn,$privacy){
+function show1($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$time,$conn,$privacy){
   $query=oci_parse($conn,"select $par from $table where istat='$istat'");
   oci_execute($query);
   $row=oci_fetch_row($query);

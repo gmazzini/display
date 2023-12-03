@@ -32,8 +32,8 @@ char hextable[] = {
   -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 };
 
-int myparse(char *ss,int n,...){
-  char *a,*b,buf[50];
+int myparse(unsigned char *ss,int n,...){
+  unsigned char *a,*b,buf[50],r,g,b;
   int i,ty,j;  
   int *pi;
   unsigned int *pui;
@@ -62,14 +62,18 @@ int myparse(char *ss,int n,...){
         for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0'; a++;
         if(b[0]=='V'){
           j=b[1]-'0';
+          r=hextable[V[j][0]]<<4|hextable[V[j][1]];
+          g=hextable[V[j][2]]<<4|hextable[V[j][3]];
+          b=hextable[V[j][4]]<<4|hextable[V[j][5]];
+          switch(b[2]){
+            case 'n': break;
+            case 'e': break;
+          }
+          pui=va_arg(args,unsigned int *); *pui=r;
+          pui=va_arg(args,unsigned int *); *pui=g;
+          pui=va_arg(args,unsigned int *); *pui=b;
           pui=va_arg(args,unsigned int *);
-          *pui=hextable[V[j][0]]<<4|hextable[V[j][1]];
-          pui=va_arg(args,unsigned int *);
-          *pui=hextable[V[j][2]]<<4|hextable[V[j][3]];
-          pui=va_arg(args,unsigned int *);
-          *pui=hextable[V[j][4]]<<4|hextable[V[j][5]];
-          pui=va_arg(args,unsigned int *);
-          *pui=hextable[b[2]]<<4|hextable[b[3]];
+          *pui=hextable[b[3]]<<4|hextable[b[4]];
         }
         else {
           pui=va_arg(args,unsigned int *);

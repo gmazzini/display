@@ -150,36 +150,6 @@ function myrandom($conn,$ip,$tot){
   return (($next<$tot) ? $next : rand(0,$tot-1));
 }
 
-function show4($base,$tot,$ip,$bin,$ff,$time,$conn){
-  $query=oci_parse($conn,"select c1,c2 from mysession where id='$ip'");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  $c1=$row[0];
-  $c2=$row[1];
-  oci_free_statement($query);
-  $query=oci_parse($conn,"select m,num from rnd1 where p=$tot");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  $m=$row[0];
-  $num=$row[1];
-  oci_free_statement($query);
-  $id=floor($c1 / $m) % $num;
-  $query=oci_parse($conn,"select a,c from rnd2 where m=$m and id=$id");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  $a=$row[0];
-  $c=$row[1];
-  oci_free_statement($query);
-  $next=($a * $c2 + $c) % $m;
-  $query=oci_parse($conn,"update mysession set c1=c1+1,c2=$next where id='$ip'");
-  oci_execute($query);
-  oci_free_statement($query);
-  $vf=$base + (($next<$tot) ? $next : rand(0,$tot-1));  
-  $name=sprintf("tmp/image/%04d.ff",$vf);
-  shell_exec("tmp/clock $name $ff");
-  shell_exec("tmp/convert3 $ff $time $bin");
-}
-
 $query=oci_parse($conn,"select count(*) from mysession where id='$ip'");
 oci_execute($query);
 $row=oci_fetch_row($query);

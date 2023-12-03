@@ -75,6 +75,7 @@ int myparse(unsigned char *ss,int n,...){
             case 'n': break;
             case 'i': rr=255-rr; gg=255-gg; bb=255-bb; break;
             case 'e': rr=myz((int)rr+(int)rr/2); gg=myz((int)gg+(int)gg/2); bb=myz((int)bb+(int)bb/2); break;
+            case 'r': rr=myz((int)rr-(int)rr/2); gg=myz((int)gg-(int)gg/2); bb=myz((int)bb-(int)bb/2); break;
           }
           pui=va_arg(args,unsigned int *); *pui=rr;
           pui=va_arg(args,unsigned int *); *pui=gg;

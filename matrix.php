@@ -209,7 +209,7 @@ switch($screen){
   $hr=(90.0-30.0*($hh+$mm/60.0))*2.0*M_PI/360.0;
   $mr=(90.0-6.0*$mm)*2.0*M_PI/360.0;
   $fp=fopen($des,"w");
-  fprintf($fp,"5 %04d FF\n",$vf);
+//  fprintf($fp,"5 %04d FF\n",$vf);
   fprintf($fp,"3 %d %d %d %d FFFFFFFF\n",31.0+$ih*cos($hr),63.0-31.0-$ih*sin($hr),31.0+$Ih*cos($hr),63.0-31.0-$Ih*sin($hr));
   fprintf($fp,"3 %d %d %d %d FFFFFFFF\n",31.0+$im*cos($mr),63.0-31.0-$im*sin($mr),31.0+$Im*cos($mr),63.0-31.0-$Im*sin($mr));
   fclose($fp);

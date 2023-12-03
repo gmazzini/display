@@ -66,8 +66,11 @@ int myparse(unsigned char *ss,int n,...){
           gg=hextable[V[j][2]]<<4|hextable[V[j][3]];
           bb=hextable[V[j][4]]<<4|hextable[V[j][5]];
           switch(b[2]){
-            case 'n': break;
-            case 'e': break;
+            case 'n': 
+              break;
+            case 'i':
+              rr=255-rr; gg=255-gg; bb=255-bb;
+              break;
           }
           pui=va_arg(args,unsigned int *); *pui=rr;
           pui=va_arg(args,unsigned int *); *pui=gg;

@@ -229,21 +229,20 @@ switch($screen){
   case "7001":
   $aux=mysplit($ente,12);
   $fp=fopen($des,"w");
-  fprintf($fp,"000000\n");
-  fprintf($fp,"-2 00 FF0000 03 %sZ\n",date("d.m.y H:i"));
-  fprintf($fp,"-2 06 FFFFFF 03 %s %s\n",$ip,$ser);
-  fprintf($fp,"00 12 FFFF00 03 Istat\n");
-  fprintf($fp,"00 18 0000FF 03 %s\n",$istat);
+  fprintf($fp,"1 -2 0 FF0000FF 00000000 3 %sZ\n",date("d.m.y H:i"));
+  fprintf($fp,"1 -2 6 FFFFFFFF 00000000 3 %s %s\n",$ip,$ser);
+  fprintf($fp,"1 0 12 FFFF00FF 00000000 3 Istat\n");
+  fprintf($fp,"1 0 18 0000FFFF 00000000 3 %s\n",$istat);
   if($sovra<>""){
-    fprintf($fp,"-1 12 00FFFF 03 Unione\n");
-    fprintf($fp,"-1 18 FF0000 03 %s\n",$sovra);
+    fprintf($fp,"1 -1 12 00FFFFFF 00000000 3 Unione\n");
+    fprintf($fp,"1 -1 18 FF0000FF 00000000 3 %s\n",$sovra);
   }
-  fprintf($fp,"-2 32 FFFFFF 02 %s\n",$aux[0]);
-  fprintf($fp,"-2 40 FFFFFF 02 %s\n",@$aux[1]);
-  fprintf($fp,"-2 48 FFFFFF 02 %s\n",@$aux[2]);
-  fprintf($fp,"-2 56 FFFFFF 02 %s\n",@$aux[3]);
+  fprintf($fp,"1 -2 32 FFFFFFFF 00000000 2 %s\n",$aux[0]);
+  fprintf($fp,"1 -2 40 FFFFFFFF 00000000 2 %s\n",@$aux[1]);
+  fprintf($fp,"1 -2 48 FFFFFFFF 00000000 2 %s\n",@$aux[2]);
+  fprintf($fp,"1 -2 56 FFFFFFFF 00000000 2 %s\n",@$aux[3]);
   fclose($fp);
-  shell_exec("tmp/write $des 4 $ff; tmp/convert3 $ff $time $bin");
+  shell_exec("tmp/write2 $des ff; tmp/convert3 $ff $time $bin");
   break;
     
   default: 

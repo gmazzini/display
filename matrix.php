@@ -48,7 +48,7 @@ function mysplit($x,$len){
   }
 }
 
-function show1($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$time,$conn,$privacy){
+function show1($table,$par,$title,$istat,$sovra,$,$ff,$bin,$time,$conn,$privacy){
   $query=oci_parse($conn,"select $par from $table where istat='$istat'");
   oci_execute($query);
   $row=oci_fetch_row($query);
@@ -60,25 +60,24 @@ function show1($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$time,$conn,$priva
   @$reraux=$row[0];
   oci_free_statement($query);
   $fp=fopen($des,"w");
-  fprintf($fp,"000000\n");
-  fprintf($fp,"-2 00 FFFFFF 02 %s\n",$title);
+  fprintf($fp,"1 -2 0 FFFFFFFF 00000000 2 %s\n",$title);
   if($sovra<>""){
     $query=oci_parse($conn,"select $par from $table where istat='$sovra'");
     oci_execute($query);
     $row=oci_fetch_row($query);
     @$sovraaux=$row[0];
     oci_free_statement($query);
-    fprintf($fp,"-2 29 FF0000 01 Unione\n");
-    fprintf($fp,"-2 38 FF00FF 02 %s\n",($sovraaux<3 & $privacy)?"*":number_format($sovraaux,0,",","."));
+    fprintf($fp,"1 -2 29 FF0000FF 00000000 1 Unione\n");
+    fprintf($fp,"1 -2 38 FF00FFFF 00000000 2 %s\n",($sovraaux<3 & $privacy)?"*":number_format($sovraaux,0,",","."));
     $delta=0;
   }
   else $delta=7;
-  fprintf($fp,"-2 %02d FF0000 01 Comune\n",10+$delta);
-  fprintf($fp,"-2 %02d FF00FF 02 %s\n",19+$delta,($aux<3 & $privacy)?"*":number_format($aux,0,",","."));
-  fprintf($fp,"-2 %02d FF0000 01 Regione\n",48-$delta);
-  fprintf($fp,"-2 %02d FF00ff 02 %s\n",57-$delta,($reraux<3 & $privacy)?"*":number_format($reraux,0,",","."));
+  fprintf($fp,"1 -2 %02d FF0000FF 00000000 1 Comune\n",10+$delta);
+  fprintf($fp,"1 -2 %02d FF00FFFF 00000000 2 %s\n",19+$delta,($aux<3 & $privacy)?"*":number_format($aux,0,",","."));
+  fprintf($fp,"1 -2 %02d FF0000FF 00000000 1 Regione\n",48-$delta);
+  fprintf($fp,"1 -2 %02d FF00FFFF 00000000 2 %s\n",57-$delta,($reraux<3 & $privacy)?"*":number_format($reraux,0,",","."));
   fclose($fp);
-  shell_exec("tmp/write $des 4 $ff; tmp/convert3 $ff $time $bin");
+  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
   return;
 }
 

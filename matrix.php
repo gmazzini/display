@@ -247,15 +247,14 @@ switch($screen){
     
   default: 
   $fp=fopen($des,"w");
-  fprintf($fp,"000000\n");
-  fprintf($fp,"-2 00 FF0000 02 ser %s\n",$ser);
-  fprintf($fp,"-2 10 00FF00 02 seq %s\n",$seq);
-  fprintf($fp,"-2 20 0000FF 02 nseq %d\n",$nseq);
-  fprintf($fp,"-2 30 FFFF00 02 mid %d\n",$mid);
-  fprintf($fp,"-2 40 FF00FF 02 screen %s\n",$screen);
-  fprintf($fp,"-2 50 00FFFF 02 time %d\n",$time);
+  fprintf($fp,"1 -2 0 FF0000FF 00000000 2 ser %s\n",$ser);
+  fprintf($fp,"1 -2 10 00FF00FF 00000000 2 seq %s\n",$seq);
+  fprintf($fp,"1 -2 20 0000FFFF 00000000 2 nseq %d\n",$nseq);
+  fprintf($fp,"1 -2 30 FFFF00FF 00000000 2 mid %d\n",$mid);
+  fprintf($fp,"1 -2 40 FF00FFFF 00000000 2 screen %s\n",$screen);
+  fprintf($fp,"1 -2 50 00FFFFFF 00000000 2 time %d\n",$time);
   fclose($fp);
-  shell_exec("tmp/write $des 4 $ff; tmp/convert3 $ff 10 $bin");
+  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff 10 $bin");
   break;
 }
 

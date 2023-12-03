@@ -202,7 +202,6 @@ switch($screen){
   case "9203":
   $vf=2001+myrandom($conn,$ip,580);
   $ih=3.0; $Ih=18.0; $im=3.0; $Im=29.0;
-  // $name=sprintf("tmp/image/%04d.ff",$vf);
   $llt=localtime(time(),true);
   $hh=$llt["tm_hour"];
   $mm=$llt["tm_min"];
@@ -216,8 +215,6 @@ switch($screen){
   fprintf($fp,"9 %d %d %d %d V2\n",31.0+$ih*cos($hr),31.0+$im*cos($mr),63.0-31.0-$im*sin($mr),31.0+$Im*cos($mr),63.0-31.0-$Im*sin($mr));
   fprintf($fp,"3 %d %d %d %d V2iFF\n",31.0+$im*cos($mr),63.0-31.0-$im*sin($mr),31.0+$Im*cos($mr),63.0-31.0-$Im*sin($mr));
   fclose($fp);
-  
-//  shell_exec("tmp/clock $name $ff");
   shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
   break;
 

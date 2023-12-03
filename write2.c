@@ -32,6 +32,12 @@ char hextable[] = {
   -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 };
 
+unsigned char myz(int a){
+  if(a>255)a=255;
+  if(a<0)a=0;
+  return (unsigned char)a;
+}
+
 int myparse(unsigned char *ss,int n,...){
   unsigned char *a,*b,buf[50],rr,gg,bb;
   int i,ty,j;  
@@ -66,11 +72,9 @@ int myparse(unsigned char *ss,int n,...){
           gg=hextable[V[j][2]]<<4|hextable[V[j][3]];
           bb=hextable[V[j][4]]<<4|hextable[V[j][5]];
           switch(b[2]){
-            case 'n': 
-              break;
-            case 'i':
-              rr=255-rr; gg=255-gg; bb=255-bb;
-              break;
+            case 'n': break;
+            case 'i': rr=255-rr; gg=255-gg; bb=255-bb; break;
+            case 'e': rr=myz((int)rr+(int)rr/2); gg=myz((int)gg+(int)gg/2); bb=myz((int)bb+(int)bb/2); break;
           }
           pui=va_arg(args,unsigned int *); *pui=rr;
           pui=va_arg(args,unsigned int *); *pui=gg;

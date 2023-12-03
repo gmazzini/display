@@ -1,6 +1,7 @@
 <?php
 
 include "data.php";
+date_default_timezone_set("Europe/Rome");
 
 $ip=$_GET["ip"];
 @$ser=$_GET["ser"];

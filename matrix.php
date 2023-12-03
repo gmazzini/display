@@ -200,9 +200,21 @@ switch($screen){
   
   case "9203":
   $vf=2001+myrandom($conn,$ip,580);
+  $ih=3.0; $Ih=18.0; $im=3.0; $Im=29.0;
   $name=sprintf("tmp/image/%04d.ff",$vf);
-  shell_exec("tmp/clock $name $ff");
-  shell_exec("tmp/convert3 $ff $time $bin");
+  $llt=localtime(time(),true);
+  $hh=$llt["tm_hour"];
+  $mm=$llt["tm_min"];
+  if($hh>11)$hh-=12;
+  $hr=(90.0-30.0*($hh+$mm/60.0))*2.0*M_PI/360.0;
+  $mr=(90.0-6.0*$mm)*2.0*M_PI/360.0;
+  $fp=fopen($des,"w");
+  fprintf($fp,"3 %d %d %d %d FFFFFFFF\n",31.0+$ih*cos($hr),63.0-31.0-$ih*sin($hr),31.0+$Ih*cos($hr),63.0-31.0-$Ih*sin($hr));
+  fprintf($fp,"3 %d %d %d %d FFFFFFFF\n",31.0+$im*cos($mr),63.0-31.0-$im*sin($mr),31.0+$Im*cos($mr),63.0-31.0-$Im*sin($mr));
+  fclose($fp);
+  
+//  shell_exec("tmp/clock $name $ff");
+  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
   break;
 
   case "7001":

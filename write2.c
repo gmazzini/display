@@ -84,7 +84,7 @@ int myparse(unsigned char *ss,int n,...){
         else {
           pui=va_arg(args,unsigned int *); *pui=hextable[b[0]]<<4|hextable[b[1]];
           pui=va_arg(args,unsigned int *); *pui=hextable[b[2]]<<4|hextable[b[3]];
-          pui=va_arg(args,unsigned int *); pui=hextable[b[4]]<<4|hextable[b[5]];
+          pui=va_arg(args,unsigned int *); *pui=hextable[b[4]]<<4|hextable[b[5]];
           pui=va_arg(args,unsigned int *); *pui=hextable[b[6]]<<4|hextable[b[7]];
         }
         break;

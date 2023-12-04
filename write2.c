@@ -32,14 +32,15 @@ char hextable[] = {
   -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 };
 
-unsigned char myz(int a){
+unsigned int myz(int a){
   if(a>255)a=255;
   if(a<0)a=0;
   return (unsigned char)a;
 }
 
 int myparse(unsigned char *ss,int n,...){
-  unsigned char *a,*b,buf[50],rr,gg,bb;
+  unsigned char *a,*b,buf[50];
+  unsigned int rr,gg,bb;
   int i,ty,j;  
   int *pi;
   unsigned int *pui;
@@ -54,14 +55,12 @@ int myparse(unsigned char *ss,int n,...){
       case 1:
         for(;*a==' ';a++){};
         for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0'; a++;
-        pi=va_arg(args,int *);
-        *pi=atoi(b);
+        pi=va_arg(args,int *); *pi=atoi(b);
         break;
      case 2:
         for(;*a==' ';a++){};
         for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0'; a++;
-        pui=va_arg(args,unsigned int *);
-        *pui=atoi(b);
+        pui=va_arg(args,unsigned int *); *pui=atoi(b);
         break;
      case 3:
         for(;*a==' ';a++){};
@@ -80,37 +79,29 @@ int myparse(unsigned char *ss,int n,...){
           pui=va_arg(args,unsigned int *); *pui=rr;
           pui=va_arg(args,unsigned int *); *pui=gg;
           pui=va_arg(args,unsigned int *); *pui=bb;
-          pui=va_arg(args,unsigned int *);
-          *pui=hextable[b[3]]<<4|hextable[b[4]];
+          pui=va_arg(args,unsigned int *); *pui=hextable[b[3]]<<4|hextable[b[4]];
         }
         else {
-          pui=va_arg(args,unsigned int *);
-          *pui=hextable[b[0]]<<4|hextable[b[1]];
-          pui=va_arg(args,unsigned int *);
-          *pui=hextable[b[2]]<<4|hextable[b[3]];
-          pui=va_arg(args,unsigned int *);
-          *pui=hextable[b[4]]<<4|hextable[b[5]];
-          pui=va_arg(args,unsigned int *);
-          *pui=hextable[b[6]]<<4|hextable[b[7]];
+          pui=va_arg(args,unsigned int *); *pui=hextable[b[0]]<<4|hextable[b[1]];
+          pui=va_arg(args,unsigned int *); *pui=hextable[b[2]]<<4|hextable[b[3]];
+          pui=va_arg(args,unsigned int *); pui=hextable[b[4]]<<4|hextable[b[5]];
+          pui=va_arg(args,unsigned int *); *pui=hextable[b[6]]<<4|hextable[b[7]];
         }
         break;
       case 4:
         for(;*a==' ';a++){};
         for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0'; a++;
-        puc=va_arg(args,unsigned char *);
-        strcpy(puc,b);
+        puc=va_arg(args,unsigned char *); strcpy(puc,b);
         break;
       case 5:
         for(;*a==' ';a++){};
         for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0'; a++;
-        pui=va_arg(args,unsigned int *);
-        *pui=hextable[b[0]]<<4|hextable[b[1]];
+        pui=va_arg(args,unsigned int *); *pui=hextable[b[0]]<<4|hextable[b[1]];
         break;
       case 6:
         for(;*a==' ';a++){};
         for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0'; a++;
-        pui=va_arg(args,unsigned int *);
-        *pui=atoi(b+1);
+        pui=va_arg(args,unsigned int *); *pui=atoi(b+1);
         break;
     }
   }
@@ -172,7 +163,7 @@ int main(int argc,char **argv){
             for(m=0;m<ml;m++){
               v=x+m+ax;
               w=y+n-1;
-              if(v<64 && w<64){
+              if(v<=63 && w<=63 && v>=0 && w>=0){
                 a=F+16+(w*64+v)*8;
                 if(cc&0x8000){
                   a[0]=(unsigned char)((unsigned int)r*t/255+(unsigned int)a[0]*(255-t)/255);
@@ -193,7 +184,7 @@ int main(int argc,char **argv){
             for(n=1;n<=yy;n++){
               v=x+ax;
               w=y+n-1;
-              if(v<64 && w<64){
+              if(v<=63 && w<=63 && v>=0 && w>=0){
                 a=F+16+(w*64+v)*8;
                 a[0]=(unsigned char)((unsigned int)rb*tb/255+(unsigned int)a[0]*(255-tb)/255);
                 a[2]=(unsigned char)((unsigned int)gb*tb/255+(unsigned int)a[2]*(255-tb)/255);
@@ -207,6 +198,7 @@ int main(int argc,char **argv){
 
       case '2':
         myparse(buf+1,5,1,&x,2,&y,2,&xx,2,&yy,3,&r,&g,&b,&t);
+        x=myr(x); y=myr(y); xx=myr(xx); yy=myr(yy);
         if(xx<x){v=xx; xx=x; x=v;};
         if(yy<y){v=yy; yy=y; y=v;};
         for(w=y;w<=yy;w++){
@@ -257,6 +249,7 @@ int main(int argc,char **argv){
       
       case '4':
         myparse(buf+1,3,1,&x,2,&y,3,&r,&g,&b,&t);
+        x=myr(x); y=myr(y);
         a=F+16+(y*64+x)*8;
         a[0]=(unsigned char)((unsigned int)r*t/255+(unsigned int)a[0]*(255-t)/255);
         a[2]=(unsigned char)((unsigned int)g*t/255+(unsigned int)a[2]*(255-t)/255);
@@ -282,6 +275,7 @@ int main(int argc,char **argv){
 
       case '6':
         myparse(buf+1,8,4,img,5,&t,1,&x,2,&y,2,&xx,2,&yy,2,&xxx,2,&yyy);
+        x=myr(x); y=myr(y); xx=myr(xx); yy=myr(yy); xxx=myr(xxx); yyy=myr(yyy);
         strcpy(buf1,"image/");
         strcat(buf1,img);
         strcat(buf1,".ff");
@@ -303,12 +297,14 @@ int main(int argc,char **argv){
 
       case '7':
         myparse(buf+1,3,1,&x,2,&y,6,&t);
+        x=myr(x); y=myr(y);
         a=F+16+(y*64+x)*8;
         sprintf(V[t],"%02hhX%02hhX%02hhX",a[0],a[2],a[4]);
         break;
 
       case '8':
         myparse(buf+1,5,1,&x,2,&y,2,&xx,2,&yy,6,&t);
+        x=myr(x); y=myr(y); xx=myr(xx); yy=myr(yy);
         if(xx<x){v=xx; xx=x; x=v;};
         if(yy<y){v=yy; yy=y; y=v;};
         rl=gl=bl=al=0;

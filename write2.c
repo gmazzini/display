@@ -35,7 +35,7 @@ char hextable[] = {
 unsigned int myz(int a){
   if(a>255)a=255;
   if(a<0)a=0;
-  return (unsigned char)a;
+  return (unsigned int)a;
 }
 
 int myparse(unsigned char *ss,int n,...){
@@ -198,7 +198,7 @@ int main(int argc,char **argv){
 
       case '2':
         myparse(buf+1,5,1,&x,2,&y,2,&xx,2,&yy,3,&r,&g,&b,&t);
-        x=myr(x); y=myr(y); xx=myr(xx); yy=myr(yy);
+        x=myz(x); y=myz(y); xx=myz(xx); yy=myz(yy);
         if(xx<x){v=xx; xx=x; x=v;};
         if(yy<y){v=yy; yy=y; y=v;};
         for(w=y;w<=yy;w++){
@@ -249,7 +249,7 @@ int main(int argc,char **argv){
       
       case '4':
         myparse(buf+1,3,1,&x,2,&y,3,&r,&g,&b,&t);
-        x=myr(x); y=myr(y);
+        x=myz(x); y=myz(y);
         a=F+16+(y*64+x)*8;
         a[0]=(unsigned char)((unsigned int)r*t/255+(unsigned int)a[0]*(255-t)/255);
         a[2]=(unsigned char)((unsigned int)g*t/255+(unsigned int)a[2]*(255-t)/255);
@@ -275,7 +275,7 @@ int main(int argc,char **argv){
 
       case '6':
         myparse(buf+1,8,4,img,5,&t,1,&x,2,&y,2,&xx,2,&yy,2,&xxx,2,&yyy);
-        x=myr(x); y=myr(y); xx=myr(xx); yy=myr(yy); xxx=myr(xxx); yyy=myr(yyy);
+        x=myz(x); y=myz(y); xx=myz(xx); yy=myz(yy); xxx=myz(xxx); yyy=myz(yyy);
         strcpy(buf1,"image/");
         strcat(buf1,img);
         strcat(buf1,".ff");
@@ -297,14 +297,14 @@ int main(int argc,char **argv){
 
       case '7':
         myparse(buf+1,3,1,&x,2,&y,6,&t);
-        x=myr(x); y=myr(y);
+        x=myz(x); y=myz(y);
         a=F+16+(y*64+x)*8;
         sprintf(V[t],"%02hhX%02hhX%02hhX",a[0],a[2],a[4]);
         break;
 
       case '8':
         myparse(buf+1,5,1,&x,2,&y,2,&xx,2,&yy,6,&t);
-        x=myr(x); y=myr(y); xx=myr(xx); yy=myr(yy);
+        x=myz(x); y=myz(y); xx=myz(xx); yy=myz(yy);
         if(xx<x){v=xx; xx=x; x=v;};
         if(yy<y){v=yy; yy=y; y=v;};
         rl=gl=bl=al=0;

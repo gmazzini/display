@@ -215,16 +215,16 @@ switch($screen){
   fprintf($fp,"9 %d %d %d %d V2\n",31.0+$im*cos($mr),63.0-31.0-$im*sin($mr),31.0+$Im*cos($mr),63.0-31.0-$Im*sin($mr));
   fprintf($fp,"3 %d %d %d %d V2iFF\n",31.0+$im*cos($mr),63.0-31.0-$im*sin($mr),31.0+$Im*cos($mr),63.0-31.0-$Im*sin($mr));
   if(abs(cos($mr))>0.7){
-    fprintf($fp,"9 %d %d %d %d V2\n",31.0+$im*cos($mr),63.0-31.0-$im*sin($mr)+1,31.0+$Im*cos($mr),63.0-31.0-$Im*sin($mr)+1);
-    fprintf($fp,"3 %d %d %d %d V2iFF\n",31.0+$im*cos($mr),63.0-31.0-$im*sin($mr)+1,31.0+$Im*cos($mr),63.0-31.0-$Im*sin($mr)+1);
-    fprintf($fp,"9 %d %d %d %d V2\n",31.0+$im*cos($mr),63.0-31.0-$im*sin($mr)-1,31.0+$Im*cos($mr),63.0-31.0-$Im*sin($mr)-1);
-    fprintf($fp,"3 %d %d %d %d V2iFF\n",31.0+$im*cos($mr),63.0-31.0-$im*sin($mr)-1,31.0+$Im*cos($mr),63.0-31.0-$Im*sin($mr)-1);
+    fprintf($fp,"9 %d %d %d %d V3\n",31.0+$im*cos($mr),63.0-31.0-$im*sin($mr)+1,31.0+$Im*cos($mr),63.0-31.0-$Im*sin($mr)+1);
+    fprintf($fp,"3 %d %d %d %d V3iFF\n",31.0+$im*cos($mr),63.0-31.0-$im*sin($mr)+1,31.0+$Im*cos($mr),63.0-31.0-$Im*sin($mr)+1);
+    fprintf($fp,"9 %d %d %d %d V4\n",31.0+$im*cos($mr),63.0-31.0-$im*sin($mr)-1,31.0+$Im*cos($mr),63.0-31.0-$Im*sin($mr)-1);
+    fprintf($fp,"3 %d %d %d %d V4iFF\n",31.0+$im*cos($mr),63.0-31.0-$im*sin($mr)-1,31.0+$Im*cos($mr),63.0-31.0-$Im*sin($mr)-1);
   }
   else {
-    fprintf($fp,"9 %d %d %d %d V2\n",31.0+$im*cos($mr)+1,63.0-31.0-$im*sin($mr),31.0+$Im*cos($mr)+1,63.0-31.0-$Im*sin($mr));
-    fprintf($fp,"3 %d %d %d %d V2iFF\n",31.0+$im*cos($mr)+1,63.0-31.0-$im*sin($mr),31.0+$Im*cos($mr)+1,63.0-31.0-$Im*sin($mr));
-    fprintf($fp,"9 %d %d %d %d V2\n",31.0+$im*cos($mr)-1,63.0-31.0-$im*sin($mr),31.0+$Im*cos($mr)-1,63.0-31.0-$Im*sin($mr));
-    fprintf($fp,"3 %d %d %d %d V2iFF\n",31.0+$im*cos($mr)-1,63.0-31.0-$im*sin($mr),31.0+$Im*cos($mr)-1,63.0-31.0-$Im*sin($mr));
+    fprintf($fp,"9 %d %d %d %d V3\n",31.0+$im*cos($mr)+1,63.0-31.0-$im*sin($mr),31.0+$Im*cos($mr)+1,63.0-31.0-$Im*sin($mr));
+    fprintf($fp,"3 %d %d %d %d V3iFF\n",31.0+$im*cos($mr)+1,63.0-31.0-$im*sin($mr),31.0+$Im*cos($mr)+1,63.0-31.0-$Im*sin($mr));
+    fprintf($fp,"9 %d %d %d %d V4\n",31.0+$im*cos($mr)-1,63.0-31.0-$im*sin($mr),31.0+$Im*cos($mr)-1,63.0-31.0-$Im*sin($mr));
+    fprintf($fp,"3 %d %d %d %d V4iFF\n",31.0+$im*cos($mr)-1,63.0-31.0-$im*sin($mr),31.0+$Im*cos($mr)-1,63.0-31.0-$Im*sin($mr));
   }
   fclose($fp);
   shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");

@@ -261,6 +261,7 @@ switch($screen){
   case "4001":
   $fp=fopen($des,"w");
   fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 Utenti\n");
+  fprintf($fp,"1 -2 15 FFFFFFFF 00000000 1 attivi\n");
   fprintf($fp,"1 -2 25 32CD32FF 00000000 1 FSE\n");
   fprintf($fp,"2 0 38 63 63 32CD32FF\n");
   $aux=show3("attivifse","attivi","00008",$conn);

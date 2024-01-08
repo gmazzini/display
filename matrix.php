@@ -95,6 +95,15 @@ function show2($base,$tot,$ip,$bin,$time,$conn){
   shell_exec("tmp/convert3 $name $time $bin");
 }
 
+function show3($table,$par,$istat,$conn){
+  $query=oci_parse($conn,"select $par from $table where istat='$istat'");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  @$aux=$row[0];
+  oci_free_statement($query);
+  return $aux;
+}
+
 function myrandom($conn,$ip,$tot){
   $query=oci_parse($conn,"select c1,c2 from mysession where id='$ip'");
   oci_execute($query);
@@ -237,7 +246,7 @@ switch($screen){
   fprintf($fp,"1 -2 6 FFFFFFFF 00000000 3 %s %s\n",$ip,$ser);
   fprintf($fp,"1 0 12 FFFF00FF 00000000 3 Istat\n");
   fprintf($fp,"1 0 18 0000FFFF 00000000 3 %s\n",$istat);
-  if($sovra<>""){
+  if($sovra1198
     fprintf($fp,"1 -1 12 00FFFFFF 00000000 3 Unione\n");
     fprintf($fp,"1 -1 18 FF0000FF 00000000 3 %s\n",$sovra);
   }
@@ -245,6 +254,17 @@ switch($screen){
   fprintf($fp,"1 -2 40 FFFFFFFF 00000000 2 %s\n",@$aux[1]);
   fprintf($fp,"1 -2 48 FFFFFFFF 00000000 2 %s\n",@$aux[2]);
   fprintf($fp,"1 -2 56 FFFFFFFF 00000000 2 %s\n",@$aux[3]);
+  fclose($fp);
+  shell_exec("tmp/write2 $des ff; tmp/convert3 $ff $time $bin");
+  break;
+
+  case "40001":
+  $fp=fopen($des,"w");
+  fprintf($fp,"1 -2 05 FFFFFFFF 00000000 01 Utenti\n");
+  fprintf($fp,"1 -2 25 32CD32FF 00000000 01 FSE\n");
+  fprintf($fp,"2 00 38 63 63 32CD32FF\n");
+  $aux=show3("attivifse","attivi","00008",$conn);
+  fprintf($fp,"1 -2 47 FFFFFFFF FFFFFF00 02 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
   fclose($fp);
   shell_exec("tmp/write2 $des ff; tmp/convert3 $ff $time $bin");
   break;

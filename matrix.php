@@ -246,7 +246,7 @@ switch($screen){
   fprintf($fp,"1 -2 6 FFFFFFFF 00000000 3 %s %s\n",$ip,$ser);
   fprintf($fp,"1 0 12 FFFF00FF 00000000 3 Istat\n");
   fprintf($fp,"1 0 18 0000FFFF 00000000 3 %s\n",$istat);
-  if($sovra1198
+  if($sovra<>""){
     fprintf($fp,"1 -1 12 00FFFFFF 00000000 3 Unione\n");
     fprintf($fp,"1 -1 18 FF0000FF 00000000 3 %s\n",$sovra);
   }

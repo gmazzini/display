@@ -255,18 +255,18 @@ switch($screen){
   fprintf($fp,"1 -2 48 FFFFFFFF 00000000 2 %s\n",@$aux[2]);
   fprintf($fp,"1 -2 56 FFFFFFFF 00000000 2 %s\n",@$aux[3]);
   fclose($fp);
-  shell_exec("tmp/write2 $des ff; tmp/convert3 $ff $time $bin");
+  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
   break;
 
   case "4001":
   $fp=fopen($des,"w");
-  fprintf($fp,"1 -2 05 FFFFFFFF 00000000 01 Utenti\n");
-  fprintf($fp,"1 -2 25 32CD32FF 00000000 01 FSE\n");
-  fprintf($fp,"2 00 38 63 63 32CD32FF\n");
+  fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 Utenti\n");
+  fprintf($fp,"1 -2 25 32CD32FF 00000000 1 FSE\n");
+  fprintf($fp,"2 0 38 63 63 32CD32FF\n");
   $aux=show3("attivifse","attivi","00008",$conn);
-  fprintf($fp,"1 -2 47 FFFFFFFF FFFFFF00 02 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
+  fprintf($fp,"1 -2 47 FFFFFFFF FFFFFF00 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
   fclose($fp);
-  shell_exec("tmp/write2 $des ff; tmp/convert3 $ff $time $bin");
+  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
   break;
     
   default: 

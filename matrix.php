@@ -258,7 +258,7 @@ switch($screen){
   shell_exec("tmp/write2 $des ff; tmp/convert3 $ff $time $bin");
   break;
 
-  case "40001":
+  case "4001":
   $fp=fopen($des,"w");
   fprintf($fp,"1 -2 05 FFFFFFFF 00000000 01 Utenti\n");
   fprintf($fp,"1 -2 25 32CD32FF 00000000 01 FSE\n");

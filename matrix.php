@@ -263,7 +263,7 @@ switch($screen){
   fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 Utenti\n");
   fprintf($fp,"1 -2 15 FFFFFFFF 00000000 1 attivi\n");
   fprintf($fp,"1 -2 25 00FF00FF 00000000 1 FSE\n");
-  fprintf($fp,"2 0 38 63 63 00FF00FF\n");
+  fprintf($fp,"2 0 38 63 63 00AA0080\n");
   $aux=show3("attivifse","attivi","00008",$conn);
   fprintf($fp,"1 -2 47 000000FF FFFFFF00 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
   fclose($fp);
@@ -274,7 +274,7 @@ switch($screen){
   $fp=fopen($des,"w");
   fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 Accessi\n");
   fprintf($fp,"1 -2 18 00FF00FF 00000000 1 FSE\n");
-  fprintf($fp,"2 0 38 63 63 00FF00FF\n");
+  fprintf($fp,"2 0 38 63 63 00AA0080\n");
   $aux=show3("accessifse","accessi","00008",$conn);
   fprintf($fp,"1 -2 47 000000FF FFFFFF00 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
   fclose($fp);
@@ -286,7 +286,7 @@ switch($screen){
   fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 Documenti\n");
   fprintf($fp,"1 -2 15 FFFFFFFF 00000000 1 scaricati\n");
   fprintf($fp,"1 -2 25 00FF00FF 00000000 1 FSE\n");
-  fprintf($fp,"2 0 38 63 63 00FF00FF\n");
+  fprintf($fp,"2 0 38 63 63 00AA0080\n");
   $aux=show3("scaricatifse","scaricati","00008",$conn);
   fprintf($fp,"1 -2 47 000000FF FFFFFF00 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
   fclose($fp);

@@ -281,7 +281,7 @@ switch($screen){
   shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
   break;
 
-  ase "4003":
+  case "4003":
   $fp=fopen($des,"w");
   fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 Documenti\n");
   fprintf($fp,"1 -2 15 FFFFFFFF 00000000 1 scaricati\n");

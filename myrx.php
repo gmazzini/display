@@ -46,7 +46,7 @@ for(;;){
         $tt=(int)(time()/86400);
         $istat=$myistat[$id];
 
-        $query=oci_parse($conn,"select count(*) from dhcpwifi where id='$vv' and ip=$id and tt=$tt");
+        $query=oci_parse($conn,"select req from dhcpwifi where id='$vv' and ip=$id and tt=$tt");
         oci_execute($query);
         $row=oci_fetch_row($query);
         @$myreq=(int)$row[0];

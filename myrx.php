@@ -61,7 +61,7 @@ for(;;){
         }
         else {
           $myreq++;
-          $query=oci_parse($conn,"update dhcpwifi set req=$myreq where values id='$vv' and ip=$id and tt=$tt");
+          $query=oci_parse($conn,"update dhcpwifi set req=$myreq where id='$vv' and ip=$id and tt=$tt");
           oci_execute($query);
           oci_free_statement($query);
           echo "$i,<$myreq>,$ip,$id,$vv,$vv2,$istat,$tt\n";

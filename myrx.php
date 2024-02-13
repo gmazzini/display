@@ -44,20 +44,27 @@ for(;;){
         for($j=0;$j<6;$j++)$tohash.=chr(hexdec($xx[$j]));
         $vv2=hash("fnv1a64",$tohash,false);        
         $tt=(int)(time()/86400);
+        $istat=$myistat[$id];
 
         $query=oci_parse($conn,"select count(*) from dhcpwifi where id='$vv' and ip=$id and tt=$tt");
         oci_execute($query);
         $row=oci_fetch_row($query);
-        @$myexist=$row[0];
+        @$myreq=(int)$row[0];
         oci_free_statement($query);
 
-        if(!$myexist){
-          $istat=$myistat[$id];
-          $query=oci_parse($conn,"insert into dhcpwifi (id,fnv1a,ip,tt,istat) values ('$vv',hextoraw('$vv2'),$id,$tt,'$istat')");
+        if($myreq==0){
+          $query=oci_parse($conn,"insert into dhcpwifi (id,fnv1a,ip,tt,istat,req) values ('$vv',hextoraw('$vv2'),$id,$tt,'$istat',1)");
           oci_execute($query);
           oci_free_statement($query);
           $ii++;
           echo "$i,$ii,$ip,$id,$vv,$vv2,$istat,$tt\n";
+        }
+        else {
+          $myreq++;
+          $query=oci_parse($conn,"update dhcpwifi set req=$myreq where values id='$vv' and ip=$id and tt=$tt");
+          oci_execute($query);
+          oci_free_statement($query);
+          echo "$i,<$myreq>,$ip,$id,$vv,$vv2,$istat,$tt\n";
         }
       }
     }

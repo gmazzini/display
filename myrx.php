@@ -17,6 +17,7 @@ for($i=42;$i<=63;$i++){
 
 $i=0;
 $ii=0;
+$uttt=0;
 $sock=socket_create(AF_INET,SOCK_DGRAM,0);
 socket_bind($sock, "0.0.0.0",514);
 for(;;){
@@ -42,8 +43,9 @@ for(;;){
         $xx=explode(":",$mac);
         $tohash="";
         for($j=0;$j<6;$j++)$tohash.=chr(hexdec($xx[$j]));
-        $vv2=hash("fnv1a64",$tohash,false);        
-        $tt=(int)(time()/86400);
+        $vv2=hash("fnv1a64",$tohash,false);
+        $ttt=time();
+        $tt=(int)($ttt/86400);
         $istat=$myistat[$id];
 
         $query=oci_parse($conn,"select req from dhcpwifi where id='$vv' and ip=$id and tt=$tt");
@@ -57,14 +59,20 @@ for(;;){
           oci_execute($query);
           oci_free_statement($query);
           $ii++;
-          echo "$i,$ii,$ip,$id,$vv,$vv2,$istat,$tt,1\n";
+          if($ttt>$uttt){
+            echo "N,$i,$ii,$ip,$id,$vv,$vv2,$istat,$tt,1\n";
+            $uttt=$ttt+2;
+          }
         }
         else {
           $myreq++;
           $query=oci_parse($conn,"update dhcpwifi set req=$myreq where id='$vv' and ip=$id and tt=$tt");
           oci_execute($query);
           oci_free_statement($query);
-          echo "$i,$ii,$ip,$id,$vv,$vv2,$istat,$tt,$myreq\n";
+          if($ttt>$uttt){
+            echo "U,$i,$ii,$ip,$id,$vv,$vv2,$istat,$tt,$myreq\n";
+            $uttt=$ttt+2;
+          } 
         }
       }
     }

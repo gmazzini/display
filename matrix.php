@@ -307,17 +307,27 @@ switch($screen){
 
   case "4005":
   $fp=fopen($des,"w");
-  fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 Cittadini\n");
-  fprintf($fp,"1 -2 15 FFFFFFFF 00000000 1 con\n");
-  fprintf($fp,"1 -2 25 FF8000FF 00000000 1 LepidaID\n");
-  $aux=show3("attivazionilepidaid","attivazioni","00008",$conn);
+  fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 Accessi\n");
+  fprintf($fp,"1 -2 15 FF8000FF 00000000 1 LepidaID\n");
+  $aux=show3("accessilepidaid","accessi","00008",$conn);
   fprintf($fp,"1 -2 46 FF8000FF 00000000 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
   fprintf($fp,"2 0 61 63 63 FF8000FF\n");
   fclose($fp);
   shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
   break;
-    
-  default: 
+
+  case "4006":
+  $fp=fopen($des,"w");
+  fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 Sportelli\n");
+  fprintf($fp,"1 -2 15 FF8000FF 00000000 1 LepidaID\n");
+  $aux=show3("sportellilepidaid","sportelli","00008",$conn);
+  fprintf($fp,"1 -2 46 FF8000FF 00000000 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
+  fprintf($fp,"2 0 61 63 63 FF8000FF\n");
+  fclose($fp);
+  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
+  break;
+
+  default:
   $fp=fopen($des,"w");
   fprintf($fp,"1 -2 0 FF0000FF 00000000 2 ser %s\n",$ser);
   fprintf($fp,"1 -2 10 00FF00FF 00000000 2 seq %s\n",$seq);

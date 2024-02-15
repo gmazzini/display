@@ -274,9 +274,9 @@ switch($screen){
   $fp=fopen($des,"w");
   fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 Accessi\n");
   fprintf($fp,"1 -2 18 00FF00FF 00000000 1 FSE\n");
-  fprintf($fp,"2 0 38 63 63 00AA0080\n");
   $aux=show3("accessifse","accessi","00008",$conn);
-  fprintf($fp,"1 -2 47 000000FF FFFFFF00 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
+  fprintf($fp,"1 -2 46 00FF00FF 00000000 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
+  fprintf($fp,"2 0 61 63 63 00FF00FF\n");
   fclose($fp);
   shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
   break;
@@ -286,9 +286,33 @@ switch($screen){
   fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 Documenti\n");
   fprintf($fp,"1 -2 15 FFFFFFFF 00000000 1 scaricati\n");
   fprintf($fp,"1 -2 25 00FF00FF 00000000 1 FSE\n");
-  fprintf($fp,"2 0 38 63 63 00AA0080\n");
   $aux=show3("scaricatifse","scaricati","00008",$conn);
-  fprintf($fp,"1 -2 47 000000FF FFFFFF00 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
+  fprintf($fp,"1 -2 46 00FF00FF 00000000 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
+  fprintf($fp,"2 0 61 63 63 00FF00FF\n");
+  fclose($fp);
+  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
+  break;
+
+  case "4004":
+  $fp=fopen($des,"w");
+  fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 Cittadini\n");
+  fprintf($fp,"1 -2 15 FFFFFFFF 00000000 1 con\n");
+  fprintf($fp,"1 -2 25 FF8000FF 00000000 1 LepidaID\n");
+  $aux=show3("attivazionilepidaid","attivazioni","00008",$conn);
+  fprintf($fp,"1 -2 46 FF8000FF 00000000 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
+  fprintf($fp,"2 0 61 63 63 FF8000FF\n");
+  fclose($fp);
+  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
+  break;
+
+  case "4005":
+  $fp=fopen($des,"w");
+  fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 Cittadini\n");
+  fprintf($fp,"1 -2 15 FFFFFFFF 00000000 1 con\n");
+  fprintf($fp,"1 -2 25 FF8000FF 00000000 1 LepidaID\n");
+  $aux=show3("attivazionilepidaid","attivazioni","00008",$conn);
+  fprintf($fp,"1 -2 46 FF8000FF 00000000 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
+  fprintf($fp,"2 0 61 63 63 FF8000FF\n");
   fclose($fp);
   shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
   break;

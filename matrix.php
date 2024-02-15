@@ -327,6 +327,30 @@ switch($screen){
   shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
   break;
 
+  case "4007":
+  $fp=fopen($des,"w");
+  fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 Punti\n");
+  fprintf($fp,"1 -2 15 FFFFFFFF 00000000 1 E-R\n");
+  fprintf($fp,"1 -2 25 008080FF 00000000 1 WiFi\n");
+  $aux=show3("apwifi","apwifi","00008",$conn);
+  fprintf($fp,"1 -2 46 008080FF 00000000 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
+  fprintf($fp,"2 0 61 63 63 008080FF\n");
+  fclose($fp);
+  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
+  break;
+
+  case "4008":
+  $fp=fopen($des,"w");
+  fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 Utenti\n");
+  fprintf($fp,"1 -2 15 FFFFFFFF 00000000 1 E-R\n");
+  fprintf($fp,"1 -2 25 008080FF 00000000 1 WiFi\n");
+  $aux=show3("userwifi","userwifi","00008",$conn);
+  fprintf($fp,"1 -2 46 008080FF 00000000 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
+  fprintf($fp,"2 0 61 63 63 008080FF\n");
+  fclose($fp);
+  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
+  break;
+
   default:
   $fp=fopen($des,"w");
   fprintf($fp,"1 -2 0 FF0000FF 00000000 2 ser %s\n",$ser);

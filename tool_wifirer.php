@@ -3,6 +3,7 @@
 include "data.php";
 $conn=oci_connect($p1,$p2,$p3);
 $tt=(int)$argv[1];
+$lab=array("11271"=>"Pres","11452"=>"AM38");
 
 $query=oci_parse($conn,"select idstart,idend from idistat where eistat='00008'");
 oci_execute($query);
@@ -23,7 +24,7 @@ for($c=0;$c<$cc;$c++){
 }
 
 for($c=0;$c<$cc;$c++){
-  printf("%d,%d,%d\n",$tt,$c,$nn[$c]);
+  printf("%d,%d,%d\n",$tt,$lab[$idstat[$c]],$nn[$c]);
 }
 
 oci_close($conn);

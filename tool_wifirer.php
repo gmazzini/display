@@ -2,9 +2,22 @@
 
 include "data.php";
 $conn=oci_connect($p1,$p2,$p3);
-$te=(int)(time()/86400);
-$ts=$te-$argv[1];
-$istat=$argv[2];
+$tt=(int)$argv[1];
+
+query=oci_parse($conn,"select idstart,idend from idistat where eistat='00008");
+oci_execute($query);
+for($cc=0;;$cc++){
+  $row=oci_fetch_row($query);
+  if($row==null)break;
+  $idstart[$cc]=(int)$row[0];
+  $idend[$cc]=(int)$row[1];
+}
+oci_free_statement($query);
+
+print_r($idstart)
+
+
+exit(0);
 
 $query=oci_parse($conn,"select idstart,idend from idistat where eistat='$istat'");
 oci_execute($query);

@@ -14,7 +14,7 @@ for($cc=0;;$cc++){
 }
 oci_free_statement($query);
 
-print_r($idstart)
+print_r($idstart);
 
 
 exit(0);

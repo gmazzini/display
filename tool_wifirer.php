@@ -4,7 +4,7 @@ include "data.php";
 $conn=oci_connect($p1,$p2,$p3);
 $tt=(int)$argv[1];
 
-query=oci_parse($conn,"select idstart,idend from idistat where eistat='00008");
+query=oci_parse($conn,"select idstart,idend from idistat where eistat='00008'");
 oci_execute($query);
 for($cc=0;;$cc++){
   $row=oci_fetch_row($query);

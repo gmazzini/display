@@ -27,8 +27,8 @@ for($c=0;$c<$cc;$c++){
 
 for($c=0;$c<$cc;$c++){
   printf("%d,%s",$tt,$lab[$idstart[$c]]);
-          
-          
+  for($n=0;$n<50;$n+=5)printf(",%d",$nn[$c][$n];
+  printf("\n");          
 }
 
 oci_close($conn);

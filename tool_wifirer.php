@@ -14,8 +14,17 @@ for($cc=0;;$cc++){
 }
 oci_free_statement($query);
 
-print_r($idstart);
+for($c=0;$c<$cc;$c++){
+  $query=oci_parse($conn,"select count(*) from dhcpwifi where id>=$idstart[$c] and id<=$idend[$c] and tt=$tt");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  $nn[$c]=(int)$row[0];
+  oci_free_statement($query);
+}
 
+for($c=0;$c<$cc;$c++){
+  printf("%d,%d,%d\n",$tt,$c,$nn[$c]);
+}
 
 exit(0);
 

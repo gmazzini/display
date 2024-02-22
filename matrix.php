@@ -116,6 +116,17 @@ function show4($table,$par,$des,$ff,$bin,$time,$conn,$row1,$row2,$row3,$col1){
   shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
 }
 
+function show5($table,$par,$des,$ff,$bin,$time,$conn,$row1,$row2,$col1){
+  $fp=fopen($des,"w");
+  fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 $row1\n");
+  fprintf($fp,"1 -2 15 $col1 00000000 1 $row2\n");
+  $aux=show3($table,$par,"00008",$conn);
+  fprintf($fp,"1 -2 46 $col1 00000000 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
+  fprintf($fp,"2 0 61 63 63 $col1\n");
+  fclose($fp);
+  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
+}
+
 function myrandom($conn,$ip,$tot){
   $query=oci_parse($conn,"select c1,c2 from mysession where id='$ip'");
   oci_execute($query);
@@ -271,98 +282,13 @@ switch($screen){
   break;
 
   case "4001": show4("attivifse","attivi",$des,$ff,$bin,$time,$conn,"Utenti","attivi","FSE","00FF00FF"); break;
-  case "6001":
-  $fp=fopen($des,"w");
-  fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 Utenti\n");
-  fprintf($fp,"1 -2 15 FFFFFFFF 00000000 1 attivi\n");
-  fprintf($fp,"1 -2 25 00FF00FF 00000000 1 FSE\n");
-  $aux=show3("attivifse","attivi","00008",$conn);
-  fprintf($fp,"1 -2 46 00FF00FF 00000000 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
-  fprintf($fp,"2 0 61 63 63 00FF00FF\n");
-  fclose($fp);
-  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
-  break;
-
-  case "4002":
-  $fp=fopen($des,"w");
-  fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 Accessi\n");
-  fprintf($fp,"1 -2 18 00FF00FF 00000000 1 FSE\n");
-  $aux=show3("accessifse","accessi","00008",$conn);
-  fprintf($fp,"1 -2 46 00FF00FF 00000000 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
-  fprintf($fp,"2 0 61 63 63 00FF00FF\n");
-  fclose($fp);
-  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
-  break;
-
-  case "4003":
-  $fp=fopen($des,"w");
-  fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 Documenti\n");
-  fprintf($fp,"1 -2 15 FFFFFFFF 00000000 1 scaricati\n");
-  fprintf($fp,"1 -2 25 00FF00FF 00000000 1 FSE\n");
-  $aux=show3("scaricatifse","scaricati","00008",$conn);
-  fprintf($fp,"1 -2 46 00FF00FF 00000000 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
-  fprintf($fp,"2 0 61 63 63 00FF00FF\n");
-  fclose($fp);
-  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
-  break;
-
-  case "4004":
-  $fp=fopen($des,"w");
-  fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 Cittadini\n");
-  fprintf($fp,"1 -2 15 FFFFFFFF 00000000 1 con\n");
-  fprintf($fp,"1 -2 25 FF8000FF 00000000 1 LepidaID\n");
-  $aux=show3("attivazionilepidaid","attivazioni","00008",$conn);
-  fprintf($fp,"1 -2 46 FF8000FF 00000000 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
-  fprintf($fp,"2 0 61 63 63 FF8000FF\n");
-  fclose($fp);
-  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
-  break;
-
-  case "4005":
-  $fp=fopen($des,"w");
-  fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 Accessi\n");
-  fprintf($fp,"1 -2 15 FF8000FF 00000000 1 LepidaID\n");
-  $aux=show3("accessilepidaid","accessi","00008",$conn);
-  fprintf($fp,"1 -2 46 FF8000FF 00000000 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
-  fprintf($fp,"2 0 61 63 63 FF8000FF\n");
-  fclose($fp);
-  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
-  break;
-
-  case "4006":
-  $fp=fopen($des,"w");
-  fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 Sportelli\n");
-  fprintf($fp,"1 -2 15 FF8000FF 00000000 1 LepidaID\n");
-  $aux=show3("sportellilepidaid","sportelli","00008",$conn);
-  fprintf($fp,"1 -2 46 FF8000FF 00000000 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
-  fprintf($fp,"2 0 61 63 63 FF8000FF\n");
-  fclose($fp);
-  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
-  break;
-
-  case "4007":
-  $fp=fopen($des,"w");
-  fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 Punti\n");
-  fprintf($fp,"1 -2 15 FFFFFFFF 00000000 1 E-R\n");
-  fprintf($fp,"1 -2 25 008080FF 00000000 1 WiFi\n");
-  $aux=show3("apwifi","apwifi","00008",$conn);
-  fprintf($fp,"1 -2 46 008080FF 00000000 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
-  fprintf($fp,"2 0 61 63 63 008080FF\n");
-  fclose($fp);
-  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
-  break;
-
-  case "4008":
-  $fp=fopen($des,"w");
-  fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 Utenti\n");
-  fprintf($fp,"1 -2 15 FFFFFFFF 00000000 1 E-R\n");
-  fprintf($fp,"1 -2 25 008080FF 00000000 1 WiFi\n");
-  $aux=show3("userwifi","userwifi","00008",$conn);
-  fprintf($fp,"1 -2 46 008080FF 00000000 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
-  fprintf($fp,"2 0 61 63 63 008080FF\n");
-  fclose($fp);
-  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
-  break;
+  case "4002": show5("accessifse","accessi",$des,$ff,$bin,$time,$conn,"Accessi","FSE","00FF00FF"); break;
+  case "4003": show4("scaricatifse","scaricati",$des,$ff,$bin,$time,$conn,"Documenti","scaricati","FSE","00FF00FF"); break;
+  case "4004": show4("attivazionilepidaid","attivazioni",$des,$ff,$bin,$time,$conn,"Cittadini","con","LepidaID","FF8000FF"); break;
+  case "4005": show5("accessilepidaid","accessi",$des,$ff,$bin,$time,$conn,"Accessi","LepidaID","FF8000FF"); break;
+  case "4006": show5("sportellilepidaid","sportelli",$des,$ff,$bin,$time,$conn,"Sportelli","LepidaID","FF8000FF"); break;
+  case "4007": show4("apwifi","apwifi",$des,$ff,$bin,$time,$conn,"Punti","E-R","WiFi","008080FF"); break;
+  case "4008": show4("userwifi","userwifi",$des,$ff,$bin,$time,$conn,"Utenti","E-R","WiFi","008080FF"); break;
 
   default:
   $fp=fopen($des,"w");

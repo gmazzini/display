@@ -104,6 +104,18 @@ function show3($table,$par,$istat,$conn){
   return $aux;
 }
 
+function show4($table,$par,$des,$ff,$bin,$time,$conn,$row1,$row2,$row3,$col1){
+  $fp=fopen($des,"w");
+  fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 $row1\n");
+  fprintf($fp,"1 -2 15 FFFFFFFF 00000000 1 $row2\n");
+  fprintf($fp,"1 -2 25 $col1 00000000 1 $row3\n");
+  $aux=show3($table,$par,"00008",$conn);
+  fprintf($fp,"1 -2 46 $col1 00000000 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
+  fprintf($fp,"2 0 61 63 63 $col1\n");
+  fclose($fp);
+  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
+}
+
 function myrandom($conn,$ip,$tot){
   $query=oci_parse($conn,"select c1,c2 from mysession where id='$ip'");
   oci_execute($query);
@@ -258,7 +270,8 @@ switch($screen){
   shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
   break;
 
-  case "4001":
+  case "4001": show4("attivifse","attivi",$des,$ff,$bin,$time,$conn,"Utenti","attivi","FSE","00FF00FF"); break;
+  case "6001":
   $fp=fopen($des,"w");
   fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 Utenti\n");
   fprintf($fp,"1 -2 15 FFFFFFFF 00000000 1 attivi\n");

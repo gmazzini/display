@@ -290,7 +290,7 @@ switch($screen){
   case "4007": show4("apwifi","apwifi",$des,$ff,$bin,$time,$conn,"Punti","E-R","WiFi","008080FF"); break;
   case "4008": show4("userwifi","userwifi",$des,$ff,$bin,$time,$conn,"Utenti","E-R","WiFi","008080FF"); break;
   case "4009": show4("scuole","scuole",$des,$ff,$bin,$time,$conn,"Scuole","connesse","1Gbps","0000FFFF"); break;
-//  case "4010": show4("uiftth","uiftth",$des,$ff,$bin,$time,$conn,"Unita’","immobiliari",”FTTH","0000FFFF"); break;
+  case "4010": show4("uiftth","uiftth",$des,$ff,$bin,$time,$conn,"Unita’","immobiliari","FTTH","0000FFFF"); break;
 //  case "4011": show4("areeaai","areeaai",$des,$ff,$bin,$time,$conn,"Aree","produttive",”connesse","0000FFFF"); break;
  // case "4012": show5("aziendeaai","aziendeaai",$des,$ff,$bin,$time,$conn,"Aziende",”connesse","0000FFFF"); break;
  // case "4013": show4("pal","pal",$des,$ff,$bin,$time,$conn,"Sedi",”connesse","Rete Lepida","800080FF"); break;

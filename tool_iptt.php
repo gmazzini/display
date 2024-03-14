@@ -13,10 +13,11 @@ $max=$row[1];
 oci_free_statement($query0);
 
 for($tt=$min;$tt<=$max;$tt++){
+  $dd=date("Y-m-d",$tt*86400);
   $query=oci_parse($conn,"select count(distinct id) from dhcpwifi where tt=$tt and ip>=$ips and ip<=$ipe");
   oci_execute($query);
   $row=oci_fetch_row($query);
-  echo "$tt,$row[0]\n";
+  echo "$dd,$row[0]\n";
   oci_free_statement($query);
 }
 

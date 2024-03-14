@@ -5,8 +5,17 @@ $conn=oci_connect($p1,$p2,$p3);
 $ips=$argv[1];
 $ipe=$argv[2];
 
-$query0=oci_parse($conn,"select distinct tt from dhcpwifi order by tt");
+$query0=oci_parse($conn,"select min(tt),max(tt) from dhcpwifi");
 oci_execute($query0);
+$row=oci_fetch_row($query0);
+$min=$row[0];
+$max=$row[1];
+oci_free_statement($query0);
+
+echo "$min,$max\n";
+exit(1);
+
+
 for(;;){
   $row=oci_fetch_row($query0);
   if($row==null)break;

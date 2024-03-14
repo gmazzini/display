@@ -12,7 +12,7 @@ $min=$row[0];
 $max=$row[1];
 oci_free_statement($query0);
 
-for($tt=min;$tt<=$max;$tt++){
+for($tt=$min;$tt<=$max;$tt++){
   $query=oci_parse($conn,"select count(distinct id) from dhcpwifi where tt=$tt and ip>=$ips and ip<=$ipe");
   oci_execute($query);
   $row=oci_fetch_row($query);

@@ -3,6 +3,9 @@
 include "/home/admgm02/data.php";
 $conn=oci_connect($p1,$p2,$p3);
 
+make3($conn,"apwifi","apwifi","1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0","WISPER!H2:I",$sovra,$ss);
+exit(1);
+
 function mycheck($conn,$table,$istat){
   $query=oci_parse($conn,"select count(*) from $table where istat='$istat'");
   oci_execute($query);

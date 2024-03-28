@@ -64,7 +64,10 @@ for($ss=0;;){
 }
 oci_free_statement($query);
 
-make3($conn,"apwifi","apwifi","1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0","WISPER!H2:I",$sovra,$ss);
+make3($conn,"apwifi","apwifi","1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0","WISPER!H2:I",0,1,$sovra,$ss);
+make3($conn,3,"uiftth","uiftth","1Nk39CPjf9Lu_UQ_zUnY97cqYZ5Vh7K00owrw-XeSgHM","B4:D",0,2,$sovra,$ss);
+
+
 exit(1);
 
 $query=oci_parse($conn,"select distinct istat from idistat where istat>'30000'");
@@ -208,7 +211,7 @@ fai2($conn,1,"man","man","https://docs.google.com/spreadsheets/d/1DEs7yoAfJ6wK9L
 fai2($conn,1,"pal","pal","https://docs.google.com/spreadsheets/d/1DEs7yoAfJ6wK9L-V5kYoArEeP-g110NgPMU0DDFv9EE/gviz/tq?tq=select%20V&tqx=out:csv&gid=1797209276",$sovra,$ss);
 fai2($conn,1,"scuole","scuole","https://docs.google.com/spreadsheets/d/10xN81W5Dd8LRjVOm_FJ0ubzgJ1EWJ4Vfi8P3iVZdBho/gviz/tq?tq=select%20A%20where%20U%3D%27BULBUL%27&tqx=out:csv&gid=566741345",$sovra,$ss);
 fai2($conn,1,"areeaai","areeaai","https://docs.google.com/spreadsheets/d/1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0/gviz/tq?tq=select%20G&tqx=out:csv&gid=566741345",$sovra,$ss);
-fai2($conn,3,"uiftth","uiftth","https://docs.google.com/spreadsheets/d/1Nk39CPjf9Lu_UQ_zUnY97cqYZ5Vh7K00owrw-XeSgHM/gviz/tq?tq=select%20B%2CD&tqx=out:csv",$sovra,$ss);
+// fai2($conn,3,"uiftth","uiftth","https://docs.google.com/spreadsheets/d/1Nk39CPjf9Lu_UQ_zUnY97cqYZ5Vh7K00owrw-XeSgHM/gviz/tq?tq=select%20B%2CD&tqx=out:csv",$sovra,$ss);
 fai2($conn,1,"aziendeaai","aziendeaai","https://docs.google.com/spreadsheets/d/1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0/gviz/tq?tq=select%20G%2CF&tqx=out:csv&gid=566741345",$sovra,$ss);
 // fai2($conn,1,"apwifi","apwifi","https://docs.google.com/spreadsheets/d/1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0/gviz/tq?tq=select%20H%2CI&tqx=out:csv&gid=1373772362",$sovra,$ss);
 
@@ -221,7 +224,7 @@ fai1($conn,"sportellilepidaid","sportelli","https://dati.fascicolo-sanitario.it/
 
 oci_close($conn);
 
-function make3($conn,$table,$field,$spreadsheetid,$range,$sovra,$ss){
+function make3($conn,$table,$field,$spreadsheetid,$range,$i1,$i2,$sovra,$ss){
   echo "$table\n";
   include "/home/www/restdati.lepida.it/googleset.php";
   $access_token=file_get_contents("/home/www/data/access_token");
@@ -234,8 +237,8 @@ function make3($conn,$table,$field,$spreadsheetid,$range,$sovra,$ss){
   $oo=json_decode(curl_exec($ch),true);
   $nn=count($oo["values"]);
   for($i=0;$i<$nn;$i++){
-    $kk=$oo["values"][$i][0];
-    $vv=(int)$oo["values"][$i][1];
+    $kk=$oo["values"][$i][$i1];
+    $vv=(int)$oo["values"][$i][$i2];
     @$ddd[$kk]+=(int)$vv;
   }
   curl_close($ch);

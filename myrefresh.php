@@ -12,12 +12,6 @@ function mycheck($conn,$table,$istat){
   return $zz; 
 }
 
-
-
-make3($conn,"apwifi","apwifi","1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0","WISPER!H2:I",$sovra,$ss);
-exit(1);
-
-
 echo "idistat\n";
 $aux=explode("\n",file_get_contents("https://docs.google.com/spreadsheets/d/1DTngQUDqQgcYhA4S1iOW3jGuj-nOO-98opbXeUC-ffA/gviz/tq?tq=select%20D%2CA%2CB%2CC&tqx=out:csv&gid=644800101"));
 for($i=1;;$i++){
@@ -69,6 +63,9 @@ for($ss=0;;){
   $ss++;
 }
 oci_free_statement($query);
+
+make3($conn,"apwifi","apwifi","1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0","WISPER!H2:I",$sovra,$ss);
+exit(1);
 
 $query=oci_parse($conn,"select distinct istat from idistat where istat>'30000'");
 oci_execute($query);
@@ -213,7 +210,7 @@ fai2($conn,1,"scuole","scuole","https://docs.google.com/spreadsheets/d/10xN81W5D
 fai2($conn,1,"areeaai","areeaai","https://docs.google.com/spreadsheets/d/1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0/gviz/tq?tq=select%20G&tqx=out:csv&gid=566741345",$sovra,$ss);
 fai2($conn,3,"uiftth","uiftth","https://docs.google.com/spreadsheets/d/1Nk39CPjf9Lu_UQ_zUnY97cqYZ5Vh7K00owrw-XeSgHM/gviz/tq?tq=select%20B%2CD&tqx=out:csv",$sovra,$ss);
 fai2($conn,1,"aziendeaai","aziendeaai","https://docs.google.com/spreadsheets/d/1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0/gviz/tq?tq=select%20G%2CF&tqx=out:csv&gid=566741345",$sovra,$ss);
-fai2($conn,1,"apwifi","apwifi","https://docs.google.com/spreadsheets/d/1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0/gviz/tq?tq=select%20H%2CI&tqx=out:csv&gid=1373772362",$sovra,$ss);
+// fai2($conn,1,"apwifi","apwifi","https://docs.google.com/spreadsheets/d/1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0/gviz/tq?tq=select%20H%2CI&tqx=out:csv&gid=1373772362",$sovra,$ss);
 
 fai1($conn,"attivifse","attivi","https://dati.fascicolo-sanitario.it/rest/attivi/comune",$sovra,$ss);
 fai1($conn,"accessifse","accessi","https://dati.fascicolo-sanitario.it/rest/accessi/comune",$sovra,$ss);
@@ -249,8 +246,6 @@ function make3($conn,$table,$field,$spreadsheetid,$range,$sovra,$ss){
     $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
     oci_execute($query);
   }
-  
-  return;
   $query=oci_parse($conn,"select sum($field) from $table where istat>'30000'");
   oci_execute($query);
   $row=oci_fetch_row($query);

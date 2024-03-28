@@ -242,9 +242,11 @@ function make3($conn,$table,$field,$spreadsheetid,$range,$sovra,$ss){
     @$ddd[$kk]+=(int)$vv;
   }
   curl_close($ch);
+  $query=oci_parse($conn,"delete from $table");
+  oci_execute($query);
+  oci_free_statement($query);
   foreach($ddd as $kk => $vv){
-    if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
-    else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
+    $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
     oci_execute($query);
   }
   

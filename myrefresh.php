@@ -228,6 +228,7 @@ function make3($conn,$table,$field,$spreadsheetid,$range,$sovra,$ss){
   echo "$table\n";
   include "/home/www/restdati.lepida.it/googleset.php";
   $access_token=file_get_contents("/home/www/data/access_token");
+  echo "https://sheets.googleapis.com/v4/spreadsheets/spreadsheetid/values/$range\n";
   $ch=curl_init();
   curl_setopt($ch,CURLOPT_URL,"https://sheets.googleapis.com/v4/spreadsheets/spreadsheetid/values/$range");
   curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,FALSE);

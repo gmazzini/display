@@ -75,6 +75,14 @@ for($yy=0;;){
 }
 oci_free_statement($query);
 
+
+
+
+
+
+fai2($conn,1,"apwifi","apwifi","https://docs.google.com/spreadsheets/d/1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0/gviz/tq?tq=select%20H%2CI&tqx=out:csv&gid=1373772362",$sovra,$ss);
+
+
 echo "userwifi\n";
 $tt=(int)(time()/86400)-365;
 $query=oci_parse($conn,"delete from dhcpwifi where tt<$tt");
@@ -207,7 +215,6 @@ fai2($conn,1,"scuole","scuole","https://docs.google.com/spreadsheets/d/10xN81W5D
 fai2($conn,1,"areeaai","areeaai","https://docs.google.com/spreadsheets/d/1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0/gviz/tq?tq=select%20G&tqx=out:csv&gid=566741345",$sovra,$ss);
 fai2($conn,3,"uiftth","uiftth","https://docs.google.com/spreadsheets/d/1Nk39CPjf9Lu_UQ_zUnY97cqYZ5Vh7K00owrw-XeSgHM/gviz/tq?tq=select%20B%2CD&tqx=out:csv",$sovra,$ss);
 fai2($conn,1,"aziendeaai","aziendeaai","https://docs.google.com/spreadsheets/d/1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0/gviz/tq?tq=select%20G%2CF&tqx=out:csv&gid=566741345",$sovra,$ss);
-fai2($conn,1,"apwifi","apwifi","https://docs.google.com/spreadsheets/d/1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0/gviz/tq?tq=select%20H%2CI&tqx=out:csv&gid=1373772362",$sovra,$ss);
 
 fai1($conn,"attivifse","attivi","https://dati.fascicolo-sanitario.it/rest/attivi/comune",$sovra,$ss);
 fai1($conn,"accessifse","accessi","https://dati.fascicolo-sanitario.it/rest/accessi/comune",$sovra,$ss);
@@ -217,5 +224,49 @@ fai1($conn,"accessilepidaid","accessi","https://dati.fascicolo-sanitario.it/rest
 fai1($conn,"sportellilepidaid","sportelli","https://dati.fascicolo-sanitario.it/rest/lepidaid/sportelli/comune",$sovra,$ss);
 
 oci_close($conn);
+
+function make3($conn,$table,$field,$spreadsheetid,$range,$sovra,$ss){
+  echo "$table\n";
+  include "/home/www/restdati.lepida.it/googleset.php";
+  $access_token=file_get_contents("/home/www/data/access_token");
+  $ch=curl_init();
+  curl_setopt($ch,CURLOPT_URL,"https://sheets.googleapis.com/v4/spreadsheets/spreadsheetid/values/$range");
+  curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,FALSE);
+  curl_setopt($ch,CURLOPT_HTTPHEADER,Array("Content-Type: application/json","Authorization: Bearer ".$access_token));
+  curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+  $oo=json_decode(curl_exec($ch),true);
+  $nn=count($oo["values"]);
+  for($i=0;$i<$nn;$i++){
+    $kk=$oo["values"][$i][0];
+    $vv=(int)$oo["values"][$i][1];
+    if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
+    else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
+    oci_execute($query);
+  }
+  curl_close($ch);
+  $query=oci_parse($conn,"select sum($field) from $table where istat>'30000'");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  $vv=$row[0];
+  oci_free_statement($query);
+  $kk="00008";
+  if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
+  else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
+  oci_execute($query);
+  oci_free_statement($query);
+  for($i=0;$i<$ss;$i++){
+    $query=oci_parse($conn,"select sum($table.$field) from $table,idistat where $table.istat=idistat.istat and idistat.sovra='$sovra[$i]'");
+    oci_execute($query);
+    $row=oci_fetch_row($query);
+    if(isset($row[0]))$vv=$row[0];
+    else $vv=0;
+    oci_free_statement($query);
+    $kk=$sovra[$i];
+    if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
+    else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
+    oci_execute($query);
+    oci_free_statement($query);
+  }
+}
 
 ?>

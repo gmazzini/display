@@ -230,7 +230,7 @@ function make3($conn,$table,$field,$spreadsheetid,$range,$sovra,$ss){
   $access_token=file_get_contents("/home/www/data/access_token");
   echo "https://sheets.googleapis.com/v4/spreadsheets/$spreadsheetid/values/$range\n";
   $ch=curl_init();
-  curl_setopt($ch,CURLOPT_URL,"https://sheets.googleapis.com/v4/$spreadsheets/spreadsheetid/values/$range");
+  curl_setopt($ch,CURLOPT_URL,"https://sheets.googleapis.com/v4/spreadsheets/$spreadsheetid/values/$range");
   curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,FALSE);
   curl_setopt($ch,CURLOPT_HTTPHEADER,Array("Content-Type: application/json","Authorization: Bearer ".$access_token));
   curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);

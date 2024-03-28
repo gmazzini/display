@@ -239,11 +239,15 @@ function make3($conn,$table,$field,$spreadsheetid,$range,$sovra,$ss){
   for($i=0;$i<$nn;$i++){
     $kk=$oo["values"][$i][0];
     $vv=(int)$oo["values"][$i][1];
+    @$ddd[$kk]+=(int)$vv;
+  }
+  curl_close($ch);
+  foreach($ddd as $kk => $vv){
     if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
     else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
     oci_execute($query);
   }
-  curl_close($ch);
+  
   return;
   $query=oci_parse($conn,"select sum($field) from $table where istat>'30000'");
   oci_execute($query);

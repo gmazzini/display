@@ -205,11 +205,12 @@ function make3($conn,$table,$field,$spreadsheetid,$range,$i1,$i2,$sovra,$ss){
   $oo=json_decode(curl_exec($ch),true);
   $nn=count($oo["values"]);
   for($i=0;$i<$nn;$i++){
-    $kk=$oo["values"][$i][$i1];
+    @$istat=$oo["values"][$i][$i1];
+    if(strlen($istat)!=5)continue;
     if($i2==-1)$vv=1;
     elseif($i2==-2){if($oo["values"][$i][0]=="MAN")$vv=1; else $vv=0;}
     else $vv=($i2==-1)?1:(int)$oo["values"][$i][$i2];
-    @$ddd[$kk]+=(int)$vv;
+    @$ddd[$istat]+=(int)$vv;
   }
   curl_close($ch);
   $query=oci_parse($conn,"delete from $table");

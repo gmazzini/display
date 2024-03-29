@@ -23,13 +23,14 @@ for($ss=0;;){
 }
 oci_free_statement($query);
 
-make3($conn,"scuole","scuole","1SUGh7fL0zkppRbYZykrdVoim5XLKv9Vwt1yDstLPu-o","Elenco!N2:U",0,-1,"@\$oo['values'][\$i][7]=='BULBUL'",$sovra,$ss);
+make3($conn,"apwifi","apwifi","1ZMxZbD-gGhLGR5RdcBHhRsZQeARiRrK1Nw-2PSWHbZE","WISPER!AN2:AO",0,1,"",$sovra,$ss);
 exit(0);
 
+make3($conn,"scuole","scuole","1SUGh7fL0zkppRbYZykrdVoim5XLKv9Vwt1yDstLPu-o","Elenco!N2:U",0,-1,"@\$oo['values'][\$i][7]=='BULBUL'",$sovra,$ss);
 make3($conn,"man","man","1DEs7yoAfJ6wK9L-V5kYoArEeP-g110NgPMU0DDFv9EE","MAN!K2:V",11,-1,"\$oo['values'][\$i][0]=='MAN'",$sovra,$ss);
 make3($conn,"pal","pal","1DEs7yoAfJ6wK9L-V5kYoArEeP-g110NgPMU0DDFv9EE","PAL!V2:V",0,-1,"1==1",$sovra,$ss);
+
 make3($conn,"uiftth","uiftth","1Nk39CPjf9Lu_UQ_zUnY97cqYZ5Vh7K00owrw-XeSgHM","B4:D",0,2,"",$sovra,$ss);
-make3($conn,"apwifi","apwifi","1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0","WISPER!H2:I",0,1,"",$sovra,$ss);
 
 // fai2($conn,1,"man","man","https://docs.google.com/spreadsheets/d/1DEs7yoAfJ6wK9L-V5kYoArEeP-g110NgPMU0DDFv9EE/gviz/tq?tq=select%20V%20where%20K%3D%27MAN%27&tqx=out:csv&gid=902689105",$sovra,$ss);
 // fai2($conn,1,"pal","pal","https://docs.google.com/spreadsheets/d/1DEs7yoAfJ6wK9L-V5kYoArEeP-g110NgPMU0DDFv9EE/gviz/tq?tq=select%20V&tqx=out:csv&gid=1797209276",$sovra,$ss);

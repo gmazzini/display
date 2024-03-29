@@ -42,8 +42,8 @@ oci_free_statement($query);
 $nn=count($oo["values"]);
 for($i=0;$i<$nn;$i++){
   $istat=$oo["values"][$i][0];
-  $ente=$oo["values"][$i][1];
-  $sovra=$oo["values"][$i][3];
+  $ente=str_replace("'","''",$oo["values"][$i][1]);
+  @$sovra=$oo["values"][$i][3];
   $query=oci_parse($conn,"insert into istatente (istat,ente) values ('$istat','$ente')");
   oci_execute($query);
   oci_free_statement($query);

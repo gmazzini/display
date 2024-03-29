@@ -202,7 +202,7 @@ function make3($conn,$table,$field,$spreadsheetid,$range,$i1,$i2,$cond,$sovra,$s
   for($i=0;$i<$nn;$i++){
     @$istat=$oo["values"][$i][$i1];
     if(strlen($istat)!=5)continue;
-    if($i2==-1)eval("if($cond)\$vv=1; else \$vv=0;");
+    @if($i2==-1)eval("if($cond)\$vv=1; else \$vv=0;");
     else $vv=($i2==-1)?1:(int)$oo["values"][$i][$i2];
     @$ddd[$istat]+=(int)$vv;
   }

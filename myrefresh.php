@@ -24,8 +24,6 @@ for($ss=0;;){
 oci_free_statement($query);
 
 make3($conn,"apwifi","apwifi","1ZMxZbD-gGhLGR5RdcBHhRsZQeARiRrK1Nw-2PSWHbZE","Apparati!AN2:AO",0,1,"",$sovra,$ss);
-exit(0);
-
 make3($conn,"scuole","scuole","1SUGh7fL0zkppRbYZykrdVoim5XLKv9Vwt1yDstLPu-o","Elenco!N2:U",0,-1,"@\$oo['values'][\$i][7]=='BULBUL'",$sovra,$ss);
 make3($conn,"man","man","1DEs7yoAfJ6wK9L-V5kYoArEeP-g110NgPMU0DDFv9EE","MAN!K2:V",11,-1,"\$oo['values'][\$i][0]=='MAN'",$sovra,$ss);
 make3($conn,"pal","pal","1DEs7yoAfJ6wK9L-V5kYoArEeP-g110NgPMU0DDFv9EE","PAL!V2:V",0,-1,"1==1",$sovra,$ss);

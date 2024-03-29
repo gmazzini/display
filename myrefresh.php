@@ -202,7 +202,7 @@ function make3($conn,$table,$field,$spreadsheetid,$range,$i1,$i2,$sovra,$ss){
   for($i=0;$i<$nn;$i++){
     $kk=$oo["values"][$i][$i1];
     if($i2==-1)$vv=1;
-    else if($i2==-2)if($oo["values"][$i][0]=="MAN")$vv=1 else $vv=0;
+    else if($i2==-2){if($oo["values"][$i][0]=="MAN")$vv=1 else $vv=0;}
     else $vv=($i2==-1)?1:(int)$oo["values"][$i][$i2];
     @$ddd[$kk]+=(int)$vv;
   }

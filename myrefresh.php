@@ -24,14 +24,14 @@ for($ss=0;;){
 oci_free_statement($query);
 
 
-make3($conn,"man","man","1DEs7yoAfJ6wK9L-V5kYoArEeP-g110NgPMU0DDFv9EE","MAN!K2:V",11,-2,$sovra,$ss);
+make3($conn,"man","man","1DEs7yoAfJ6wK9L-V5kYoArEeP-g110NgPMU0DDFv9EE","MAN!K2:V",11,-1,"\$oo['values'][\$i][0]=='MAN'",$sovra,$ss);
 exit(0);
 
 
 
-make3($conn,"pal","pal","1DEs7yoAfJ6wK9L-V5kYoArEeP-g110NgPMU0DDFv9EE","PAL!V2:V",0,-1,$sovra,$ss);
-make3($conn,"uiftth","uiftth","1Nk39CPjf9Lu_UQ_zUnY97cqYZ5Vh7K00owrw-XeSgHM","B4:D",0,2,$sovra,$ss);
-make3($conn,"apwifi","apwifi","1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0","WISPER!H2:I",0,1,$sovra,$ss);
+make3($conn,"pal","pal","1DEs7yoAfJ6wK9L-V5kYoArEeP-g110NgPMU0DDFv9EE","PAL!V2:V",0,-1,"1==1",$sovra,$ss);
+make3($conn,"uiftth","uiftth","1Nk39CPjf9Lu_UQ_zUnY97cqYZ5Vh7K00owrw-XeSgHM","B4:D",0,2,"",$sovra,$ss);
+make3($conn,"apwifi","apwifi","1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0","WISPER!H2:I",0,1,"",$sovra,$ss);
 
 
 exit(0);
@@ -192,7 +192,7 @@ fai1($conn,"sportellilepidaid","sportelli","https://dati.fascicolo-sanitario.it/
 
 oci_close($conn);
 
-function make3($conn,$table,$field,$spreadsheetid,$range,$i1,$i2,$sovra,$ss){
+function make3($conn,$table,$field,$spreadsheetid,$range,$i1,$i2,$cond,$sovra,$ss){
   echo "$table\n";
   include "/home/www/restdati.lepida.it/googleset.php";
   $access_token=file_get_contents("/home/www/data/access_token");
@@ -207,8 +207,7 @@ function make3($conn,$table,$field,$spreadsheetid,$range,$i1,$i2,$sovra,$ss){
   for($i=0;$i<$nn;$i++){
     @$istat=$oo["values"][$i][$i1];
     if(strlen($istat)!=5)continue;
-    if($i2==-1)$vv=1;
-    elseif($i2==-2){if($oo["values"][$i][0]=="MAN")$vv=1; else $vv=0;}
+    if($i2==-1)eval("if($cond)\$vv=1; else \$vv=0;");
     else $vv=($i2==-1)?1:(int)$oo["values"][$i][$i2];
     @$ddd[$istat]+=(int)$vv;
   }

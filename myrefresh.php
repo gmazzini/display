@@ -24,7 +24,7 @@ for($ss=0;;){
 oci_free_statement($query);
 
 
-make3($conn,"scuole","scuole","10xN81W5Dd8LRjVOm_FJ0ubzgJ1EWJ4Vfi8P3iVZdBho","Elenco!N2:U",0,-1,"\$oo['values'][\$i][7]=='BULBUL'",$sovra,$ss);
+make3($conn,"scuole","scuole","10xN81W5Dd8LRjVOm_FJ0ubzgJ1EWJ4Vfi8P3iVZdBho","Elenco!N2:U",0,-1,"@\$oo['values'][\$i][7]=='BULBUL'",$sovra,$ss);
 
 exit(0);
 

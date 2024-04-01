@@ -341,7 +341,7 @@ function show10($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$time,$conn,$priv
     $delta=0;
   }
   else $delta=7;
-  fprintf($fp,"1 -2 %02d FF0000FF 00000000 1 -Comune\n",10+$delta);
+  fprintf($fp,"1 -2 %02d FF0000FF 00000000 1 Comune\n",10+$delta);
   fprintf($fp,"1 -2 %02d FF00FFFF 00000000 2 %s\n",19+$delta,($aux<3 & $privacy)?"*":number_format($aux,0,",","."));
   fprintf($fp,"1 -2 %02d FF0000FF 00000000 1 Regione\n",48-$delta);
   fprintf($fp,"1 -2 %02d FF00FFFF 00000000 2 %s\n",57-$delta,($reraux<3 & $privacy)?"*":number_format($reraux,0,",","."));

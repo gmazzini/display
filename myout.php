@@ -79,6 +79,7 @@ else {
 }
 echo "{\n";
 echo "  \"epoch\":".time().",\n";
+echo "  \"tt\":$tt,\n";
 echo $comune;
 echo $regione;
 if($sovra<>"")echo $unione;

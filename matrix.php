@@ -201,7 +201,7 @@ oci_free_statement($query);
 switch($screen){ 
   case "0001": show1("uiftth","uiftth","FTTH bianche",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
   case "0002": show1("areeaai","areeaai","AAI Aree",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
-  case "0003": show1("aziendeaai","aziendeaai","AAI Aziende",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
+  case "0003": show10("aziendeaai","aziendeaai","AAI Aziende",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
   case "0004": show1("scuole","scuole","Scuole 1G",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
   case "0005": show1("pal","pal","PAL rete",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
   case "0006": show1("man","man","MAN rete",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
@@ -341,7 +341,7 @@ function show10($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$time,$conn,$priv
     $delta=0;
   }
   else $delta=7;
-  fprintf($fp,"1 -2 %02d FF0000FF 00000000 1 Comune\n",10+$delta);
+  fprintf($fp,"1 -2 %02d FF0000FF 00000000 1 -Comune\n",10+$delta);
   fprintf($fp,"1 -2 %02d FF00FFFF 00000000 2 %s\n",19+$delta,($aux<3 & $privacy)?"*":number_format($aux,0,",","."));
   fprintf($fp,"1 -2 %02d FF0000FF 00000000 1 Regione\n",48-$delta);
   fprintf($fp,"1 -2 %02d FF00FFFF 00000000 2 %s\n",57-$delta,($reraux<3 & $privacy)?"*":number_format($reraux,0,",","."));

@@ -23,8 +23,8 @@ for($ss=0;;){
 }
 oci_free_statement($query);
 
+make4($conn,"aziendeaai","aziendeaai","1_H9hzrPmySAfAMkLtGmH5IIB8cric6OtUwXf3Jfl6ME","Aziende!B2:B",0,-1,"1==1",$sovra,$ss);
 
-make3($conn,"aziendeaai","aziendeaai","1_H9hzrPmySAfAMkLtGmH5IIB8cric6OtUwXf3Jfl6ME","Aziende!B2:B",0,-1,"1==1",$sovra,$ss);
 make3($conn,"areeaai","areeaai","1_H9hzrPmySAfAMkLtGmH5IIB8cric6OtUwXf3Jfl6ME","Nodi!B2:B",0,-1,"1==1",$sovra,$ss);
 make3($conn,"apwifi","apwifi","1ZMxZbD-gGhLGR5RdcBHhRsZQeARiRrK1Nw-2PSWHbZE","Apparati!AN2:AO",0,1,"",$sovra,$ss);
 make3($conn,"scuole","scuole","1SUGh7fL0zkppRbYZykrdVoim5XLKv9Vwt1yDstLPu-o","Elenco!N2:U",0,-1,"@\$oo['values'][\$i][7]=='BULBUL'",$sovra,$ss);
@@ -234,6 +234,57 @@ function make3($conn,$table,$field,$spreadsheetid,$range,$i1,$i2,$cond,$sovra,$s
     $kk=$sovra[$i];
     if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
     else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
+    oci_execute($query);
+    oci_free_statement($query);
+  }
+}
+
+function make4($conn,$table,$field,$spreadsheetid,$range,$i1,$i2,$cond,$sovra,$ss){
+  echo "$table\n";
+  include "/home/www/restdati.lepida.it/googleset.php";
+  $access_token=file_get_contents("/home/www/data/access_token");
+  echo "https://sheets.googleapis.com/v4/spreadsheets/$spreadsheetid/values/$range\n";
+  $ch=curl_init();
+  curl_setopt($ch,CURLOPT_URL,"https://sheets.googleapis.com/v4/spreadsheets/$spreadsheetid/values/$range");
+  curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,FALSE);
+  curl_setopt($ch,CURLOPT_HTTPHEADER,Array("Content-Type: application/json","Authorization: Bearer ".$access_token));
+  curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+  $oo=json_decode(curl_exec($ch),true);
+  $nn=count($oo["values"]);
+  for($i=0;$i<$nn;$i++){
+    @$istat=$oo["values"][$i][$i1];
+    if(strlen($istat)!=5)continue;
+    if($i2==-1)eval("if($cond)\$vv=1; else \$vv=0;");
+    else @$vv=(int)$oo["values"][$i][$i2];
+    @$ddd[$istat]+=(int)$vv;
+  }
+  curl_close($ch);
+  $tt=(int)(time()/86400);
+  $query=oci_parse($conn,"delete from $table");
+  oci_execute($query);
+  oci_free_statement($query);
+  foreach($ddd as $kk => $vv){
+    $query=oci_parse($conn,"insert into $table (istat,$field,tt) values ('$kk',$vv,$tt)");
+    oci_execute($query);
+  }
+  $query=oci_parse($conn,"select sum($field) from $table where istat>'30000' and tt=$tt");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  $vv=$row[0];
+  oci_free_statement($query);
+  $kk="00008";
+  $query=oci_parse($conn,"insert into $table (istat,$field,tt) values ('$kk',$vv,$tt)");
+  oci_execute($query);
+  oci_free_statement($query);
+  for($i=0;$i<$ss;$i++){
+    $query=oci_parse($conn,"select sum($table.$field) from $table,idistat where $table.istat=idistat.istat and idistat.sovra='$sovra[$i]' and $table.tt=$tt");
+    oci_execute($query);
+    $row=oci_fetch_row($query);
+    if(isset($row[0]))$vv=$row[0];
+    else $vv=0;
+    oci_free_statement($query);
+    $kk=$sovra[$i];
+    $query=oci_parse($conn,"insert into $table (istat,$field,tt) values ('$kk',$vv,$tt)");
     oci_execute($query);
     oci_free_statement($query);
   }

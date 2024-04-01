@@ -24,12 +24,13 @@ for($ss=0;;){
 oci_free_statement($query);
 
 make4($conn,"aziendeaai","aziendeaai","1_H9hzrPmySAfAMkLtGmH5IIB8cric6OtUwXf3Jfl6ME","Aziende!B2:B",0,-1,"1==1",$sovra,$ss);
+make4($conn,"areeaai","areeaai","1_H9hzrPmySAfAMkLtGmH5IIB8cric6OtUwXf3Jfl6ME","Nodi!B2:B",0,-1,"1==1",$sovra,$ss);
+make4($conn,"apwifi","apwifi","1ZMxZbD-gGhLGR5RdcBHhRsZQeARiRrK1Nw-2PSWHbZE","Apparati!AN2:AO",0,1,"",$sovra,$ss);
+make4($conn,"scuole","scuole","1SUGh7fL0zkppRbYZykrdVoim5XLKv9Vwt1yDstLPu-o","Elenco!N2:U",0,-1,"@\$oo['values'][\$i][7]=='BULBUL'",$sovra,$ss);
+make4($conn,"man","man","1DEs7yoAfJ6wK9L-V5kYoArEeP-g110NgPMU0DDFv9EE","MAN!K2:V",11,-1,"\$oo['values'][\$i][0]=='MAN'",$sovra,$ss);
+make4($conn,"pal","pal","1DEs7yoAfJ6wK9L-V5kYoArEeP-g110NgPMU0DDFv9EE","PAL!V2:V",0,-1,"1==1",$sovra,$ss);
 
-make3($conn,"areeaai","areeaai","1_H9hzrPmySAfAMkLtGmH5IIB8cric6OtUwXf3Jfl6ME","Nodi!B2:B",0,-1,"1==1",$sovra,$ss);
-make3($conn,"apwifi","apwifi","1ZMxZbD-gGhLGR5RdcBHhRsZQeARiRrK1Nw-2PSWHbZE","Apparati!AN2:AO",0,1,"",$sovra,$ss);
-make3($conn,"scuole","scuole","1SUGh7fL0zkppRbYZykrdVoim5XLKv9Vwt1yDstLPu-o","Elenco!N2:U",0,-1,"@\$oo['values'][\$i][7]=='BULBUL'",$sovra,$ss);
-make3($conn,"man","man","1DEs7yoAfJ6wK9L-V5kYoArEeP-g110NgPMU0DDFv9EE","MAN!K2:V",11,-1,"\$oo['values'][\$i][0]=='MAN'",$sovra,$ss);
-make3($conn,"pal","pal","1DEs7yoAfJ6wK9L-V5kYoArEeP-g110NgPMU0DDFv9EE","PAL!V2:V",0,-1,"1==1",$sovra,$ss);
+eit(0);
 
 make3($conn,"uiftth","uiftth","1Nk39CPjf9Lu_UQ_zUnY97cqYZ5Vh7K00owrw-XeSgHM","B4:D",0,2,"",$sovra,$ss);
 

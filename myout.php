@@ -1,7 +1,10 @@
 <?php
 
 include "data.php";
-$istat=$_GET["istat"];;
+$istat=$_GET["istat"];
+if(isset($_GET["tt"]))$tt=_GET["tt"];
+else $tt=(int)((time()-25200)/86400);
+
 $conn=oci_connect($p1,$p2,$p3);
 
 $query=oci_parse($conn,"select sovra from idistat where istat='$istat'");
@@ -26,7 +29,6 @@ $row=oci_fetch_row($query);
 @$ente=$row[0];
 oci_free_statement($query);
 $unione.="    \"ente\":\"$ente\",\n";
-
 
 function show1($table,$par,$title,$istat,$sovra,$conn,$privacy){
   global $comune,$unione,$regione;
@@ -55,7 +57,7 @@ function show1($table,$par,$title,$istat,$sovra,$conn,$privacy){
 
 show1("uiftth","uiftth","FTTH bianche",$istat,$sovra,$conn,0);
 show1("areeaai","areeaai","AAI Aree",$istat,$sovra,$conn,0);
-show1("aziendeaai","aziendeaai","AAI Aziende",$istat,$sovra,$conn,0);
+show10("aziendeaai","aziendeaai","AAI Aziende",$istat,$sovra,$conn,0);
 show1("scuole","scuole","Scuole 1G",$istat,$sovra,$conn,0);
 show1("pal","pal","PAL rete",$istat,$sovra,$conn,0);
 show1("man","man","MAN rete",$istat,$sovra,$conn,0);
@@ -83,5 +85,30 @@ if($sovra<>"")echo $unione;
 echo "}\n";
 
 oci_close($conn);
+
+function show10($table,$par,$title,$istat,$sovra,$conn,$privacy,$tt){
+  global $comune,$unione,$regione;
+  $query=oci_parse($conn,"select $par from $table where istat='$istat' and tt=$tt");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  @$aux=(int)$row[0];
+  if($aux<3 & $privacy)$aux="*";
+  oci_free_statement($query);
+  $comune.="    \"$table\":$aux,\n";
+  $query=oci_parse($conn,"select $par from $table where istat='$sovra' and tt=$tt");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  @$aux=(int)$row[0];
+  if($aux<3 & $privacy)$aux="*";
+  oci_free_statement($query);
+  $unione.="    \"$table\":$aux,\n";
+  $query=oci_parse($conn,"select $par from $table where istat='00008' and tt=$tt");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  @$aux=(int)$row[0];
+  if($aux<3 & $privacy)$aux="*";
+  oci_free_statement($query);
+  $regione.="    \"$table\":$aux,\n";
+}
 
 ?>

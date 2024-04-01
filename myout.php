@@ -2,7 +2,7 @@
 
 include "data.php";
 $istat=$_GET["istat"];
-if(isset($_GET["tt"]))$tt=_GET["tt"];
+if(isset($_GET["tt"]))$tt=(int)$_GET["tt"];
 else $tt=(int)((time()-25200)/86400);
 
 $conn=oci_connect($p1,$p2,$p3);

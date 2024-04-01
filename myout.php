@@ -57,7 +57,7 @@ function show1($table,$par,$title,$istat,$sovra,$conn,$privacy){
 
 show1("uiftth","uiftth","FTTH bianche",$istat,$sovra,$conn,0);
 show1("areeaai","areeaai","AAI Aree",$istat,$sovra,$conn,0);
-show10("aziendeaai","aziendeaai","AAI Aziende",$istat,$sovra,$conn,0);
+show10("aziendeaai","aziendeaai","AAI Aziende",$istat,$sovra,$conn,0,$tt);
 show1("scuole","scuole","Scuole 1G",$istat,$sovra,$conn,0);
 show1("pal","pal","PAL rete",$istat,$sovra,$conn,0);
 show1("man","man","MAN rete",$istat,$sovra,$conn,0);

@@ -200,12 +200,12 @@ oci_free_statement($query);
 
 switch($screen){ 
   case "0001": show1("uiftth","uiftth","FTTH bianche",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
-  case "0002": show1("areeaai","areeaai","AAI Aree",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
+  case "0002": show10("areeaai","areeaai","AAI Aree",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
   case "0003": show10("aziendeaai","aziendeaai","AAI Aziende",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
-  case "0004": show1("scuole","scuole","Scuole 1G",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
-  case "0005": show1("pal","pal","PAL rete",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
-  case "0006": show1("man","man","MAN rete",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
-  case "0007": show1("apwifi","apwifi","Punti WiFi",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
+  case "0004": show10("scuole","scuole","Scuole 1G",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
+  case "0005": show10("pal","pal","PAL rete",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
+  case "0006": show10("man","man","MAN rete",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
+  case "0007": show10("apwifi","apwifi","Punti WiFi",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
   case "0008": show1("userwifi","userwifi","Utenti WiFi",$istat,$sovra,$des,$ff,$bin,$time,$conn,1); break;
   case "0009": show1("attivifse","attivi","Attivi FSE",$istat,$sovra,$des,$ff,$bin,$time,$conn,1); break;
   case "0010": show1("accessifse","accessi","Accessi FSE",$istat,$sovra,$des,$ff,$bin,$time,$conn,1); break;

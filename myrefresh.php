@@ -261,7 +261,7 @@ function make4($conn,$table,$field,$spreadsheetid,$range,$i1,$i2,$cond,$sovra,$s
   }
   curl_close($ch);
   $tt=(int)(time()/86400);
-  $query=oci_parse($conn,"delete from $table");
+  $query=oci_parse($conn,"delete from $table where tt=$tt");
   oci_execute($query);
   oci_free_statement($query);
   foreach($ddd as $kk => $vv){

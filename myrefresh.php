@@ -290,4 +290,41 @@ function make4($conn,$table,$field,$spreadsheetid,$range,$i1,$i2,$cond,$sovra,$s
   }
 }
 
+function make5($conn,$table,$field,$url,$sovra,$ss){
+  echo "$table\n";
+  $tt=(int)(time()/86400);
+  $query=oci_parse($conn,"delete from $table where tt=$tt");
+  oci_execute($query);
+  oci_free_statement($query);
+  $aux=json_decode(file_get_contents("$url"),true);
+  foreach($aux["dati"] as $k => $v){
+    $kk=substr($k,1,5);
+    $vv=(int)$v["$field"];
+    $query=oci_parse($conn,"insert into $table (istat,$field,tt) values ('$kk',$vv,$tt)");
+    oci_execute($query);
+    oci_free_statement($query);
+  }
+  $query=oci_parse($conn,"select sum($field) from $table where istat>'30000' and tt=$tt");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  $vv=$row[0];
+  oci_free_statement($query);
+  $kk="00008";
+  $query=oci_parse($conn,"insert into $table (istat,$field,tt) values ('$kk',$vv,$tt)");
+  oci_execute($query);
+  oci_free_statement($query);
+  for($i=0;$i<$ss;$i++){
+    $query=oci_parse($conn,"select sum($table.$field) from $table,idistat where $table.istat=idistat.istat and idistat.sovra='$sovra[$i]' and $table.tt=$tt");
+    oci_execute($query);
+    $row=oci_fetch_row($query);
+    if(isset($row[0]))$vv=$row[0];
+    else $vv=0;
+    oci_free_statement($query);
+    $kk=$sovra[$i];
+    $query=oci_parse($conn,"insert into $table (istat,$field,tt) values ('$kk',$vv,$tt)");
+    oci_execute($query);
+    oci_free_statement($query);
+  }
+}
+
 ?>

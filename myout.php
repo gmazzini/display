@@ -30,32 +30,7 @@ $row=oci_fetch_row($query);
 oci_free_statement($query);
 $unione.="    \"ente\":\"$ente\",\n";
 
-function show1($table,$par,$title,$istat,$sovra,$conn,$privacy){
-  global $comune,$unione,$regione;
-  $query=oci_parse($conn,"select $par from $table where istat='$istat'");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  @$aux=(int)$row[0];
-  if($aux<3 & $privacy)$aux="*";
-  oci_free_statement($query);
-  $comune.="    \"$table\":$aux,\n";
-  $query=oci_parse($conn,"select $par from $table where istat='$sovra'");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  @$aux=(int)$row[0];
-  if($aux<3 & $privacy)$aux="*";
-  oci_free_statement($query);
-  $unione.="    \"$table\":$aux,\n";
-  $query=oci_parse($conn,"select $par from $table where istat='00008'");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  @$aux=(int)$row[0];
-  if($aux<3 & $privacy)$aux="*";
-  oci_free_statement($query);
-  $regione.="    \"$table\":$aux,\n";
-}
-
-show1("uiftth","uiftth","FTTH bianche",$istat,$sovra,$conn,0);
+show10("uiftth","uiftth","FTTH bianche",$istat,$sovra,$conn,0,$tt);
 show10("areeaai","areeaai","AAI Aree",$istat,$sovra,$conn,0,$tt);
 show10("aziendeaai","aziendeaai","AAI Aziende",$istat,$sovra,$conn,0,$tt);
 show10("scuole","scuole","Scuole 1G",$istat,$sovra,$conn,0,$tt);

@@ -206,7 +206,7 @@ switch($screen){
   case "0005": show10("pal","pal","PAL rete",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
   case "0006": show10("man","man","MAN rete",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
   case "0007": show10("apwifi","apwifi","Punti WiFi",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
-  case "0008": show1("userwifi","userwifi","Utenti WiFi",$istat,$sovra,$des,$ff,$bin,$time,$conn,1); break;
+  case "0008": show10("userwifi","userwifi","Utenti WiFi",$istat,$sovra,$des,$ff,$bin,$time,$conn,1); break;
   case "0009": show10("attivifse","attivi","Attivi FSE",$istat,$sovra,$des,$ff,$bin,$time,$conn,1); break;
   case "0010": show10("accessifse","accessi","Accessi FSE",$istat,$sovra,$des,$ff,$bin,$time,$conn,1); break;
   case "0011": show10("scaricatifse","scaricati","Scaricati FSE",$istat,$sovra,$des,$ff,$bin,$time,$conn,1); break;

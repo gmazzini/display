@@ -3,15 +3,6 @@
 include "/home/admgm02/data.php";
 $conn=oci_connect($p1,$p2,$p3);
 
-function mycheck($conn,$table,$istat){
-  $query=oci_parse($conn,"select count(*) from $table where istat='$istat'");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  @$zz=$row[0];
-  oci_free_statement($query);
-  return $zz; 
-}
-
 $query=oci_parse($conn,"select distinct sovra from idistat");
 oci_execute($query);
 for($ss=0;;){
@@ -100,58 +91,6 @@ for($i=0;$i<$ss;$i++){
 }
 
 oci_close($conn);
-
-function make3($conn,$table,$field,$spreadsheetid,$range,$i1,$i2,$cond,$sovra,$ss){
-  echo "$table\n";
-  include "/home/www/restdati.lepida.it/googleset.php";
-  $access_token=file_get_contents("/home/www/data/access_token");
-  echo "https://sheets.googleapis.com/v4/spreadsheets/$spreadsheetid/values/$range\n";
-  $ch=curl_init();
-  curl_setopt($ch,CURLOPT_URL,"https://sheets.googleapis.com/v4/spreadsheets/$spreadsheetid/values/$range");
-  curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,FALSE);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,Array("Content-Type: application/json","Authorization: Bearer ".$access_token));
-  curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
-  $oo=json_decode(curl_exec($ch),true);
-  $nn=count($oo["values"]);
-  for($i=0;$i<$nn;$i++){
-    @$istat=$oo["values"][$i][$i1];
-    if(strlen($istat)!=5)continue;
-    if($i2==-1)eval("if($cond)\$vv=1; else \$vv=0;");
-    else @$vv=(int)$oo["values"][$i][$i2];
-    @$ddd[$istat]+=(int)$vv;
-  }
-  curl_close($ch);
-  $query=oci_parse($conn,"delete from $table");
-  oci_execute($query);
-  oci_free_statement($query);
-  foreach($ddd as $kk => $vv){
-    $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
-    oci_execute($query);
-  }
-  $query=oci_parse($conn,"select sum($field) from $table where istat>'30000'");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  $vv=$row[0];
-  oci_free_statement($query);
-  $kk="00008";
-  if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
-  else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
-  oci_execute($query);
-  oci_free_statement($query);
-  for($i=0;$i<$ss;$i++){
-    $query=oci_parse($conn,"select sum($table.$field) from $table,idistat where $table.istat=idistat.istat and idistat.sovra='$sovra[$i]'");
-    oci_execute($query);
-    $row=oci_fetch_row($query);
-    if(isset($row[0]))$vv=$row[0];
-    else $vv=0;
-    oci_free_statement($query);
-    $kk=$sovra[$i];
-    if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
-    else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
-    oci_execute($query);
-    oci_free_statement($query);
-  }
-}
 
 function make4($conn,$table,$field,$spreadsheetid,$range,$i1,$i2,$cond,$sovra,$ss){
   echo "$table\n";

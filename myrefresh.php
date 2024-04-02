@@ -72,6 +72,10 @@ oci_execute($query);
 oci_free_statement($query);
 $table="userwifi";
 $field="userwifi";
+$tt=(int)(time()/86400);
+$query=oci_parse($conn,"delete from $table where tt=$tt");
+oci_execute($query);
+oci_free_statement($query);
 for($i=0;$i<$yy;$i++){
   $kk=$yyistat[$i];
   echo "userwifi:$kk\n";
@@ -81,8 +85,7 @@ for($i=0;$i<$yy;$i++){
   if(isset($row[0]))$vv=$row[0];
   else $vv=0;
   oci_free_statement($query);
-  if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
-  else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
+  $query=oci_parse($conn,"insert into $table (istat,$field,tt) values ('$kk',$vv,$tt)");
   oci_execute($query);
   oci_free_statement($query);
 }
@@ -93,8 +96,7 @@ oci_execute($query);
 $row=oci_fetch_row($query);
 $vv=$row[0];
 oci_free_statement($query);
-if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
-else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
+$query=oci_parse($conn,"insert into $table (istat,$field,tt) values ('$kk',$vv,$tt)");
 oci_execute($query);
 oci_free_statement($query);
 for($i=0;$i<$ss;$i++){
@@ -106,8 +108,7 @@ for($i=0;$i<$ss;$i++){
   if(isset($row[0]))$vv=$row[0];
   else $vv=0;
   oci_free_statement($query);
-  if(mycheck($conn,$table,$kk))$query=oci_parse($conn,"update $table set $field=$vv where istat='$kk'");
-  else $query=oci_parse($conn,"insert into $table (istat,$field) values ('$kk',$vv)");
+  $query=oci_parse($conn,"insert into $table (istat,$field,tt) values ('$kk',$vv,$tt)");
   oci_execute($query);
   oci_free_statement($query);
 }

@@ -63,12 +63,12 @@ show10("pal","pal","PAL rete",$istat,$sovra,$conn,0,$tt);
 show10("man","man","MAN rete",$istat,$sovra,$conn,0,$tt);
 show10("apwifi","apwifi","Punti WiFi",$istat,$sovra,$conn,0,$tt);
 show1("userwifi","userwifi","Utenti WiFi",$istat,$sovra,$conn,1);
-show1("attivifse","attivi","Attivi FSE",$istat,$sovra,$conn,1);
-show1("accessifse","accessi","Accessi FSE",$istat,$sovra,$conn,1);
-show1("scaricatifse","scaricati","Scaricati FSE",$istat,$sovra,$conn,1);
-show1("attivazionilepidaid","attivazioni","Attivazioni ID",$istat,$sovra,$conn,1);
-show1("accessilepidaid","accessi","Accessi ID",$istat,$sovra,$conn,1);
-show1("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$conn,0);
+show10("attivifse","attivi","Attivi FSE",$istat,$sovra,$conn,1);
+show10("accessifse","accessi","Accessi FSE",$istat,$sovra,$conn,1);
+show10("scaricatifse","scaricati","Scaricati FSE",$istat,$sovra,$conn,1);
+show10("attivazionilepidaid","attivazioni","Attivazioni ID",$istat,$sovra,$conn,1);
+show10("accessilepidaid","accessi","Accessi ID",$istat,$sovra,$conn,1);
+show10("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$conn,0);
 
 $comune.="    \"istat\":\"$istat\"\n  },\n";
 $regione.="    \"istat\":\"00008\"\n  }";

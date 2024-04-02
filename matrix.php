@@ -35,125 +35,6 @@ $row=oci_fetch_row($query);
 @$ente=$row[0];
 oci_free_statement($query);
 
-function mysplit($x,$len){
-  $o=0;
-  for($l=0;;){
-    $s=strpos($x," ",$l);
-    if($s==null)$ss=strlen($x);
-    else $ss=$s;
-    if(strlen($oo[$o])+$ss-$l+1>$len)$o++;
-    if(strlen($oo[$o])==0)$oo[$o]=substr($x,$l,$ss-$l);
-    else $oo[$o].=" ".substr($x,$l,$ss-$l);
-    if($s==null)return $oo;
-    $l=$ss+1;
-  }
-}
-
-function show1($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$time,$conn,$privacy){
-  $query=oci_parse($conn,"select $par from $table where istat='$istat'");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  @$aux=$row[0];
-  oci_free_statement($query);
-  $query=oci_parse($conn,"select $par from $table where istat='00008'");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  @$reraux=$row[0];
-  oci_free_statement($query);
-  $fp=fopen($des,"w");
-  fprintf($fp,"1 -2 0 FFFFFFFF 00000000 2 %s\n",$title);
-  if($sovra<>""){
-    $query=oci_parse($conn,"select $par from $table where istat='$sovra'");
-    oci_execute($query);
-    $row=oci_fetch_row($query);
-    @$sovraaux=$row[0];
-    oci_free_statement($query);
-    fprintf($fp,"1 -2 29 FF0000FF 00000000 1 Unione\n");
-    fprintf($fp,"1 -2 38 FF00FFFF 00000000 2 %s\n",($sovraaux<3 & $privacy)?"*":number_format($sovraaux,0,",","."));
-    $delta=0;
-  }
-  else $delta=7;
-  fprintf($fp,"1 -2 %02d FF0000FF 00000000 1 Comune\n",10+$delta);
-  fprintf($fp,"1 -2 %02d FF00FFFF 00000000 2 %s\n",19+$delta,($aux<3 & $privacy)?"*":number_format($aux,0,",","."));
-  fprintf($fp,"1 -2 %02d FF0000FF 00000000 1 Regione\n",48-$delta);
-  fprintf($fp,"1 -2 %02d FF00FFFF 00000000 2 %s\n",57-$delta,($reraux<3 & $privacy)?"*":number_format($reraux,0,",","."));
-  fclose($fp);
-  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
-  return;
-}
-
-function show2($base,$tot,$ip,$bin,$time,$conn){
-  $query=oci_parse($conn,"update mysession set c1=c1+1 where id='$ip'");
-  oci_execute($query);
-  oci_free_statement($query);
-  $query=oci_parse($conn,"select c1 from mysession where id='$ip'");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  $vf=$base + $row[0] % $tot;
-  oci_free_statement($query);
-  $name=sprintf("tmp/image/%04d.ff",$vf);
-  shell_exec("tmp/convert3 $name $time $bin");
-}
-
-function show3($table,$par,$istat,$conn){
-  $query=oci_parse($conn,"select $par from $table where istat='$istat'");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  @$aux=$row[0];
-  oci_free_statement($query);
-  return $aux;
-}
-
-function show4($table,$par,$des,$ff,$bin,$time,$conn,$row1,$row2,$row3,$col1){
-  $fp=fopen($des,"w");
-  fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 $row1\n");
-  fprintf($fp,"1 -2 15 FFFFFFFF 00000000 1 $row2\n");
-  fprintf($fp,"1 -2 25 $col1 00000000 1 $row3\n");
-  $aux=show3($table,$par,"00008",$conn);
-  fprintf($fp,"1 -2 46 $col1 00000000 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
-  fprintf($fp,"2 0 61 63 63 $col1\n");
-  fclose($fp);
-  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
-}
-
-function show5($table,$par,$des,$ff,$bin,$time,$conn,$row1,$row2,$col1){
-  $fp=fopen($des,"w");
-  fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 $row1\n");
-  fprintf($fp,"1 -2 15 $col1 00000000 1 $row2\n");
-  $aux=show3($table,$par,"00008",$conn);
-  fprintf($fp,"1 -2 46 $col1 00000000 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
-  fprintf($fp,"2 0 61 63 63 $col1\n");
-  fclose($fp);
-  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
-}
-
-function myrandom($conn,$ip,$tot){
-  $query=oci_parse($conn,"select c1,c2 from mysession where id='$ip'");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  $c1=$row[0];
-  $c2=$row[1];
-  oci_free_statement($query);
-  $query=oci_parse($conn,"select m,num from rnd1 where p=$tot");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  $m=$row[0];
-  $num=$row[1];
-  oci_free_statement($query);
-  $id=floor($c1 / $m) % $num;
-  $query=oci_parse($conn,"select a,c from rnd2 where m=$m and id=$id");
-  oci_execute($query);
-  $row=oci_fetch_row($query);
-  $a=$row[0];
-  $c=$row[1];
-  oci_free_statement($query);
-  $next=($a * $c2 + $c) % $m;
-  $query=oci_parse($conn,"update mysession set c1=c1+1,c2=$next where id='$ip'");
-  oci_execute($query);
-  oci_free_statement($query);
-  return (($next<$tot) ? $next : rand(0,$tot-1));
-}
-
 $query=oci_parse($conn,"select count(*) from mysession where id='$ip'");
 oci_execute($query);
 $row=oci_fetch_row($query);
@@ -199,7 +80,7 @@ if($time=="")$time=1;
 oci_free_statement($query);
 
 switch($screen){ 
-  case "0001": show1("uiftth","uiftth","FTTH bianche",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
+  case "0001": show10("uiftth","uiftth","FTTH bianche",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
   case "0002": show10("areeaai","areeaai","AAI Aree",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
   case "0003": show10("aziendeaai","aziendeaai","AAI Aziende",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
   case "0004": show10("scuole","scuole","Scuole 1G",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
@@ -315,6 +196,92 @@ header("Content-Length: $len");
 readfile($bin);
 
 oci_close($conn);
+
+function mysplit($x,$len){
+  $o=0;
+  for($l=0;;){
+    $s=strpos($x," ",$l);
+    if($s==null)$ss=strlen($x);
+    else $ss=$s;
+    if(strlen($oo[$o])+$ss-$l+1>$len)$o++;
+    if(strlen($oo[$o])==0)$oo[$o]=substr($x,$l,$ss-$l);
+    else $oo[$o].=" ".substr($x,$l,$ss-$l);
+    if($s==null)return $oo;
+    $l=$ss+1;
+  }
+}
+
+function show2($base,$tot,$ip,$bin,$time,$conn){
+  $query=oci_parse($conn,"update mysession set c1=c1+1 where id='$ip'");
+  oci_execute($query);
+  oci_free_statement($query);
+  $query=oci_parse($conn,"select c1 from mysession where id='$ip'");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  $vf=$base + $row[0] % $tot;
+  oci_free_statement($query);
+  $name=sprintf("tmp/image/%04d.ff",$vf);
+  shell_exec("tmp/convert3 $name $time $bin");
+}
+
+function show3($table,$par,$istat,$conn){
+  $query=oci_parse($conn,"select $par from $table where istat='$istat'");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  @$aux=$row[0];
+  oci_free_statement($query);
+  return $aux;
+}
+
+function show4($table,$par,$des,$ff,$bin,$time,$conn,$row1,$row2,$row3,$col1){
+  $fp=fopen($des,"w");
+  fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 $row1\n");
+  fprintf($fp,"1 -2 15 FFFFFFFF 00000000 1 $row2\n");
+  fprintf($fp,"1 -2 25 $col1 00000000 1 $row3\n");
+  $aux=show3($table,$par,"00008",$conn);
+  fprintf($fp,"1 -2 46 $col1 00000000 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
+  fprintf($fp,"2 0 61 63 63 $col1\n");
+  fclose($fp);
+  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
+}
+
+function show5($table,$par,$des,$ff,$bin,$time,$conn,$row1,$row2,$col1){
+  $fp=fopen($des,"w");
+  fprintf($fp,"1 -2 5 FFFFFFFF 00000000 1 $row1\n");
+  fprintf($fp,"1 -2 15 $col1 00000000 1 $row2\n");
+  $aux=show3($table,$par,"00008",$conn);
+  fprintf($fp,"1 -2 46 $col1 00000000 2 %s\n",($aux<3)?"*":number_format($aux,0,",","."));
+  fprintf($fp,"2 0 61 63 63 $col1\n");
+  fclose($fp);
+  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
+}
+
+function myrandom($conn,$ip,$tot){
+  $query=oci_parse($conn,"select c1,c2 from mysession where id='$ip'");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  $c1=$row[0];
+  $c2=$row[1];
+  oci_free_statement($query);
+  $query=oci_parse($conn,"select m,num from rnd1 where p=$tot");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  $m=$row[0];
+  $num=$row[1];
+  oci_free_statement($query);
+  $id=floor($c1 / $m) % $num;
+  $query=oci_parse($conn,"select a,c from rnd2 where m=$m and id=$id");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  $a=$row[0];
+  $c=$row[1];
+  oci_free_statement($query);
+  $next=($a * $c2 + $c) % $m;
+  $query=oci_parse($conn,"update mysession set c1=c1+1,c2=$next where id='$ip'");
+  oci_execute($query);
+  oci_free_statement($query);
+  return (($next<$tot) ? $next : rand(0,$tot-1));
+}
 
 function show10($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$time,$conn,$privacy){
   $tt=(int)((time()-25200)/86400);

@@ -14,9 +14,6 @@ for($ss=0;;){
 }
 oci_free_statement($query);
 
-make4($conn,"uiftth","uiftth","11EyZCYlMyiGn9GetrFq1WpOFDcHEBegSBOkzaJYmAsA","Comuni!B3:E",0,3,"",$sovra,$ss);
-exit(0);
-
 make5($conn,"attivifse","attivi","https://dati.fascicolo-sanitario.it/rest/attivi/comune",$sovra,$ss);
 make5($conn,"accessifse","accessi","https://dati.fascicolo-sanitario.it/rest/accessi/comune",$sovra,$ss);
 make5($conn,"scaricatifse","scaricati","https://dati.fascicolo-sanitario.it/rest/documenti/comune",$sovra,$ss);
@@ -30,6 +27,7 @@ make4($conn,"apwifi","apwifi","1ZMxZbD-gGhLGR5RdcBHhRsZQeARiRrK1Nw-2PSWHbZE","Ap
 make4($conn,"scuole","scuole","1SUGh7fL0zkppRbYZykrdVoim5XLKv9Vwt1yDstLPu-o","Elenco!N2:U",0,-1,"@\$oo['values'][\$i][7]=='BULBUL'",$sovra,$ss);
 make4($conn,"man","man","1DEs7yoAfJ6wK9L-V5kYoArEeP-g110NgPMU0DDFv9EE","MAN!K2:V",11,-1,"\$oo['values'][\$i][0]=='MAN'",$sovra,$ss);
 make4($conn,"pal","pal","1DEs7yoAfJ6wK9L-V5kYoArEeP-g110NgPMU0DDFv9EE","PAL!V2:V",0,-1,"1==1",$sovra,$ss);
+make4($conn,"uiftth","uiftth","11EyZCYlMyiGn9GetrFq1WpOFDcHEBegSBOkzaJYmAsA","Comuni!B3:E",0,3,"",$sovra,$ss);
 
 $query=oci_parse($conn,"select distinct istat from idistat where istat>'30000'");
 oci_execute($query);

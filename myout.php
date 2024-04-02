@@ -62,7 +62,7 @@ show10("scuole","scuole","Scuole 1G",$istat,$sovra,$conn,0,$tt);
 show10("pal","pal","PAL rete",$istat,$sovra,$conn,0,$tt);
 show10("man","man","MAN rete",$istat,$sovra,$conn,0,$tt);
 show10("apwifi","apwifi","Punti WiFi",$istat,$sovra,$conn,0,$tt);
-show1("userwifi","userwifi","Utenti WiFi",$istat,$sovra,$conn,1);
+show10("userwifi","userwifi","Utenti WiFi",$istat,$sovra,$conn,1,$tt);
 show10("attivifse","attivi","Attivi FSE",$istat,$sovra,$conn,1,$tt);
 show10("accessifse","accessi","Accessi FSE",$istat,$sovra,$conn,1,$tt);
 show10("scaricatifse","scaricati","Scaricati FSE",$istat,$sovra,$conn,1,$tt);

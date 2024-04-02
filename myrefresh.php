@@ -23,6 +23,9 @@ for($ss=0;;){
 }
 oci_free_statement($query);
 
+make5($conn,"accessifse","accessi","https://dati.fascicolo-sanitario.it/rest/accessi/comune",$sovra,$ss);
+exit(0);
+
 make4($conn,"aziendeaai","aziendeaai","1_H9hzrPmySAfAMkLtGmH5IIB8cric6OtUwXf3Jfl6ME","Aziende!B2:B",0,-1,"1==1",$sovra,$ss);
 make4($conn,"areeaai","areeaai","1_H9hzrPmySAfAMkLtGmH5IIB8cric6OtUwXf3Jfl6ME","Nodi!B2:B",0,-1,"1==1",$sovra,$ss);
 make4($conn,"apwifi","apwifi","1ZMxZbD-gGhLGR5RdcBHhRsZQeARiRrK1Nw-2PSWHbZE","Apparati!AN2:AO",0,1,"",$sovra,$ss);
@@ -42,7 +45,7 @@ make3($conn,"uiftth","uiftth","1Nk39CPjf9Lu_UQ_zUnY97cqYZ5Vh7K00owrw-XeSgHM","B4
 // fai2($conn,1,"apwifi","apwifi","https://docs.google.com/spreadsheets/d/1cgCtacbWsm7wybTp8cA7wWBFo9bZOSc7JAnlV99K-O0/gviz/tq?tq=select%20H%2CI&tqx=out:csv&gid=1373772362",$sovra,$ss);
 
 fai1($conn,"attivifse","attivi","https://dati.fascicolo-sanitario.it/rest/attivi/comune",$sovra,$ss);
-fai1($conn,"accessifse","accessi","https://dati.fascicolo-sanitario.it/rest/accessi/comune",$sovra,$ss);
+// fai1($conn,"accessifse","accessi","https://dati.fascicolo-sanitario.it/rest/accessi/comune",$sovra,$ss);
 fai1($conn,"scaricatifse","scaricati","https://dati.fascicolo-sanitario.it/rest/documenti/comune",$sovra,$ss);
 fai1($conn,"attivazionilepidaid","attivazioni","https://dati.fascicolo-sanitario.it/rest/lepidaid/attivazioni/comune",$sovra,$ss);
 fai1($conn,"accessilepidaid","accessi","https://dati.fascicolo-sanitario.it/rest/lepidaid/accessi/comune",$sovra,$ss);

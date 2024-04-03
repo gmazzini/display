@@ -30,20 +30,21 @@ $row=oci_fetch_row($query);
 oci_free_statement($query);
 $unione.="    \"ente\":\"$ente\",\n";
 
-show10("uiftth","uiftth","FTTH bianche",$istat,$sovra,$conn,0,$tt);
-show10("areeaai","areeaai","AAI Aree",$istat,$sovra,$conn,0,$tt);
-show10("aziendeaai","aziendeaai","AAI Aziende",$istat,$sovra,$conn,0,$tt);
-show10("scuole","scuole","Scuole 1G",$istat,$sovra,$conn,0,$tt);
-show10("pal","pal","PAL rete",$istat,$sovra,$conn,0,$tt);
-show10("man","man","MAN rete",$istat,$sovra,$conn,0,$tt);
-show10("apwifi","apwifi","Punti WiFi",$istat,$sovra,$conn,0,$tt);
-show10("userwifi","userwifi","Utenti WiFi",$istat,$sovra,$conn,1,$tt);
-show10("attivifse","attivi","Attivi FSE",$istat,$sovra,$conn,1,$tt);
-show10("accessifse","accessi","Accessi FSE",$istat,$sovra,$conn,1,$tt);
-show10("scaricatifse","scaricati","Scaricati FSE",$istat,$sovra,$conn,1,$tt);
-show10("attivazionilepidaid","attivazioni","Attivazioni ID",$istat,$sovra,$conn,1,$tt);
-show10("accessilepidaid","accessi","Accessi ID",$istat,$sovra,$conn,1,$tt);
-show10("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$conn,0,$tt);
+show10("uiftth","uiftth",$istat,$sovra,$conn,0,$tt);
+show10("uifwa","uifwa",$istat,$sovra,$conn,0,$tt);
+show10("areeaai","areeaai",$istat,$sovra,$conn,0,$tt);
+show10("aziendeaai","aziendeaai",$istat,$sovra,$conn,0,$tt);
+show10("scuole","scuole",$istat,$sovra,$conn,0,$tt);
+show10("pal","pal",$istat,$sovra,$conn,0,$tt);
+show10("man","man",$istat,$sovra,$conn,0,$tt);
+show10("apwifi","apwifi",$istat,$sovra,$conn,0,$tt);
+show10("userwifi","userwifi",$istat,$sovra,$conn,1,$tt);
+show10("attivifse","attivi",$istat,$sovra,$conn,1,$tt);
+show10("accessifse","accessi",$istat,$sovra,$conn,1,$tt);
+show10("scaricatifse","scaricati",$istat,$sovra,$conn,1,$tt);
+show10("attivazionilepidaid","attivazioni",$istat,$sovra,$conn,1,$tt);
+show10("accessilepidaid","accessi",$istat,$sovra,$conn,1,$tt);
+show10("sportellilepidaid","sportelli",$istat,$sovra,$conn,0,$tt);
 
 $comune.="    \"istat\":\"$istat\"\n  },\n";
 $regione.="    \"istat\":\"00008\"\n  }";
@@ -62,7 +63,7 @@ echo "}\n";
 
 oci_close($conn);
 
-function show10($table,$par,$title,$istat,$sovra,$conn,$privacy,$tt){
+function show10($table,$par,$istat,$sovra,$conn,$privacy,$tt){
   global $comune,$unione,$regione;
   $query=oci_parse($conn,"select $par from $table where istat='$istat' and tt=$tt");
   oci_execute($query);

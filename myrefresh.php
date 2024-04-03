@@ -14,6 +14,9 @@ for($ss=0;;){
 }
 oci_free_statement($query);
 
+make4($conn,"uifwa","uifwa","11EyZCYlMyiGn9GetrFq1WpOFDcHEBegSBOkzaJYmAsA","Comuni!B3:F",0,4,"",$sovra,$ss);
+exit(0);
+
 make5($conn,"attivifse","attivi","https://dati.fascicolo-sanitario.it/rest/attivi/comune",$sovra,$ss);
 make5($conn,"accessifse","accessi","https://dati.fascicolo-sanitario.it/rest/accessi/comune",$sovra,$ss);
 make5($conn,"scaricatifse","scaricati","https://dati.fascicolo-sanitario.it/rest/documenti/comune",$sovra,$ss);

@@ -96,7 +96,7 @@ for($i=0;$i<$ss;$i++){
 oci_close($conn);
 
 function make4($conn,$table,$field,$spreadsheetid,$range,$i1,$i2,$cond,$sovra,$ss){
-  echo "$table\n";
+  echo "4>> $table\n";
   include "/home/www/restdati.lepida.it/googleset.php";
   $access_token=file_get_contents("/home/www/data/access_token");
   echo "https://sheets.googleapis.com/v4/spreadsheets/$spreadsheetid/values/$range\n";
@@ -147,7 +147,7 @@ function make4($conn,$table,$field,$spreadsheetid,$range,$i1,$i2,$cond,$sovra,$s
 }
 
 function make5($conn,$table,$field,$url,$sovra,$ss){
-  echo "$table\n";
+  echo "5>> $table\n";
   $tt=(int)(time()/86400);
   $query=oci_parse($conn,"delete from $table where tt=$tt");
   oci_execute($query);
@@ -184,7 +184,7 @@ function make5($conn,$table,$field,$url,$sovra,$ss){
 }
 
 function make6($conn,$table,$field,$url){
-  echo "$table\n";
+  echo "6>> $table\n";
   $tt=(int)(time()/86400);
   $aux=json_decode(file_get_contents("$url"),true);
   $vv=0;

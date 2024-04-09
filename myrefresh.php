@@ -14,12 +14,17 @@ for($ss=0;;){
 }
 oci_free_statement($query);
 
+make5($conn,"sportellilepidaid","sportelli","https://dati.fascicolo-sanitario.it/rest/lepidaid/sportelli/comune",$sovra,$ss);
+make6($conn,"sportellilepidaid","sportelli","https://dati.fascicolo-sanitario.it/rest/lepidaid/sportelli/comune_norer");
+exit(0);
+
+
 make5($conn,"attivifse","attivi","https://dati.fascicolo-sanitario.it/rest/attivi/comune",$sovra,$ss);
 make5($conn,"accessifse","accessi","https://dati.fascicolo-sanitario.it/rest/accessi/comune",$sovra,$ss);
 make5($conn,"scaricatifse","scaricati","https://dati.fascicolo-sanitario.it/rest/documenti/comune",$sovra,$ss);
 make5($conn,"attivazionilepidaid","attivazioni","https://dati.fascicolo-sanitario.it/rest/lepidaid/attivazioni/comune",$sovra,$ss);
 make5($conn,"accessilepidaid","accessi","https://dati.fascicolo-sanitario.it/rest/lepidaid/accessi/comune",$sovra,$ss);
-make5($conn,"sportellilepidaid","sportelli","https://dati.fascicolo-sanitario.it/rest/lepidaid/sportelli/comune",$sovra,$ss);
+
 
 make4($conn,"aziendeaai","aziendeaai","1_H9hzrPmySAfAMkLtGmH5IIB8cric6OtUwXf3Jfl6ME","Aziende!B2:B",0,-1,"1==1",$sovra,$ss);
 make4($conn,"areeaai","areeaai","1_H9hzrPmySAfAMkLtGmH5IIB8cric6OtUwXf3Jfl6ME","Nodi!B2:B",0,-1,"1==1",$sovra,$ss);
@@ -177,6 +182,18 @@ function make5($conn,$table,$field,$url,$sovra,$ss){
     oci_execute($query);
     oci_free_statement($query);
   }
+}
+
+function make6($conn,$table,$field,$url){
+  echo "$table\n";
+  $tt=(int)(time()/86400);
+  $aux=json_decode(file_get_contents("$url"),true);
+  $vv=0;
+  foreach($aux["dati"] as $k => $v)$vv+=(int)$v["$field"];
+  $kk="00000";
+  $query=oci_parse($conn,"insert into $table (istat,$field,tt) values ('$kk',$vv,$tt)");
+  oci_execute($query);
+  oci_free_statement($query);
 }
 
 ?>

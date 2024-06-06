@@ -226,7 +226,8 @@ function show2($base,$tot,$ip,$bin,$time,$conn){
 }
 
 function show3($table,$par,$istat,$conn){
-  $query=oci_parse($conn,"select $par from $table where istat='$istat'");
+  $tt=(int)((time()-25200)/86400);
+  $query=oci_parse($conn,"select $par from $table where istat='$istat' and tt=$tt");
   oci_execute($query);
   $row=oci_fetch_row($query);
   @$aux=$row[0];

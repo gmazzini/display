@@ -1,6 +1,6 @@
 #include <WiFi.h>
 #include <SPI.h>
-// Rel 2.0 by GM 2023-24
+// Rel 20240710 by GM Copyright 2023-24
 #define mySSID "EmiliaRomagnaWiFi wifiprivacy.it"
 #define mySER "0002"
 
@@ -60,7 +60,6 @@ unsigned char c,buf[6144],*aa;
 WiFiClient client;
 IPAddress ip;
 unsigned long MM[15][384];
-byte mac[6];
 unsigned char TTl[]={0,1,2,2,4,4,4,4,8,8,8,8,8,8,8,8};
 unsigned char TTh[]={0,16,32,32,64,64,64,64,128,128,128,128,128,128,128,128};
 
@@ -146,7 +145,6 @@ void loop(){
       for(;;){
         if(mywait())goto mybreak;
         c=client.read();
-        Serial.write(c);
         if(k1==0 && c==0x0d){k1=1; continue;}
         if(k1==1){if(c==0x0a){k1=2; continue;} else {k1=0; continue;}}
         if(k1==2){if(c==0x0d){k1=3; continue;} else {k1=0; continue;}}
@@ -160,8 +158,6 @@ void loop(){
           buf[i]=client.read();
         }
         if(c>0)myqq=c;
-        Serial.print("tt:"); Serial.println(tt);
-        Serial.print("myqq:"); Serial.println(myqq);
         for(k1=0;k1<15;k1++){
           aa=buf;
           for(k2=0;k2<384;k2++){
@@ -185,7 +181,6 @@ void loop(){
 }
 
 void setup() {
-  Serial.begin(9600);
   refresh=0;
   valid=0;
   myqq=2;
@@ -207,24 +202,33 @@ void setup() {
   
   WiFi.mode(WIFI_STA);
   WiFi.begin(mySSID);
+  for(row=0;row<32;row++){
+    pOEl
+    for(j=0;j<2;j++){
+      for(i=0;i<32;i++){
+        pR1l
+        pR2l
+        pG1l
+        pG2l
+        pB1l
+        pB2l
+        pCLKl
+        pCLKh
+      }
+    }
+    if(row&0x10)pEh else pEl
+    if(row&0x08)pDh else pDl
+    if(row&0x04)pCh else pCl
+    if(row&0x02)pBh else pBl
+    if(row&0x01)pAh else pAl
+    pLATh
+    pLATl
+    pOEh
+  }
   delay(4000);
   for(;;){
-    WiFi.macAddress(mac);
-    Serial.print("MAC: ");
-    Serial.print(mac[5],HEX);
-    Serial.print(":");
-    Serial.print(mac[4],HEX);
-    Serial.print(":");
-    Serial.print(mac[3],HEX);
-    Serial.print(":");
-    Serial.print(mac[2],HEX);
-    Serial.print(":");
-    Serial.print(mac[1],HEX);
-    Serial.print(":");
-    Serial.println(mac[0],HEX);
-    Serial.println("Connecting...");
-    delay(1000);
     if(WiFi.status()==WL_CONNECTED)break;
+    delay(1000);
   }
   tt=millis();
 }

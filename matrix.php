@@ -177,6 +177,7 @@ switch($screen){
   case "4012": show5("aziendeaai","aziendeaai",$des,$ff,$bin,$time,$conn,"Aziende","connesse","0000FFFF"); break;
   case "4013": show4("pal","pal",$des,$ff,$bin,$time,$conn,"Sedi","connesse","Rete Lepida","4B0080FF"); break;
   case "4014": show4("man","man",$des,$ff,$bin,$time,$conn,"Sedi","MAN","Rete Lepida","4B0080FF"); break;
+  case "4015": show5("sensori","sensori",$des,$ff,$bin,$time,$conn,"Totale","sensori","808080FF"); break;
 
   default:
   $fp=fopen($des,"w");

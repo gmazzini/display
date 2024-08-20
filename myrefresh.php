@@ -14,9 +14,6 @@ for($ss=0;;){
 }
 oci_free_statement($query);
 
-make4($conn,"sensori","sensori","1n4RMzFN4Jz4u6uLjluOeU8C89YNciph-3BzYEO9-O-M","Estrazione!C2:C",0,-1,"1==1",$sovra,$ss);
-exit(1);
-
 make5($conn,"sportellilepidaid","sportelli","https://dati.fascicolo-sanitario.it/rest/lepidaid/sportelli/comune",$sovra,$ss);
 make6($conn,"sportellilepidaid","sportelli","https://dati.fascicolo-sanitario.it/rest/lepidaid/sportelli/comune_norer");
 make5($conn,"attivazionilepidaid","attivazioni","https://dati.fascicolo-sanitario.it/rest/lepidaid/attivazioni/comune",$sovra,$ss);
@@ -36,6 +33,7 @@ make4($conn,"man","man","1DEs7yoAfJ6wK9L-V5kYoArEeP-g110NgPMU0DDFv9EE","MAN!K2:V
 make4($conn,"pal","pal","1DEs7yoAfJ6wK9L-V5kYoArEeP-g110NgPMU0DDFv9EE","PAL!V2:V",0,-1,"1==1",$sovra,$ss);
 make4($conn,"uiftth","uiftth","11EyZCYlMyiGn9GetrFq1WpOFDcHEBegSBOkzaJYmAsA","Comuni!B3:E",0,3,"",$sovra,$ss);
 make4($conn,"uifwa","uifwa","11EyZCYlMyiGn9GetrFq1WpOFDcHEBegSBOkzaJYmAsA","Comuni!B3:F",0,4,"",$sovra,$ss);
+make4($conn,"sensori","sensori","1n4RMzFN4Jz4u6uLjluOeU8C89YNciph-3BzYEO9-O-M","Estrazione!C2:C",0,-1,"1==1",$sovra,$ss);
 
 $query=oci_parse($conn,"select distinct istat from idistat where istat>'30000'");
 oci_execute($query);

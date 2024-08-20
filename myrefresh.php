@@ -14,6 +14,9 @@ for($ss=0;;){
 }
 oci_free_statement($query);
 
+make4($conn,"sensori","sensori","1n4RMzFN4Jz4u6uLjluOeU8C89YNciph-3BzYEO9-O-M","Estrazione!C2:C",0,-1,"1==1",$sovra,$ss);
+exit(1);
+
 make5($conn,"sportellilepidaid","sportelli","https://dati.fascicolo-sanitario.it/rest/lepidaid/sportelli/comune",$sovra,$ss);
 make6($conn,"sportellilepidaid","sportelli","https://dati.fascicolo-sanitario.it/rest/lepidaid/sportelli/comune_norer");
 make5($conn,"attivazionilepidaid","attivazioni","https://dati.fascicolo-sanitario.it/rest/lepidaid/attivazioni/comune",$sovra,$ss);

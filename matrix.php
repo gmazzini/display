@@ -95,6 +95,7 @@ switch($screen){
   case "0013": show10("accessilepidaid","accessi","Accessi ID",$istat,$sovra,$des,$ff,$bin,$time,$conn,1); break;
   case "0014": show10("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
   case "0015": show10("uifwa","uifwa","FWA bianche",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
+  case "0016": show10("sensori","sensori","Sensori",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
 
   case "8001": shell_exec("tmp/convert3 tmp/image/L001.ff $time $bin"); break;
   case "8002": shell_exec("tmp/convert3 tmp/image/L002.ff $time $bin"); break;

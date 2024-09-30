@@ -103,6 +103,8 @@ switch($screen){
   case "8004": shell_exec("tmp/convert3 tmp/image/L004.ff $time $bin"); break;
   case "8005": shell_exec("tmp/convert3 tmp/image/L005.ff $time $bin"); break;
   case "8006": shell_exec("tmp/convert3 tmp/image/L006.ff $time $bin"); break;
+  case "8007": shell_exec("tmp/convert3 tmp/image/L007.ff $time $bin"); break;
+  case "8008": shell_exec("tmp/convert3 tmp/image/L008.ff $time $bin"); break;
 
   case "9001": show2(1,76,$ip,$bin,$time,$conn); break;
   case "9002": show2(1001,28,$ip,$bin,$time,$conn); break;

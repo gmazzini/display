@@ -61,7 +61,6 @@ for(;;){
       if($myistat[$id]==0)echo "Missed:$ip\n";
       else {
         $i++;
-        $vv=substr(hash("sha256",$mac),0,8);
         $xx=explode(":",$mac);
         $tohash="";
         for($j=0;$j<6;$j++)$tohash.=chr(hexdec($xx[$j]));
@@ -69,29 +68,29 @@ for(;;){
         $tt=(int)($ttt/86400);
         $istat=$myistat[$id];
 
-        $query=oci_parse($conn,"select req from dhcpwifi where id='$vv' and ip=$id and tt=$tt");
+        $query=oci_parse($conn,"select req from dhcpwifi where fnv1a='$vv2' and ip=$id and tt=$tt");
         oci_execute($query);
         $row=oci_fetch_row($query);
         @$myreq=(int)$row[0];
         oci_free_statement($query);
 
         if($myreq==0){
-          $query=oci_parse($conn,"insert into dhcpwifi (id,fnv1a,ip,tt,istat,req) values ('$vv',hextoraw('$vv2'),$id,$tt,'$istat',1)");
+          $query=oci_parse($conn,"insert into dhcpwifi (fnv1a,ip,tt,istat,req) values (hextoraw('$vv2'),$id,$tt,'$istat',1)");
           oci_execute($query);
           oci_free_statement($query);
           $ii++;
           if($ttt>$uttt){
-            echo "N,$i,$ii,$ip,$id,$vv,$vv2,$istat,$tt,1\n";
+            echo "N,$i,$ii,$ip,$id,$vv2,$istat,$tt,1\n";
             $uttt=$ttt+2;
           }
         }
         else {
           $myreq++;
-          $query=oci_parse($conn,"update dhcpwifi set req=$myreq where id='$vv' and ip=$id and tt=$tt");
+          $query=oci_parse($conn,"update dhcpwifi set req=$myreq where fnv1a='$vv2' and ip=$id and tt=$tt");
           oci_execute($query);
           oci_free_statement($query);
           if($ttt>$uttt){
-            echo "U,$i,$ii,$ip,$id,$vv,$vv2,$istat,$tt,$myreq\n";
+            echo "U,$i,$ii,$ip,$id,$vv2,$istat,$tt,$myreq\n";
             $uttt=$ttt+2;
           } 
         }

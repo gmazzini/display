@@ -42,9 +42,13 @@ for(;;){
   
   $ll=strpos($buf,":");
   $ll=strpos($buf,":",$ll+1);
-  $aux=substr($buf,0,$ll+2);
-  echo $aux."\n";
-  $ttt=strtotime($aux);
+  if($mode==0){
+    $ttt=time();
+  }
+  else if($mode==1){
+    $aux=substr($buf,0,$ll+2);
+    $ttt=strtotime($aux);
+  }
   $ll=strpos($buf,":",$ll+1);
   $aux=substr($buf,$ll+2);
   echo $aux."\n";

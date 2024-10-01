@@ -40,10 +40,9 @@ for(;;){
     $buf=trim($aux);
   }
   
-  $ll=strpos($buf," ");
-  $ll=strpos($buf," ",$ll+1);
-  $ll=strpos($buf," ",$ll+1);
-  $aux=substr($buf,0,$ll);
+  $ll=strpos($buf,":");
+  $ll=strpos($buf,":",$ll+1);
+  $aux=substr($buf,0,$ll+2);
   $ttt=strtotime($aux);
   $ll=strpos($buf,":",$ll+1);
   $aux=substr($buf,$ll+2);

@@ -51,7 +51,6 @@ for(;;){
   }
   $ll=strpos($buf,":",$ll+1);
   $aux=substr($buf,$ll+2);
-  echo $aux."\n";
 
   if(substr($aux,0,11)=="DHCPREQUEST"){
     $ll=strpos($buf,"for");

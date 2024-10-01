@@ -2,6 +2,7 @@
 
 include "data.php";
 $conn=oci_connect($p1,$p2,$p3);
+$mode=$argv[1]; // 0 from UDP/514, 1 from STDIN
 
 for($i=42;$i<=63;$i++){
   for($j=0;$j<=255;$j++){
@@ -18,14 +19,35 @@ for($i=42;$i<=63;$i++){
 $i=0;
 $ii=0;
 $uttt=0;
-$sock=socket_create(AF_INET,SOCK_DGRAM,0);
-socket_bind($sock, "0.0.0.0",514);
+if($mode==0){
+  $sock=socket_create(AF_INET,SOCK_DGRAM,0);
+  socket_bind($sock, "0.0.0.0",514);
+}
+else if($mode==1){
+  $mfp=fopen("php://stdin","r");
+}
+
 for(;;){
-  socket_recvfrom($sock,$buf,1000,0,$remote_ip,$remote_port);
-  $ll=strpos($buf,":");
-  $ll=strpos($buf,":",$ll+1);
+  if($mode==0){
+    socket_recvfrom($sock,$buf,1000,0,$remote_ip,$remote_port);
+  }
+  else if($mode==1){
+    $aux=fgets($mfp);
+    if($aux===false){
+      fclose($mfp);
+      break;
+    }
+    $buf=trim($aux);
+  }
+  
+  $ll=strpos($buf," ");
+  $ll=strpos($buf," ",$ll+1);
+  $ll=strpos($buf," ",$ll+1);
+  $aux=substr($buf,0,$ll);
+  $ttt=strtotime($aux);
   $ll=strpos($buf,":",$ll+1);
   $aux=substr($buf,$ll+2);
+  
   if(substr($aux,0,11)=="DHCPREQUEST"){
     $ll=strpos($buf,"for");
     $le=strpos($buf," ",$ll+4);
@@ -44,7 +66,6 @@ for(;;){
         $tohash="";
         for($j=0;$j<6;$j++)$tohash.=chr(hexdec($xx[$j]));
         $vv2=hash("fnv1a64",$tohash,false);
-        $ttt=time();
         $tt=(int)($ttt/86400);
         $istat=$myistat[$id];
 

@@ -79,7 +79,7 @@ for(;;){
         oci_free_statement($query);
 
         if($myreq==0){
-          $query=oci_parse($conn,"insert into dhcpwifi (fnv1a,ip,tt,istat,req) values (hextoraw('$vv2'),$id,$tt,'$istat',1)");
+          $query=oci_parse($conn,"insert into dhcpwifi (fnv1a,ip,tt,istat,req,id) values (hextoraw('$vv2'),$id,$tt,'$istat',1,'')");
           oci_execute($query);
           oci_free_statement($query);
           $ii++;

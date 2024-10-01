@@ -72,7 +72,7 @@ for(;;){
         $tt=(int)($ttt/86400);
         $istat=$myistat[$id];
 
-        $query=oci_parse($conn,"select req from dhcpwifi where fnv1a='$vv2' and ip=$id and tt=$tt");
+        $query=oci_parse($conn,"select req from dhcpwifi where fnv1a=hextoraw('$vv2') and ip=$id and tt=$tt");
         oci_execute($query);
         $row=oci_fetch_row($query);
         @$myreq=(int)$row[0];
@@ -90,7 +90,7 @@ for(;;){
         }
         else {
           $myreq++;
-          $query=oci_parse($conn,"update dhcpwifi set req=$myreq where fnv1a='$vv2' and ip=$id and tt=$tt");
+          $query=oci_parse($conn,"update dhcpwifi set req=$myreq where fnv1a=hextoraw('$vv2') and ip=$id and tt=$tt");
           oci_execute($query);
           oci_free_statement($query);
           if($ttt>$uttt){

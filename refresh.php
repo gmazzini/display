@@ -3,6 +3,11 @@
 include "/home/admgm02/data.php";
 $conn=oci_connect($p1,$p2,$p3);
 
+$tt=(int)(time()/86400)-365;
+$query=oci_parse($conn,"delete from dhcpwifi where tt<$tt");
+oci_execute($query);
+oci_free_statement($query);
+
 $query=oci_parse($conn,"select distinct sovra from idistat");
 oci_execute($query);
 for($ss=0;;){
@@ -47,10 +52,6 @@ for($yy=0;;){
 oci_free_statement($query);
 
 echo "userwifi\n";
-$tt=(int)(time()/86400)-365;
-$query=oci_parse($conn,"delete from dhcpwifi where tt<$tt");
-oci_execute($query);
-oci_free_statement($query);
 $table="userwifi";
 $field="userwifi";
 $tt=(int)(time()/86400);

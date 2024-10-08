@@ -1,5 +1,6 @@
 <?php
 
+if(((int)gmdate("H"))!=0 || ((int)gmdate("i"))!=0)exit(0);
 include "/home/admgm02/data.php";
 $conn=oci_connect($p1,$p2,$p3);
 

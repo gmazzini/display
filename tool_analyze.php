@@ -53,6 +53,8 @@ else {
 }
 
 echo "UnUsed\n";
-for($j=1;$j<$i;$j++)if($used[$j]==0)echo $idstart[$j].",".$idend[$j]."\n";
+for($j=1;$j<$i;$j++){
+  if($used[$j]==0)printf("%d,%d,%s\n",$idstart[$j],$idend[$j],$ip[$j]);
+}
 
 ?>

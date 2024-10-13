@@ -19,6 +19,7 @@ for($i=1;;$i++){
   $ip[$i]=mys($aa[2]);
   $pal[$i]=mys($aa[3]);
   $ssid[$i]=mys($aa[4]);
+  $used[$i]=0;
 }
 
 $fp=fopen("qq","r");
@@ -35,7 +36,10 @@ for($v=0;;){
     $mwe=$we[$aa[3]];
     $a2=$a1+2**(24-$mwe)-1;
     for($j=1;$j<$i;$j++){
-      if($a1==$idstart[$j] && $a2==$idend[$j] && $mpal==$pal[$j] && $mssid==$ssid[$j])break;
+      if($a1==$idstart[$j] && $a2==$idend[$j] && $mpal==$pal[$j] && $mssid==$ssid[$j]){
+        $used[$j]=1;
+        break;
+      }
     }
     if($j>=$i)$out[$v++]="$a1,$a2,$aa[1]/$mwe,$mpal,$mssid";
   }
@@ -47,5 +51,8 @@ else {
   sort($out);
   print_r($out);
 }
+
+echo "UnUsed\n";
+for($j=1;$j<$i;$j++)if($used[$j]==0)echo $idstart[$j].",".$idend[$j]."\n";
 
 ?>

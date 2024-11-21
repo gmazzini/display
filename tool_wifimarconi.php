@@ -6,7 +6,7 @@ $tts=$argv[1];
 $tte=$argv[2];
 
 for($tt=$tts;$tt<=$tte;$tt++){
-  $query=oci_parse($conn,"select count(distinct id) from dhcpwifi where tt=$tt and (ip>=14016 and ip<=14047)");
+  $query=oci_parse($conn,"select count(distinct fnv1a) from dhcpwifi where tt=$tt and (ip>=14016 and ip<=14047)");
   oci_execute($query);
   $row=oci_fetch_row($query);
   printf("%d,%d\n",$tt,$row[0]);

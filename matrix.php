@@ -353,7 +353,7 @@ function show10($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$time,$conn,$priv
   return;
 }
 
-unction show11($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$time,$conn,$privacy,$bar){
+function show11($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$time,$conn,$privacy,$bar){
   $tt=(int)((time()-25200)/86400);
   $query=oci_parse($conn,"select $par from $table where istat='$istat' and tt=$tt");
   oci_execute($query);

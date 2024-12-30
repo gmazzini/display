@@ -97,22 +97,22 @@ switch($screen){
   case "0015": show10("uifwa","uifwa","FWA bianche",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
   case "0016": show10("sensori","sensori","Sensori",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
   
-  case "0101": show10("uiftth","uiftth","FTTH bianche",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,0); break;
-  case "0102": show10("areeaai","areeaai","AAI Aree",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,2); break;
-  case "0103": show10("aziendeaai","aziendeaai","AAI Aziende",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,3); break;
-  case "0104": show10("scuole","scuole","Scuole 1G",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,4); break;
-  case "0105": show10("pal","pal","PAL rete",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,5); break;
-  case "0106": show10("man","man","MAN rete",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,6); break;
-  case "0107": show10("apwifi","apwifi","Punti WiFi",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,7); break;
-  case "0108": show10("userwifi","userwifi","Utenti WiFi",$istat,$sovra,$des,$ff,$bin,$time,$conn,1,8); break;
-  case "0109": show10("attivifse","attivi","Attivi FSE",$istat,$sovra,$des,$ff,$bin,$time,$conn,1,9); break;
-  case "0110": show10("accessifse","accessi","Accessi FSE",$istat,$sovra,$des,$ff,$bin,$time,$conn,1,10); break;
-  case "0111": show10("scaricatifse","scaricati","Scaricati FSE",$istat,$sovra,$des,$ff,$bin,$time,$conn,1,11); break;
-  case "0112": show10("attivazionilepidaid","attivazioni","Attivazioni ID",$istat,$sovra,$des,$ff,$bin,$time,$conn,1,12); break;
-  case "0113": show10("accessilepidaid","accessi","Accessi ID",$istat,$sovra,$des,$ff,$bin,$time,$conn,1,13); break;
-  case "0114": show10("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,14); break;
-  case "0115": show10("uifwa","uifwa","FWA bianche",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,1); break;
-  case "0116": show10("sensori","sensori","Sensori",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,15); break;
+  case "0101": show11("uiftth","uiftth","FTTH bianche",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,0); break;
+  case "0102": show11("areeaai","areeaai","AAI Aree",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,2); break;
+  case "0103": show11("aziendeaai","aziendeaai","AAI Aziende",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,3); break;
+  case "0104": show11("scuole","scuole","Scuole 1G",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,4); break;
+  case "0105": show11("pal","pal","PAL rete",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,5); break;
+  case "0106": show11("man","man","MAN rete",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,6); break;
+  case "0107": show11("apwifi","apwifi","Punti WiFi",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,7); break;
+  case "0108": show11("userwifi","userwifi","Utenti WiFi",$istat,$sovra,$des,$ff,$bin,$time,$conn,1,8); break;
+  case "0109": show11("attivifse","attivi","Attivi FSE",$istat,$sovra,$des,$ff,$bin,$time,$conn,1,9); break;
+  case "0110": show11("accessifse","accessi","Accessi FSE",$istat,$sovra,$des,$ff,$bin,$time,$conn,1,10); break;
+  case "0111": show11("scaricatifse","scaricati","Scaricati FSE",$istat,$sovra,$des,$ff,$bin,$time,$conn,1,11); break;
+  case "0112": show11("attivazionilepidaid","attivazioni","Attivazioni ID",$istat,$sovra,$des,$ff,$bin,$time,$conn,1,12); break;
+  case "0113": show11("accessilepidaid","accessi","Accessi ID",$istat,$sovra,$des,$ff,$bin,$time,$conn,1,13); break;
+  case "0114": show11("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,14); break;
+  case "0115": show11("uifwa","uifwa","FWA bianche",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,1); break;
+  case "0116": show11("sensori","sensori","Sensori",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,15); break;
 
   case "8001": shell_exec("tmp/convert3 tmp/image/L001.ff $time $bin"); break;
   case "8002": shell_exec("tmp/convert3 tmp/image/L002.ff $time $bin"); break;

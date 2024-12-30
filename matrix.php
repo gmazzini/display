@@ -105,6 +105,19 @@ switch($screen){
   case "8006": shell_exec("tmp/convert3 tmp/image/L006.ff $time $bin"); break;
   case "8007": shell_exec("tmp/convert3 tmp/image/L007.ff $time $bin"); break;
   case "8008": shell_exec("tmp/convert3 tmp/image/L008.ff $time $bin"); break;
+  case "8009": shell_exec("tmp/convert3 tmp/image/L009.ff $time $bin"); break;
+  case "8010": shell_exec("tmp/convert3 tmp/image/L010.ff $time $bin"); break;
+  case "8011": shell_exec("tmp/convert3 tmp/image/L011.ff $time $bin"); break;
+  case "8012": shell_exec("tmp/convert3 tmp/image/L012.ff $time $bin"); break;
+  case "8013": shell_exec("tmp/convert3 tmp/image/L013.ff $time $bin"); break;
+  case "8014": shell_exec("tmp/convert3 tmp/image/L014.ff $time $bin"); break;
+  case "8015": shell_exec("tmp/convert3 tmp/image/L015.ff $time $bin"); break;
+  case "8016": shell_exec("tmp/convert3 tmp/image/L016.ff $time $bin"); break;
+  case "8017": shell_exec("tmp/convert3 tmp/image/L017.ff $time $bin"); break;
+  case "8018": shell_exec("tmp/convert3 tmp/image/L018.ff $time $bin"); break;
+  case "8019": shell_exec("tmp/convert3 tmp/image/L019.ff $time $bin"); break;
+  case "8020": shell_exec("tmp/convert3 tmp/image/L020.ff $time $bin"); break;
+  
 
   case "9001": show2(1,76,$ip,$bin,$time,$conn); break;
   case "9002": show2(1001,28,$ip,$bin,$time,$conn); break;

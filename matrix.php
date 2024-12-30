@@ -96,6 +96,23 @@ switch($screen){
   case "0014": show10("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
   case "0015": show10("uifwa","uifwa","FWA bianche",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
   case "0016": show10("sensori","sensori","Sensori",$istat,$sovra,$des,$ff,$bin,$time,$conn,0); break;
+  
+  case "0101": show10("uiftth","uiftth","FTTH bianche",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,0); break;
+  case "0102": show10("areeaai","areeaai","AAI Aree",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,2); break;
+  case "0103": show10("aziendeaai","aziendeaai","AAI Aziende",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,3); break;
+  case "0104": show10("scuole","scuole","Scuole 1G",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,4); break;
+  case "0105": show10("pal","pal","PAL rete",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,5); break;
+  case "0106": show10("man","man","MAN rete",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,6); break;
+  case "0107": show10("apwifi","apwifi","Punti WiFi",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,7); break;
+  case "0108": show10("userwifi","userwifi","Utenti WiFi",$istat,$sovra,$des,$ff,$bin,$time,$conn,1,8); break;
+  case "0109": show10("attivifse","attivi","Attivi FSE",$istat,$sovra,$des,$ff,$bin,$time,$conn,1,9); break;
+  case "0110": show10("accessifse","accessi","Accessi FSE",$istat,$sovra,$des,$ff,$bin,$time,$conn,1,10); break;
+  case "0111": show10("scaricatifse","scaricati","Scaricati FSE",$istat,$sovra,$des,$ff,$bin,$time,$conn,1,11); break;
+  case "0112": show10("attivazionilepidaid","attivazioni","Attivazioni ID",$istat,$sovra,$des,$ff,$bin,$time,$conn,1,12); break;
+  case "0113": show10("accessilepidaid","accessi","Accessi ID",$istat,$sovra,$des,$ff,$bin,$time,$conn,1,13); break;
+  case "0114": show10("sportellilepidaid","sportelli","Sportelli ID",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,14); break;
+  case "0115": show10("uifwa","uifwa","FWA bianche",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,1); break;
+  case "0116": show10("sensori","sensori","Sensori",$istat,$sovra,$des,$ff,$bin,$time,$conn,0,15); break;
 
   case "8001": shell_exec("tmp/convert3 tmp/image/L001.ff $time $bin"); break;
   case "8002": shell_exec("tmp/convert3 tmp/image/L002.ff $time $bin"); break;
@@ -331,6 +348,41 @@ function show10($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$time,$conn,$priv
   fprintf($fp,"1 -2 %02d FF00FFFF 00000000 2 %s\n",19+$delta,($aux<3 & $privacy)?"*":number_format($aux,0,",","."));
   fprintf($fp,"1 -2 %02d FF0000FF 00000000 1 Regione\n",48-$delta);
   fprintf($fp,"1 -2 %02d FF00FFFF 00000000 2 %s\n",57-$delta,($reraux<3 & $privacy)?"*":number_format($reraux,0,",","."));
+  fclose($fp);
+  shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
+  return;
+}
+
+unction show11($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$time,$conn,$privacy,$bar){
+  $tt=(int)((time()-25200)/86400);
+  $query=oci_parse($conn,"select $par from $table where istat='$istat' and tt=$tt");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  @$aux=$row[0];
+  oci_free_statement($query);
+  $query=oci_parse($conn,"select $par from $table where istat='00008' and tt=$tt");
+  oci_execute($query);
+  $row=oci_fetch_row($query);
+  @$reraux=$row[0];
+  oci_free_statement($query);
+  $fp=fopen($des,"w");
+  fprintf($fp,"1 -2 0 FFFFFFFF 00000000 2 %s\n",$title);
+  if($sovra<>""){
+    $query=oci_parse($conn,"select $par from $table where istat='$sovra' and tt=$tt");
+    oci_execute($query);
+    $row=oci_fetch_row($query);
+    @$sovraaux=$row[0];
+    oci_free_statement($query);
+    fprintf($fp,"1 -2 29 FF0000FF 00000000 1 Unione\n");
+    fprintf($fp,"1 -2 38 FF00FFFF 00000000 2 %s\n",($sovraaux<3 & $privacy)?"*":number_format($sovraaux,0,",","."));
+    $delta=0;
+  }
+  else $delta=7;
+  fprintf($fp,"1 -2 %02d FF0000FF 00000000 1 Comune\n",10+$delta);
+  fprintf($fp,"1 -2 %02d FF00FFFF 00000000 2 %s\n",19+$delta,($aux<3 & $privacy)?"*":number_format($aux,0,",","."));
+  fprintf($fp,"1 -2 %02d FF0000FF 00000000 1 Regione\n",48-$delta);
+  fprintf($fp,"1 -2 %02d FF00FFFF 00000000 2 %s\n",57-$delta,($reraux<3 & $privacy)?"*":number_format($reraux,0,",","."));
+  fprintf($fp,"2 62 00 63 %02d FFFFFFFF\n",$bar*4+3);
   fclose($fp);
   shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
   return;

@@ -123,19 +123,91 @@ switch($screen){
   case "8007": shell_exec("tmp/convert3 tmp/image/L007.ff $time $bin"); break;
   case "8008": shell_exec("tmp/convert3 tmp/image/L008.ff $time $bin"); break;
   case "8009": shell_exec("tmp/convert3 tmp/image/L009.ff $time $bin"); break;
-  case "8010": shell_exec("tmp/convert3 tmp/image/L010.ff $time $bin"); break;
-  case "8011": shell_exec("tmp/convert3 tmp/image/L011.ff $time $bin"); break;
-  case "8012": shell_exec("tmp/convert3 tmp/image/L012.ff $time $bin"); break;
-  case "8013": shell_exec("tmp/convert3 tmp/image/L013.ff $time $bin"); break;
-  case "8014": shell_exec("tmp/convert3 tmp/image/L014.ff $time $bin"); break;
-  case "8015": shell_exec("tmp/convert3 tmp/image/L015.ff $time $bin"); break;
-  case "8016": shell_exec("tmp/convert3 tmp/image/L016.ff $time $bin"); break;
-  case "8017": shell_exec("tmp/convert3 tmp/image/L017.ff $time $bin"); break;
-  case "8018": shell_exec("tmp/convert3 tmp/image/L018.ff $time $bin"); break;
-  case "8019": shell_exec("tmp/convert3 tmp/image/L019.ff $time $bin"); break;
-  case "8020": shell_exec("tmp/convert3 tmp/image/L020.ff $time $bin"); break;
-  
 
+  case "8010": 
+  $fp=fopen($des,"w"); 
+  fprintf($fp,"5 L010 FF\n"); 
+  fprintf($fp,"1 0 37 FFFFFFFF 00000000 03 DIPARTIMENTO\n");
+  fprintf($fp,"1 0 44 800080FF 00000000 03 RETI\n");
+  fclose($fp); shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin"); break;
+  case "8011": 
+  $fp=fopen($des,"w"); 
+  fprintf($fp,"5 L011 FF\n");
+  fprintf($fp,"1 0 37 FFFFFFFF 00000000 03 DIPARTIMENTO\n");
+  fprintf($fp,"1 0 44 800080FF 00000000 03 DATACENTER\n");
+  fprintf($fp,"1 42 44 800080FF 00000000 03 en");
+  fprintf($fp,"1 0 51 800080FF 00000000 03 CLOUD\n");
+  fclose($fp); shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin"); break;
+  case "8012": 
+  $fp=fopen($des,"w"); 
+  fprintf($fp,"5 L012 FF\n"); 
+  fprintf($fp,"1 0 37 FFFFFFFF 00000000 03 DIPARTIMENTO\n");
+  fprintf($fp,"1 0 44 800080FF 00000000 03 SOFTWARE\n");
+  fprintf($fp,"1 34 44 800080FF 00000000 03 e\n");
+  fprintf($fp,"1 0 51 800080FF 00000000 03 PIATTAFORME\n");
+  fclose($fp); shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin"); break;
+  case "8013": 
+  $fp=fopen($des,"w"); 
+  fprintf($fp,"5 L013 FF\n"); 
+  fprintf($fp,"1 0 37 FFFFFFFF 00000000 03 DIPARTIMENTO\n");
+  fprintf($fp,"1 0 44 800080FF 00000000 03 WELFARE\n");
+  fprintf($fp,"1 30 44 800080FF 00000000 03 en");
+  fprintf($fp,"1 0 51 800080FF 00000000 03 INTEGRAZIONI\n");
+  fprintf($fp,"1 0 58 800080FF 00000000 03 DIGITALI\n");
+  fclose($fp); shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin"); break;
+  case "8014": 
+  $fp=fopen($des,"w"); 
+  fprintf($fp,"5 L014 FF\n");
+  fprintf($fp,"1 0 37 FFFFFFFF 00000000 03 DIPARTIMENTO\n");
+  fprintf($fp,"1 0 44 800080FF 00000000 03 AMMINISTRAZIONE\n");
+  fclose($fp); shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin"); break;
+  case "8015": 
+  $fp=fopen($des,"w"); 
+  fprintf($fp,"5 L015 FF\n");
+  fprintf($fp,"1 0 37 FFFFFFFF 00000000 03 DIPARTIMENTO\n");
+  fprintf($fp,"1 0 44 800080FF 00000000 03 AZIONI\n");
+  fprintf($fp,"1 0 51 800080FF 00000000 03 STRATEGICHE\n");
+  fprintf($fp,"1 46 51 800080FF 00000000 03 e\n");
+  fprintf($fp,"1 0 58 800080FF 00000000 03 SPECIALI\n");
+  fclose($fp); shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin"); break;
+  case "8016": 
+  $fp=fopen($des,"w"); 
+  fprintf($fp,"5 L016 FF\n");
+  fprintf($fp,"1 0 37 FFFFFFFF 00000000 03 DIPARTIMENTO\n");
+  fprintf($fp,"1 0 44 800080FF 00000000 03 ACCESSO\n");
+  fclose($fp); shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin"); break;
+  case "8017": 
+  $fp=fopen($des,"w"); 
+  fprintf($fp,"5 L017 FF\n");
+  fprintf($fp,"1 0 37 FFFFFFFF 00000000 03 DIVISIONE\n");
+  fprintf($fp,"1 0 44 800080FF 00000000 03 SICUREZZA\n");
+  fprintf($fp,"1 0 51 800080FF 00000000 03 AMBIENTE\n");
+  fprintf($fp,"1 34 51 800080FF 00000000 03 e\n");
+  printf($fp,"1 0 58 800080FF 00000000 03 EMERGENZA\n");
+  fclose($fp); shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin"); break;
+  case "8018": 
+  $fp=fopen($des,"w"); 
+  fprintf($fp,"5 L018 FF\n");
+  fprintf($fp,"1 0 37 FFFFFFFF 00000000 03 PROGETTO\n");
+  fprintf($fp,"1 0 44 800080FF 00000000 03 CUP UNICO\n");
+  fprintf($fp,"1 0 51 800080FF 00000000 03 REGIONALE\n");
+  fclose($fp); shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin"); break;
+  case "8019": 
+  $fp=fopen($des,"w"); 
+  fprintf($fp,"5 L019 FF\n");
+  fprintf($fp,"1 0 37 FFFFFFFF 00000000 03 PROGETTO\n");
+  fprintf($fp,"1 0 44 800080FF 00000000 03 BIG DATA HPC\n");
+  fprintf($fp,"1 0 51 800080FF 00000000 03 MARGHERITA\n");
+  fclose($fp); shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin"); break;
+  case "8020": 
+  $fp=fopen($des,"w"); 
+  fprintf($fp,"5 L020 FF\n");
+  fprintf($fp,"1 0 37 FFFFFFFF 00000000 03 PROGETTO\n");
+  fprintf($fp,"1 0 44 800080FF 00000000 03 DIGITAL\n");
+  fprintf($fp,"1 0 51 800080FF 00000000 03 INNOVATION HUB\n");
+  fprintf($fp,"1 0 58 800080FF 00000000 03 EMILIA-ROMAGNA\n");
+  fclose($fp); shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin"); break;
+  
   case "9001": show2(1,76,$ip,$bin,$time,$conn); break;
   case "9002": show2(1001,28,$ip,$bin,$time,$conn); break;
   case "9003": show2(2001,580,$ip,$bin,$time,$conn); break;

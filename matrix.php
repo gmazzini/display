@@ -382,7 +382,7 @@ function show11($table,$par,$title,$istat,$sovra,$des,$ff,$bin,$time,$conn,$priv
   fprintf($fp,"1 -2 %02d FF00FFFF 00000000 2 %s\n",19+$delta,($aux<3 & $privacy)?"*":number_format($aux,0,",","."));
   fprintf($fp,"1 -2 %02d FF0000FF 00000000 1 Regione\n",48-$delta);
   fprintf($fp,"1 -2 %02d FF00FFFF 00000000 2 %s\n",57-$delta,($reraux<3 & $privacy)?"*":number_format($reraux,0,",","."));
-  fprintf($fp,"2 63 00 63 %02d 808080FF\n",$bar*4+3);
+  fprintf($fp,"2 63 00 63 %02d 999999FF\n",$bar*4+3);
   fclose($fp);
   shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin");
   return;

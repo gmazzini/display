@@ -283,10 +283,7 @@ switch($screen){
   case "4013": show4("pal","pal",$des,$ff,$bin,$time,$conn,"Sedi","connesse","Rete Lepida","4B0080FF"); break;
   case "4014": show4("man","man",$des,$ff,$bin,$time,$conn,"Sedi","MAN","Rete Lepida","4B0080FF"); break;
   case "4015": show5("sensori","sensori",$des,$ff,$bin,$time,$conn,"Totale","sensori","FF00FFFF"); break;
-  case "4107": show6("apwifi","apwifi",$des,$ff,$bin,$time,$conn,"Punti","E-R","WiFi","4B0080FF"); break;
-  case "4109": show6("scuole","scuole",$des,$ff,$bin,$time,$conn,"Scuole","connesse","1Gbps","4B0080FF"); break;
-  case "4113": show6("pal","pal",$des,$ff,$bin,$time,$conn,"Sedi","connesse","Rete Lepida","4B0080FF"); break;
-  case "4114": show6("man","man",$des,$ff,$bin,$time,$conn,"Sedi","MAN","Rete Lepida","4B0080FF"); break
+
 
   default:
   $fp=fopen($des,"w");

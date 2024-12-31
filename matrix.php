@@ -130,7 +130,7 @@ switch($screen){
   fprintf($fp,"1 0 37 FFFFFFFF 00000000 03 DIPARTIMENTO\n");
   fprintf($fp,"1 0 44 800080FF 00000000 03 RETI\n");
   fclose($fp); shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin"); break;
-  case "8011": 
+  case "8021": 
   $fp=fopen($des,"w"); 
   fprintf($fp,"5 L011 FF\n"); 
   fprintf($fp,"1 0 37 FFFFFFFF 00000000 03 DIPARTIMENTO\n");

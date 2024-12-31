@@ -135,7 +135,7 @@ switch($screen){
   fprintf($fp,"5 L011 FF\n");
   fprintf($fp,"1 0 37 FFFFFFFF 00000000 03 DIPARTIMENTO\n");
   fprintf($fp,"1 0 44 800080FF 00000000 03 DATACENTER\n");
-  fprintf($fp,"1 42 44 800080FF 00000000 03 en");
+  fprintf($fp,"1 42 44 800080FF 00000000 03 e\n");
   fprintf($fp,"1 0 51 800080FF 00000000 03 CLOUD\n");
   fclose($fp); shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin"); break;
   case "8012": 
@@ -151,7 +151,7 @@ switch($screen){
   fprintf($fp,"5 L013 FF\n"); 
   fprintf($fp,"1 0 37 FFFFFFFF 00000000 03 DIPARTIMENTO\n");
   fprintf($fp,"1 0 44 800080FF 00000000 03 WELFARE\n");
-  fprintf($fp,"1 30 44 800080FF 00000000 03 en");
+  fprintf($fp,"1 30 44 800080FF 00000000 03 e\n");
   fprintf($fp,"1 0 51 800080FF 00000000 03 INTEGRAZIONI\n");
   fprintf($fp,"1 0 58 800080FF 00000000 03 DIGITALI\n");
   fclose($fp); shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin"); break;
@@ -183,7 +183,7 @@ switch($screen){
   fprintf($fp,"1 0 44 800080FF 00000000 03 SICUREZZA\n");
   fprintf($fp,"1 0 51 800080FF 00000000 03 AMBIENTE\n");
   fprintf($fp,"1 34 51 800080FF 00000000 03 e\n");
-  printf($fp,"1 0 58 800080FF 00000000 03 EMERGENZA\n");
+  fprintf($fp,"1 0 58 800080FF 00000000 03 EMERGENZA\n");
   fclose($fp); shell_exec("tmp/write2 $des $ff; tmp/convert3 $ff $time $bin"); break;
   case "8018": 
   $fp=fopen($des,"w"); 

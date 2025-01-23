@@ -45,7 +45,7 @@ show10("scaricatifse","scaricati",$istat,$sovra,$conn,1,$tt);
 show10("attivazionilepidaid","attivazioni",$istat,$sovra,$conn,1,$tt);
 show10("accessilepidaid","accessi",$istat,$sovra,$conn,1,$tt);
 show10("sportellilepidaid","sportelli",$istat,$sovra,$conn,0,$tt);
-show10("sensori","sensori",$istat,$sovra,$conn,1,$tt);
+show10("sensori","sensori",$istat,$sovra,$conn,0,$tt);
 
 $comune.="    \"istat\":\"$istat\"\n  },\n";
 $regione.="    \"istat\":\"00008\"\n  }";

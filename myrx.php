@@ -19,7 +19,7 @@ $i=0;
 $ii=0;
 $uttt=0;
 $sock=socket_create(AF_INET,SOCK_DGRAM,0);
-socket_bind($sock, "0.0.0.0",514);
+socket_bind($sock,"0.0.0.0",514);
 for(;;){
   socket_recvfrom($sock,$buf,1000,0,$remote_ip,$remote_port);
   $ll=strpos($buf,":");

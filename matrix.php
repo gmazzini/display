@@ -123,6 +123,10 @@ switch($screen){
   case "8007": shell_exec("tmp/convert3 tmp/image/L007.ff $time $bin"); break;
   case "8008": shell_exec("tmp/convert3 tmp/image/L008.ff $time $bin"); break;
   case "8009": shell_exec("tmp/convert3 tmp/image/L009.ff $time $bin"); break;
+  case "8021": shell_exec("tmp/convert3 tmp/image/L021.ff $time $bin"); break;
+  case "8022": shell_exec("tmp/convert3 tmp/image/L022.ff $time $bin"); break;
+  case "8023": shell_exec("tmp/convert3 tmp/image/L023.ff $time $bin"); break;
+  case "8024": shell_exec("tmp/convert3 tmp/image/L024.ff $time $bin"); break;
 
   case "8010": 
   $fp=fopen($des,"w"); 

@@ -78,7 +78,7 @@ int mywait(){
 }
 
 void loop(){
-  int ok=0;
+  int ok=0,v;
   uint32_t mask;
   pr1=MM[refresh];
   pr2=pr1+64;
@@ -170,9 +170,11 @@ void loop(){
         c=client.read();
         for(i=0;i<6144;i++){
           if(mywait())goto mybreak;
-          buf[i]=client.read();
+          v=client.read();
+          if(v<0)goto mybreak;
+          buf[i]=(unsigned char)v;
         }
-        if(c>0)myqq=c;
+        if(c>=1 && c<=20)myqq=c;
         for(k1=0;k1<15;k1++){
           aa=buf;
           for(k2=0;k2<384;k2++){
@@ -190,6 +192,7 @@ void loop(){
         ok=1;
       }
       mybreak:
+      client.stop();
       valid=ok;
     }
   }

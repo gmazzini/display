@@ -78,7 +78,7 @@ int mywait(){
 }
 
 void loop(){
-  int ok;
+  int ok=0;
   uint32_t mask;
   pr1=MM[refresh];
   pr2=pr1+64;
@@ -246,11 +246,8 @@ void setup() {
         pCLKh
       }
     }
-    if(row&0x10)pEh else pEl
-    if(row&0x08)pDh else pDl
-    if(row&0x04)pCh else pCl
-    if(row&0x02)pBh else pBl
-    if(row&0x01)pAh else pAl
+    GPIO.out_w1tc=rowClr[row];
+    GPIO.out_w1ts=rowSet[row];
     pLATh
     pLATl
     pOEh

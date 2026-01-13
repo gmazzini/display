@@ -1,8 +1,9 @@
 #include <WiFi.h>
 #include <SPI.h>
-// Rel 20260112 by GM Copyright 2023-25
+// Rel 20260113 by GM Copyright 2023-25
 #define mySSID "EmiliaRomagnaWiFi wifiprivacy.it"
 #define mySER "0108"
+#define myWEB "display.mazzini.org"
 
 // OE=D13=GPIO_NUM_48 LAT=D12=GPIO_NUM_47 CLK=11=GPIO_NUM_38
 // A=D10=GPIO_NUM_21 B=D9=GPIO_NUM_18 C=D8=GPIO_NUM_17 D=D7=GPIO_NUM_10 E=D6=GPIO_NUM_9
@@ -67,7 +68,11 @@ unsigned long *pr1,*pr2,*pg1,*pg2,*pb1,*pb2,tt,ta,oo;
 unsigned char c,buf[6144],*aa;
 WiFiClient client;
 IPAddress ip;
-unsigned long MM[15][384];
+unsigned long MM_A[15][384];
+unsigned long MM_B[15][384];
+volatile unsigned long (*front)[384]=MM_A;
+volatile unsigned long (*back)[384]=MM_B;
+volatile unsigned long (*swapTmp)[384];
 unsigned char TTl[]={0,1,2,2,4,4,4,4,8,8,8,8,8,8,8,8};
 unsigned char TTh[]={0,16,32,32,64,64,64,64,128,128,128,128,128,128,128,128};
 uint32_t rowSet[32],rowClr[32];
@@ -83,10 +88,10 @@ int mywait(){
 
 void loop(){
   int ok=0,v;
-  IPAddress tmp;
+  static IPAddress tmp;
   uint32_t mask;
 
-  pr1=MM[refresh];
+  pr1=front[refresh];
   pr2=pr1+64;
   pg1=pr2+64; pg2=pg1+64;
   pb1=pg2+64; pb2=pb1+64;
@@ -137,7 +142,6 @@ void loop(){
     yield();
     ta=millis();
     if(ta-tt>1000*myqq){
-      valid=0;
       tt=ta;
       ok=0;
       if(WiFi.status()!=WL_CONNECTED){
@@ -152,7 +156,7 @@ void loop(){
       client.stop();
       client.setTimeout(1500);
       if(IP_IS_ZERO(dispIP) || (millis()-lastDns)>DNS_TTL){
-        if(WiFi.hostByName("display.mazzini.org",tmp)){
+        if(WiFi.hostByName(myWEB,tmp)){
           dispIP=tmp;
           lastDns=millis();
         } 
@@ -164,7 +168,8 @@ void loop(){
       client.print("&ip=");
       client.print(ip);
       client.println(" HTTP/1.1");
-      client.println("Host: display.mazzini.org");
+      client.print("Host: ");
+      client.println(myWEB);
       client.println("User-Agent: ArduinoWiFi/1.1");
       client.println("Connection: close");
       client.println();
@@ -199,14 +204,19 @@ void loop(){
               if(n<15)oo<<=1;
               aa++;
             }
-            MM[k1][k2]=oo;
+            back[k1][k2]=oo;
           }
         }
         ok=1;
       }
       mybreak:
       client.stop();
-      valid=ok;
+      if(ok){
+        swapTmp=front;
+        front=back;
+        back=swapTmp;
+        valid=1;
+      }
     }
   }
 }

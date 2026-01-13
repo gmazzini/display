@@ -64,7 +64,8 @@
 int row,refresh,i,j,k1,k2,myqq,n,valid;
 unsigned long lastWifiTry=0;
 unsigned long zr1,zr2,zg1,zg2,zb1,zb2;
-unsigned long *pr1,*pr2,*pg1,*pg2,*pb1,*pb2,tt,ta,oo;
+volatile unsigned long *pr1,*pr2,*pg1,*pg2,*pb1,*pb2;
+unsigned long tt,ta,oo;
 unsigned char c,buf[6144],*aa;
 WiFiClient client;
 IPAddress ip;

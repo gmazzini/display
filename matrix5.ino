@@ -1,7 +1,7 @@
 #include <WiFi.h>
 #include <SPI.h>
 
-// necessari per GPIO.* e gpio_set_direction con core recenti
+// per usare GPIO.out_w1ts/out1_w1ts e gpio_set_direction
 #include "soc/gpio_struct.h"
 #include "driver/gpio.h"
 
@@ -31,37 +31,37 @@
 #define pG2 GPIO_NUM_4
 #define pG1 GPIO_NUM_3
 
-// MACRO-STATEMENT: il ';' è DENTRO, quindi nel codice NON mettere ';' dopo pXXX
-#define pCLKh GPIO.out1_w1ts.val = ((uint32_t)1 << (38-32));
-#define pCLKl GPIO.out1_w1tc.val = ((uint32_t)1 << (38-32));
-#define pLATh GPIO.out1_w1ts.val = ((uint32_t)1 << (47-32));
-#define pLATl GPIO.out1_w1tc.val = ((uint32_t)1 << (47-32));
-#define pOEh  GPIO.out1_w1ts.val = ((uint32_t)1 << (48-32));
-#define pOEl  GPIO.out1_w1tc.val = ((uint32_t)1 << (48-32));
+// ---- Fast IO macros (NO ';' here) ----
+#define pCLKh GPIO.out1_w1ts.val = ((uint32_t)1 << (38-32))
+#define pCLKl GPIO.out1_w1tc.val = ((uint32_t)1 << (38-32))
+#define pLATh GPIO.out1_w1ts.val = ((uint32_t)1 << (47-32))
+#define pLATl GPIO.out1_w1tc.val = ((uint32_t)1 << (47-32))
+#define pOEh  GPIO.out1_w1ts.val = ((uint32_t)1 << (48-32))
+#define pOEl  GPIO.out1_w1tc.val = ((uint32_t)1 << (48-32))
 
-#define pAh GPIO.out_w1ts = ((uint32_t)1 << 21);
-#define pAl GPIO.out_w1tc = ((uint32_t)1 << 21);
-#define pBh GPIO.out_w1ts = ((uint32_t)1 << 18);
-#define pBl GPIO.out_w1tc = ((uint32_t)1 << 18);
-#define pCh GPIO.out_w1ts = ((uint32_t)1 << 17);
-#define pCl GPIO.out_w1tc = ((uint32_t)1 << 17);
-#define pDh GPIO.out_w1ts = ((uint32_t)1 << 10);
-#define pDl GPIO.out_w1tc = ((uint32_t)1 << 10);
-#define pEh GPIO.out_w1ts = ((uint32_t)1 << 9);
-#define pEl GPIO.out_w1tc = ((uint32_t)1 << 9);
+#define pAh GPIO.out_w1ts = ((uint32_t)1 << 21)
+#define pAl GPIO.out_w1tc = ((uint32_t)1 << 21)
+#define pBh GPIO.out_w1ts = ((uint32_t)1 << 18)
+#define pBl GPIO.out_w1tc = ((uint32_t)1 << 18)
+#define pCh GPIO.out_w1ts = ((uint32_t)1 << 17)
+#define pCl GPIO.out_w1tc = ((uint32_t)1 << 17)
+#define pDh GPIO.out_w1ts = ((uint32_t)1 << 10)
+#define pDl GPIO.out_w1tc = ((uint32_t)1 << 10)
+#define pEh GPIO.out_w1ts = ((uint32_t)1 << 9)
+#define pEl GPIO.out_w1tc = ((uint32_t)1 << 9)
 
-#define pB2h GPIO.out_w1ts = ((uint32_t)1 << 8);
-#define pB2l GPIO.out_w1tc = ((uint32_t)1 << 8);
-#define pB1h GPIO.out_w1ts = ((uint32_t)1 << 7);
-#define pB1l GPIO.out_w1tc = ((uint32_t)1 << 7);
-#define pR2h GPIO.out_w1ts = ((uint32_t)1 << 6);
-#define pR2l GPIO.out_w1tc = ((uint32_t)1 << 6);
-#define pR1h GPIO.out_w1ts = ((uint32_t)1 << 5);
-#define pR1l GPIO.out_w1tc = ((uint32_t)1 << 5);
-#define pG2h GPIO.out_w1ts = ((uint32_t)1 << 4);
-#define pG2l GPIO.out_w1tc = ((uint32_t)1 << 4);
-#define pG1h GPIO.out_w1ts = ((uint32_t)1 << 3);
-#define pG1l GPIO.out_w1tc = ((uint32_t)1 << 3);
+#define pB2h GPIO.out_w1ts = ((uint32_t)1 << 8)
+#define pB2l GPIO.out_w1tc = ((uint32_t)1 << 8)
+#define pB1h GPIO.out_w1ts = ((uint32_t)1 << 7)
+#define pB1l GPIO.out_w1tc = ((uint32_t)1 << 7)
+#define pR2h GPIO.out_w1ts = ((uint32_t)1 << 6)
+#define pR2l GPIO.out_w1tc = ((uint32_t)1 << 6)
+#define pR1h GPIO.out_w1ts = ((uint32_t)1 << 5)
+#define pR1l GPIO.out_w1tc = ((uint32_t)1 << 5)
+#define pG2h GPIO.out_w1ts = ((uint32_t)1 << 4)
+#define pG2l GPIO.out_w1tc = ((uint32_t)1 << 4)
+#define pG1h GPIO.out_w1ts = ((uint32_t)1 << 3)
+#define pG1l GPIO.out_w1tc = ((uint32_t)1 << 3)
 
 #define MASK_A (1u<<21)
 #define MASK_B (1u<<18)
@@ -109,8 +109,8 @@ void loop(){
 
   for(row=0;row<32;row++){
 
-    // FIX1: blank mentre shifti/addr/latch
-    pOEh
+    // FIX1 ghosting: OE OFF (blank) while shifting + addr + latch
+    pOEh;
 
     for(j=0;j<2;j++){
       zr1=*pr1++; zr2=*pr2++;
@@ -119,38 +119,39 @@ void loop(){
       if(valid){
         mask=0x80000000;
         for(i=0;i<32;i++){
-          if(zr1 & mask){ pR1h } else { pR1l }
-          if(zr2 & mask){ pR2h } else { pR2l }
-          if(zg1 & mask){ pG1h } else { pG1l }
-          if(zg2 & mask){ pG2h } else { pG2l }
-          if(zb1 & mask){ pB1h } else { pB1l }
-          if(zb2 & mask){ pB2h } else { pB2l }
-          pCLKl
-          pCLKh
+          if(zr1 & mask){ pR1h; } else { pR1l; }
+          if(zr2 & mask){ pR2h; } else { pR2l; }
+          if(zg1 & mask){ pG1h; } else { pG1l; }
+          if(zg2 & mask){ pG2h; } else { pG2l; }
+          if(zb1 & mask){ pB1h; } else { pB1l; }
+          if(zb2 & mask){ pB2h; } else { pB2l; }
+          pCLKl;
+          pCLKh;
           mask >>= 1;
         }
       }
       else {
-        pR1l
-        pR2l
-        pG1l
-        pG2l
-        pB1l
-        pB2l
+        pR1l;
+        pR2l;
+        pG1l;
+        pG2l;
+        pB1l;
+        pB2l;
         for(i=0;i<32;i++){
-          pCLKl
-          pCLKh
+          pCLKl;
+          pCLKh;
         }
       }
     }
 
     GPIO.out_w1tc=rowClr[row];
     GPIO.out_w1ts=rowSet[row];
-    pLATh
-    pLATl
 
-    // abilita solo dopo latch
-    pOEl
+    pLATh;
+    pLATl;
+
+    // OE ON only after latch
+    pOEl;
   }
 
   if(++refresh>=15){
@@ -179,6 +180,7 @@ void loop(){
         else if(IP_IS_ZERO(dispIP))goto mybreak;
       }
       if(!client.connect(dispIP,80))goto mybreak;
+
       client.print("GET /?ser=");
       client.print(mySER);
       client.print("&ip=");
@@ -277,24 +279,24 @@ void setup() {
   WiFi.begin(mySSID);
 
   for(row=0;row<32;row++){
-    pOEh
+    pOEh;
     for(j=0;j<2;j++){
       for(i=0;i<32;i++){
-        pR1l
-        pR2l
-        pG1l
-        pG2l
-        pB1l
-        pB2l
-        pCLKl
-        pCLKh
+        pR1l;
+        pR2l;
+        pG1l;
+        pG2l;
+        pB1l;
+        pB2l;
+        pCLKl;
+        pCLKh;
       }
     }
     GPIO.out_w1tc=rowClr[row];
     GPIO.out_w1ts=rowSet[row];
-    pLATh
-    pLATl
-    pOEl
+    pLATh;
+    pLATl;
+    pOEl;
   }
 
   delay(4000);
@@ -304,4 +306,3 @@ void setup() {
   }
   tt=millis();
 }
-

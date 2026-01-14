@@ -1,4 +1,3 @@
-
 #include <Arduino.h>
 #include <WiFi.h>
 #include <SPI.h>
@@ -32,7 +31,6 @@
 #define pG2  GPIO_NUM_4
 #define pG1  GPIO_NUM_3
 
-// NOTA: qui mantengo ESATTAMENTE il tuo stile con ';' dentro.
 #define pCLKh GPIO.out1_w1ts.val = ((uint32_t)1 << (38-32));
 #define pCLKl GPIO.out1_w1tc.val = ((uint32_t)1 << (38-32));
 #define pLATh GPIO.out1_w1ts.val = ((uint32_t)1 << (47-32));
@@ -73,7 +71,6 @@
 
 #define IP_IS_ZERO(ip) ((ip)[0]==0 && (ip)[1]==0 && (ip)[2]==0 && (ip)[3]==0)
 
-// ------------------ GLOBALI DISPLAY ------------------
 int row,refresh,i,j,k1,k2,myqq,n,valid;
 unsigned long zr1,zr2,zg1,zg2,zb1,zb2;
 volatile unsigned long *pr1,*pr2,*pg1,*pg2,*pb1,*pb2;
@@ -91,35 +88,24 @@ unsigned char TTh[]={0,16,32,32,64,64,64,64,128,128,128,128,128,128,128,128};
 
 uint32_t rowSet[32],rowClr[32];
 
-// ------------------ GLOBALI RETE (KEEP-ALIVE + NON BLOCCANTE) ------------------
 WiFiClient client;
 IPAddress dispIP, ip, tmp;
 unsigned long lastDns=0;
 const unsigned long DNS_TTL=300000UL;
 unsigned long lastWifiTry=0;
-
 unsigned long tt=0;
 unsigned long netT0=0;
-
 enum NetState { NET_IDLE, NET_DNS, NET_CONNECT, NET_SEND, NET_HDR, NET_QBYTE, NET_PAYLOAD, NET_DECODE, NET_SWAP, NET_FAIL };
 NetState netState = NET_IDLE;
-
 int hdrState=0;
 int payloadPos=0;
 unsigned char qByte=0;
-
-// decode spezzata minima (per togliere colpi), ma stabile
 int dec_k1=0;
 int dec_k2=0;
 unsigned char *dec_aa=nullptr;
 unsigned long dec_oo=0;
-
 int decodeWords=0;
-
-// per evitare flick “dopo update”: niente stop dopo swap (keepalive)
 volatile int wantClose=0;
-
-// vars lavoro (globali o inizio funzioni)
 unsigned long pump_t0=0;
 int v=0;
 unsigned char ch=0;
@@ -130,7 +116,6 @@ static inline bool budget_expired(unsigned long t0, unsigned long budget_us){
 }
 
 static inline void drainClient(){
-  // scarica eventuali residui (di solito nulla)
   while(client.available()) client.read();
 }
 
@@ -154,8 +139,6 @@ void netFail(){
 
 void netPump(unsigned long budget_us){
   pump_t0 = micros();
-
-  // chiusura eventualmente richiesta (solo su errori)
   if(wantClose){
     client.stop();
     wantClose=0;
@@ -208,12 +191,11 @@ void netPump(unsigned long budget_us){
           }
         }
 
-        drainClient(); // paranoia: deve essere vuoto prima della nuova GET
+        drainClient();
         netState = NET_SEND;
         continue;
 
       case NET_SEND:
-        // KEEP-ALIVE: niente close
         client.print("GET /?ser=");
         client.print(mySER);
         client.print("&ip=");
@@ -285,7 +267,6 @@ void netPump(unsigned long budget_us){
         }
 
         if(payloadPos >= 6144){
-          // prepara decode spezzata
           dec_k1 = 0;
           dec_k2 = 0;
           dec_aa = buf;
@@ -297,8 +278,6 @@ void netPump(unsigned long budget_us){
         return;
 
       case NET_DECODE:
-        // spezza solo la decode (evita colpi) ma senza cambiare logica originale:
-        // per ogni k1 riparte da buf
         decodeWords = 16; // 16 word per pump
         while(decodeWords-- > 0){
 
@@ -322,17 +301,14 @@ void netPump(unsigned long budget_us){
           if(dec_k2 >= 384){
             dec_k2 = 0;
             dec_k1++;
-            dec_aa = buf;     // identico al tuo schema originale
+            dec_aa = buf;
           }
         }
         return;
 
       case NET_SWAP:
-        // SWAP leggerissimo; KEEP-ALIVE: NON chiudo qui
         swapTmp=front; front=back; back=swapTmp;
         valid=1;
-
-        // pronto per prossimo ciclo: resta connesso
         netState = NET_IDLE;
         return;
 
@@ -343,7 +319,6 @@ void netPump(unsigned long budget_us){
   }
 }
 
-// ------------------ SETUP ------------------
 void setup() {
   int r;
   uint32_t s;
@@ -412,7 +387,6 @@ void setup() {
   netState = NET_IDLE;
 }
 
-// ------------------ LOOP DISPLAY + NETPUMP IN PUNTO SICURO ------------------
 void loop() {
   uint32_t mask;
 
@@ -471,10 +445,7 @@ void loop() {
 
   if(++refresh>=15){
     refresh=0;
-
-    // rete/decodifica con budget (qui è il punto più "morbido")
     netPump(650);
-
     yield();
   }
 }

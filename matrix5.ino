@@ -25,34 +25,34 @@
 #define pR1 GPIO_NUM_5
 #define pG2 GPIO_NUM_4
 #define pG1 GPIO_NUM_3
-#define pCLKh GPIO.out1_w1ts.val = ((uint32_t)1 << (38-32));
-#define pCLKl GPIO.out1_w1tc.val = ((uint32_t)1 << (38-32));
-#define pLATh GPIO.out1_w1ts.val = ((uint32_t)1 << (47-32));
-#define pLATl GPIO.out1_w1tc.val = ((uint32_t)1 << (47-32));
-#define pOEh GPIO.out1_w1ts.val = ((uint32_t)1 << (48-32));
-#define pOEl GPIO.out1_w1tc.val = ((uint32_t)1 << (48-32));
-#define pAh GPIO.out_w1ts = ((uint32_t)1 << 21);
-#define pAl GPIO.out_w1tc = ((uint32_t)1 << 21);
-#define pBh GPIO.out_w1ts = ((uint32_t)1 << 18);
-#define pBl GPIO.out_w1tc = ((uint32_t)1 << 18);
-#define pCh GPIO.out_w1ts = ((uint32_t)1 << 17);
-#define pCl GPIO.out_w1tc = ((uint32_t)1 << 17);
-#define pDh GPIO.out_w1ts = ((uint32_t)1 << 10);
-#define pDl GPIO.out_w1tc = ((uint32_t)1 << 10);
-#define pEh GPIO.out_w1ts = ((uint32_t)1 << 9);
-#define pEl GPIO.out_w1tc = ((uint32_t)1 << 9);
-#define pB2h GPIO.out_w1ts = ((uint32_t)1 << 8);
-#define pB2l GPIO.out_w1tc = ((uint32_t)1 << 8);
-#define pB1h GPIO.out_w1ts = ((uint32_t)1 << 7);
-#define pB1l GPIO.out_w1tc = ((uint32_t)1 << 7);
-#define pR2h GPIO.out_w1ts = ((uint32_t)1 << 6);
-#define pR2l GPIO.out_w1tc = ((uint32_t)1 << 6);
-#define pR1h GPIO.out_w1ts = ((uint32_t)1 << 5);
-#define pR1l GPIO.out_w1tc = ((uint32_t)1 << 5);
-#define pG2h GPIO.out_w1ts = ((uint32_t)1 << 4);
-#define pG2l GPIO.out_w1tc = ((uint32_t)1 << 4);
-#define pG1h GPIO.out_w1ts = ((uint32_t)1 << 3);
-#define pG1l GPIO.out_w1tc = ((uint32_t)1 << 3);
+#define pCLKh GPIO.out1_w1ts.val = ((uint32_t)1 << (38-32))
+#define pCLKl GPIO.out1_w1tc.val = ((uint32_t)1 << (38-32))
+#define pLATh GPIO.out1_w1ts.val = ((uint32_t)1 << (47-32))
+#define pLATl GPIO.out1_w1tc.val = ((uint32_t)1 << (47-32))
+#define pOEh GPIO.out1_w1ts.val = ((uint32_t)1 << (48-32))
+#define pOEl GPIO.out1_w1tc.val = ((uint32_t)1 << (48-32))
+#define pAh GPIO.out_w1ts = ((uint32_t)1 << 21)
+#define pAl GPIO.out_w1tc = ((uint32_t)1 << 21)
+#define pBh GPIO.out_w1ts = ((uint32_t)1 << 18)
+#define pBl GPIO.out_w1tc = ((uint32_t)1 << 18)
+#define pCh GPIO.out_w1ts = ((uint32_t)1 << 17)
+#define pCl GPIO.out_w1tc = ((uint32_t)1 << 17)
+#define pDh GPIO.out_w1ts = ((uint32_t)1 << 10)
+#define pDl GPIO.out_w1tc = ((uint32_t)1 << 10)
+#define pEh GPIO.out_w1ts = ((uint32_t)1 << 9)
+#define pEl GPIO.out_w1tc = ((uint32_t)1 << 9)
+#define pB2h GPIO.out_w1ts = ((uint32_t)1 << 8)
+#define pB2l GPIO.out_w1tc = ((uint32_t)1 << 8)
+#define pB1h GPIO.out_w1ts = ((uint32_t)1 << 7)
+#define pB1l GPIO.out_w1tc = ((uint32_t)1 << 7)
+#define pR2h GPIO.out_w1ts = ((uint32_t)1 << 6)
+#define pR2l GPIO.out_w1tc = ((uint32_t)1 << 6)
+#define pR1h GPIO.out_w1ts = ((uint32_t)1 << 5)
+#define pR1l GPIO.out_w1tc = ((uint32_t)1 << 5)
+#define pG2h GPIO.out_w1ts = ((uint32_t)1 << 4)
+#define pG2l GPIO.out_w1tc = ((uint32_t)1 << 4)
+#define pG1h GPIO.out_w1ts = ((uint32_t)1 << 3)
+#define pG1l GPIO.out_w1tc = ((uint32_t)1 << 3)
 #define MASK_A (1u<<21)
 #define MASK_B (1u<<18)
 #define MASK_C (1u<<17)

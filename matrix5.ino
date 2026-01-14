@@ -109,8 +109,7 @@ void loop(){
 
   for(row=0;row<32;row++){
 
-    // FIX1 ghosting: OE OFF (blank) while shifting + addr + latch
-    pOEh;
+    pOEl;
 
     for(j=0;j<2;j++){
       zr1=*pr1++; zr2=*pr2++;
@@ -150,8 +149,7 @@ void loop(){
     pLATh;
     pLATl;
 
-    // OE ON only after latch
-    pOEl;
+    pOEh;
   }
 
   if(++refresh>=15){

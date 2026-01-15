@@ -1,3 +1,5 @@
+// Display on ESP32S3 Rel 20260115 by GM Copyright 2023-25
+
 #include <Arduino.h>
 #include <WiFi.h>
 #include <SPI.h>
@@ -5,10 +7,12 @@
 #include "soc/gpio_periph.h"
 #include "driver/gpio.h"
 
-// Rel 20260113 by GM Copyright 2023-25
 #define mySSID "EmiliaRomagnaWiFi wifiprivacy.it"
 #define mySER  "0108"
-#define myWEB  "display.mazzini.org"
+// #define myWEB  "display.mazzini.org"
+// #define myPGR  ""
+#define myWEB  "matrix.lepida.it"
+#define myPGR  "matrix.php"
 
 // OE=D13=GPIO_NUM_48 LAT=D12=GPIO_NUM_47 CLK=11=GPIO_NUM_38
 // A=D10=GPIO_NUM_21 B=D9=GPIO_NUM_18 C=D8=GPIO_NUM_17 D=D7=GPIO_NUM_10 E=D6=GPIO_NUM_9
@@ -196,7 +200,9 @@ void netPump(unsigned long budget_us){
         continue;
 
       case NET_SEND:
-        client.print("GET /?ser=");
+        client.print("GET /");
+        client.print(myPGR);
+        client.print("?ser=");
         client.print(mySER);
         client.print("&ip=");
         client.print(WiFi.localIP());
@@ -396,7 +402,8 @@ void loop() {
   pb1=pg2+64; pb2=pb1+64;
 
   for(row=0;row<32;row++){
-    pOEl pR1l pR2l pG1l pG2l pB1l pB2l
+    pOEl 
+    pR1l pR2l pG1l pG2l pB1l pB2l
 
     for(j=0;j<2;j++){
       zr1=*pr1++; zr2=*pr2++;

@@ -1,15 +1,15 @@
 <?php
 
-$base="/home/www/www.chaos.cc/dev";
+$base="/home/www/display/";
 $mydes=$_GET["des"];
-$fp=fopen("$base/qq.des","w");
+$fp=fopen("$base/dev/qq.des","w");
 $mydes=str_replace("\\","\n",$mydes);
 fprintf($fp,"%s",$mydes);
 fclose($fp);
-shell_exec("$base/write2 $base/qq.des $base/qq.ff; $base/convert3 $base/qq.ff 1 $base/qq.bin");
-$len=filesize("$base/qq.bin");
+shell_exec("$base/write2 $base/dev/qq.des $base/dev/qq.ff; $base/convert3 $base/dev/qq.ff 1 $base/dev/qq.bin");
+$len=filesize("$base/dev/qq.bin");
 header("Content-Type: application/octet-stream");
 header("Content-Length: $len");
-readfile("$base/qq.bin");
+readfile("$base/dev/qq.bin");
 
 ?>

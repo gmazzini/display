@@ -9,7 +9,7 @@
 
 #define mySSID "EmiliaRomagnaWiFi wifiprivacy.it"
 #define mySER  "0108"
-#define myPUMP  2000
+#define myPUMP  650
 #define myWEB  "display.mazzini.org"
 #define myPGR  ""
 // #define myWEB  "matrix.lepida.it"
@@ -254,7 +254,7 @@ void netPump(unsigned long budget_us){
           v = client.read();
           if(v<0){ netFail(); return; }
           qByte = (unsigned char)v;
-          if(qByte>=1 && qByte<=20) myqq = qByte;
+          if(qByte>=7 && qByte<=50) myqq = qByte;
           payloadPos = 0;
           netState = NET_PAYLOAD;
           continue;

@@ -8,6 +8,7 @@
 #include "font_2.h"
 #include "font_3.h"
 #include "font_4.h"
+#define myIMAGES "/home/www/display/images/"
 
 unsigned char V[10][20];
 unsigned int *mf[]={
@@ -258,7 +259,7 @@ int main(int argc,char **argv){
       
       case '5':
         myparse(buf+1,2,4,img,5,&t);
-        strcpy(buf1,"image/");
+        strcpy(buf1,myIMAGES);
         strcat(buf1,img);
         strcat(buf1,".ff");
         fp2=fopen(buf1,"rb");
@@ -276,7 +277,7 @@ int main(int argc,char **argv){
       case '6':
         myparse(buf+1,8,4,img,5,&t,1,&x,2,&y,2,&xx,2,&yy,2,&xxx,2,&yyy);
         x=myz(x); y=myz(y); xx=myz(xx); yy=myz(yy); xxx=myz(xxx); yyy=myz(yyy);
-        strcpy(buf1,"image/");
+        strcpy(buf1,myIMAGES);
         strcat(buf1,img);
         strcat(buf1,".ff");
         fp2=fopen(buf1,"rb");

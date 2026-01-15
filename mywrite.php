@@ -1,15 +1,16 @@
 <?php
 
 $base="/home/www/display/";
+$myf=$base."files/";
 $mydes=$_GET["des"];
-$fp=fopen("$base/dev/qq.des","w");
+$fp=fopen("$myf/qq.des","w");
 $mydes=str_replace("\\","\n",$mydes);
 fprintf($fp,"%s",$mydes);
 fclose($fp);
-shell_exec("$base/write2 $base/dev/qq.des $base/dev/qq.ff; $base/convert3 $base/dev/qq.ff 1 $base/dev/qq.bin");
-$len=filesize("$base/dev/qq.bin");
+shell_exec("$base/write2 $myf/qq.des $myf/qq.ff; $base/convert3 $myf/qq.ff 10 $myf/qq.bin");
+$len=filesize("$myf/qq.bin");
 header("Content-Type: application/octet-stream");
 header("Content-Length: $len");
-readfile("$base/dev/qq.bin");
+readfile("$myf/qq.bin");
 
 ?>

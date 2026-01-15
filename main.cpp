@@ -9,10 +9,11 @@
 
 #define mySSID "EmiliaRomagnaWiFi wifiprivacy.it"
 #define mySER  "0108"
-// #define myWEB  "display.mazzini.org"
-// #define myPGR  ""
-#define myWEB  "matrix.lepida.it"
-#define myPGR  "matrix.php"
+#define myPUMP  2000
+#define myWEB  "display.mazzini.org"
+#define myPGR  ""
+// #define myWEB  "matrix.lepida.it"
+// #define myPGR  "matrix.php"
 
 // OE=D13=GPIO_NUM_48 LAT=D12=GPIO_NUM_47 CLK=11=GPIO_NUM_38
 // A=D10=GPIO_NUM_21 B=D9=GPIO_NUM_18 C=D8=GPIO_NUM_17 D=D7=GPIO_NUM_10 E=D6=GPIO_NUM_9
@@ -452,7 +453,7 @@ void loop() {
 
   if(++refresh>=15){
     refresh=0;
-    netPump(650);
+    netPump(myPUMP);
     yield();
   }
 }

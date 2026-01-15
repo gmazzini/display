@@ -363,6 +363,7 @@ void setup() {
   }
 
   WiFi.mode(WIFI_STA);
+  WiFi.setSleep(false);
   WiFi.setAutoReconnect(true);
   WiFi.persistent(false);
   WiFi.begin(mySSID);

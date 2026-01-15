@@ -1,62 +1,80 @@
-<html>
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Display renderer</title>
+</head>
+
 <body>
 
 <table>
-<tr><td>
-<form action="javascript:mymy()"">
-  <textarea id="mydes" rows="20" cols="50"></textarea>
-  <br>
-  <input type="submit" value="Render">
-</form>
-</td><td>
-<canvas id="myCanvas" width="578" height="578" style="background-color:#000000;">
+  <tr>
+    <td style="vertical-align: top;">
+      <textarea id="mydes" rows="20" cols="50"></textarea>
+      <br>
+      <button id="btn">Render</button>
+    </td>
+
+    <td style="vertical-align: top;">
+      <canvas id="myCanvas" width="578" height="578" style="background:#000;"></canvas>
+    </td>
+  </tr>
 </table>
-</td></tr>
 
 <script>
 function componentToHex(c) {
-  var hex = c.toString(16);
-  return hex.length == 1 ? "0" + hex : hex;
+  const hex = c.toString(16);
+  return hex.length === 1 ? "0" + hex : hex;
 }
-
 function rgbToHex(r, g, b) {
   return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 
-function mymy(){
-  var r,g,b,i,j,z;
-  var xmlHttp = new XMLHttpRequest();
-  xmlHttp.overrideMimeType('text/plain; charset=x-user-defined');
+document.getElementById("btn").addEventListener("click", () => {
+  document.getElementById("mydes").blur();
+  mymy();
+});
 
-  var mydes = document.getElementById("mydes");
-  var vv = mydes.value;
-  vv = vv.replace(/\r?\n/g,"\\");
+async function mymy(){
+  const mydes = document.getElementById("mydes");
+  let vv = (mydes ? mydes.value : "");
+  vv = vv.replace(/\r?\n/g, "\\"); // "\" rappresenta newline nel parametro GET
 
-  xmlHttp.open("GET","https://www.chaos.cc/dev/mywrite.php?des="+vv,false);
-  xmlHttp.send(null);
-  var x = xmlHttp.response;
-  var c = document.getElementById("myCanvas");
-  var ctx = c.getContext("2d");
+  const url = "/mywrite.php?des=" + encodeURIComponent(vv);
+
+  const resp = await fetch(url, { cache: "no-store" });
+  if (!resp.ok) return;
+
+  const bytes = new Uint8Array(await resp.arrayBuffer());
+  if (bytes.length < 4097) return;
+
+  const canvas = document.getElementById("myCanvas");
+  const ctx = canvas && canvas.getContext ? canvas.getContext("2d") : null;
+  if (!canvas || !ctx) return;
+
   ctx.globalAlpha = 1.0;
-  ctx.clearRect(0, 0, c.width, c.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  z=1;
-  for(j=0;j<64;j++){
-    for(i=0;i<64;i++){
-      if(i%2==0){
-        r=x.charCodeAt(z) & 240;
-        g=x.charCodeAt(z+2048) & 240;
-        b=x.charCodeAt(z+4096) & 240;
-      }
-      else {
-        r=(x.charCodeAt(z) & 15) << 4;
-        g=(x.charCodeAt(z+2048) & 15) << 4;
-        b=(x.charCodeAt(z+4096) & 15) << 4;
+  let z = 1;
+  for (let j = 0; j < 64; j++) {
+    for (let i = 0; i < 64; i++) {
+      let r, g, b;
+
+      if (i % 2 === 0) {
+        r = bytes[z]         & 240;
+        g = bytes[z + 2048]  & 240;
+        b = bytes[z + 4096]  & 240;
+      } else {
+        r = (bytes[z]         & 15) << 4;
+        g = (bytes[z + 2048]  & 15) << 4;
+        b = (bytes[z + 4096]  & 15) << 4;
         z++;
       }
-      ctx.fillStyle = rgbToHex(r,g,b);
+
+      ctx.fillStyle = rgbToHex(r, g, b);
       ctx.beginPath();
-      ctx.arc(5+i*9,5+j*9,4,0,Math.PI*2,true);
+      ctx.arc(5 + i * 9, 5 + j * 9, 4, 0, Math.PI * 2, true);
       ctx.fill();
     }
   }
@@ -65,4 +83,3 @@ function mymy(){
 
 </body>
 </html>
- 

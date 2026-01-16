@@ -10,7 +10,7 @@ $n=(int)@file_get_contents("/run/display/$ser.step")+1;
 file_put_contents("/run/display/$ser.step",(string)$n."\n",LOCK_EX);
 
 $nf=mt_rand(2001,2580);
-file_put_contents($des,"#\n5 $nf FF\n1 0 0 FF000040 00000000 4 $n\n");
+file_put_contents($des,"#\n5 $nf FF\n1 0 0 FF0000FF 00000000 4 $n\n");
 
 shell_exec("/home/www/display/write2 $des $ff; /home/www/display/convert3 $ff 40 $bin");
 

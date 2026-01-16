@@ -438,8 +438,7 @@ void setup() {
   }
   
   prefs.begin("conf", false);
-  has_ser = prefs.isKey("ser");
-  if (!has_ser) {
+  if (!prefs.isKey("ser")) {
     randomString(ser, 8);
     prefs.putBytes("ser", (const void *)ser, sizeof(ser));
   } 

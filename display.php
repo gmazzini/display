@@ -9,11 +9,8 @@ $ff="/run/display/$ser.ff";
 $n=(int)@file_get_contents("/run/display/$ser.step")+1;
 file_put_contents("/run/display/$ser.step",(string)$n."\n",LOCK_EX);
 
-$files=glob("/home/www/display/images/[0-9][0-9][0-9][0-9].ff");
-shuffle($files);
-$nf=$files[0];
-
-file_put_contents($des,"#\n5 2010 FF\n1 0 0 FF0000FF 00000000 4 $n\n");
+$nf=mt_rand(2001,2580);
+file_put_contents($des,"#\n5 $nf FF\n1 0 0 FF000040 00000000 4 $n\n");
 
 shell_exec("/home/www/display/write2 $des $ff; /home/www/display/convert3 $ff 40 $bin");
 

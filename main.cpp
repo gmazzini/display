@@ -12,7 +12,7 @@
 #define mySSID "EmiliaRomagnaWiFi wifiprivacy.it"
 #define myPUMP  650
 #define myWEB  "display.mazzini.org"
-#define myPGR  ""
+#define myPGR  "display.php"
 // #define myWEB  "matrix.lepida.it"
 // #define myPGR  "matrix.php"
 

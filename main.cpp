@@ -134,12 +134,8 @@ static inline volatile unsigned long (*getFrontPtr())[384] {
 // ----------------------------------------------------------------
 
 static void randomString(char *out, size_t len){
-  const char charset[] =
-    "0123456789"
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    "abcdefghijklmnopqrstuvwxyz";
-  size_t i;
-  size_t charset_len;
+  const char charset[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  size_t i,charset_len;
   uint32_t r;
   charset_len = sizeof(charset) - 1;
   for (i = 0; i < len; i++) {

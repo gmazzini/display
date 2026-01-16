@@ -77,6 +77,7 @@
 
 #define IP_IS_ZERO(ip) ((ip)[0]==0 && (ip)[1]==0 && (ip)[2]==0 && (ip)[3]==0)
 
+Preferences prefs;
 int row,refresh,i,j,k1,k2,myqq,n,valid;
 unsigned long zr1,zr2,zg1,zg2,zb1,zb2;
 volatile unsigned long *pr1,*pr2,*pg1,*pg2,*pb1,*pb2;

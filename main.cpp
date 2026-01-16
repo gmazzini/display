@@ -1,9 +1,4 @@
 // Display on ESP32S3 Rel 20260115 by GM Copyright 2023-25
-// VERSIONE: due task (display + rete) su due core (senza DMA), partendo dal tuo codice.
-// - loop() resta il refresh display (core Arduino di default: core 1)
-// - netTask() fa SOLO rete+decode+swap (pinned core 0)
-// - swap front/back protetto con critical section (per evitare race)
-// GM
 
 #include <Arduino.h>
 #include <WiFi.h>
@@ -11,9 +6,10 @@
 #include "soc/gpio_struct.h"
 #include "soc/gpio_periph.h"
 #include "driver/gpio.h"
+#include <Preferences.h>
+#include "esp_system.h" 
 
 #define mySSID "EmiliaRomagnaWiFi wifiprivacy.it"
-#define mySER  "0108"
 #define myPUMP  650
 #define myWEB  "display.mazzini.org"
 #define myPGR  ""
@@ -97,6 +93,7 @@ unsigned char TTl[]={0,1,2,2,4,4,4,4,8,8,8,8,8,8,8,8};
 unsigned char TTh[]={0,16,32,32,64,64,64,64,128,128,128,128,128,128,128,128};
 
 uint32_t rowSet[32],rowClr[32];
+char ser[9];
 
 WiFiClient client;
 IPAddress dispIP, ip, tmp;
@@ -134,6 +131,22 @@ static inline volatile unsigned long (*getFrontPtr())[384] {
   return p;
 }
 // ----------------------------------------------------------------
+
+static void randomString(char *out, size_t len){
+  const char charset[] =
+    "0123456789"
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    "abcdefghijklmnopqrstuvwxyz";
+  size_t i;
+  size_t charset_len;
+  uint32_t r;
+  charset_len = sizeof(charset) - 1;
+  for (i = 0; i < len; i++) {
+    r = esp_random();
+    out[i] = charset[r % charset_len];
+  }
+  out[len] = '\0';
+}
 
 static inline bool budget_expired(unsigned long t0, unsigned long budget_us){
   return (unsigned long)(micros() - t0) >= budget_us;
@@ -223,7 +236,7 @@ void netPump(unsigned long budget_us){
         client.print("GET /");
         client.print(myPGR);
         client.print("?ser=");
-        client.print(mySER);
+        client.print(ser);
         client.print("&ip=");
         client.print(WiFi.localIP());
         client.println(" HTTP/1.1");
@@ -274,6 +287,12 @@ void netPump(unsigned long budget_us){
           if(v<0){ netFail(); return; }
           qByte = (unsigned char)v;
           if(qByte>=1 && qByte<=200) myqq = qByte;
+          if(qByte==255) {
+            prefs.begin("conf", false);
+            randomString(ser, 8);
+            prefs.putBytes("ser", (const void *)ser, sizeof(ser));
+            prefs.end();
+          }
           payloadPos = 0;
           netState = NET_PAYLOAD;
           continue;
@@ -416,7 +435,16 @@ void setup() {
     pLATl
     pOEh
   }
-
+  
+  prefs.begin("conf", false);
+  has_ser = prefs.isKey("ser");
+  if (!has_ser) {
+    randomString(ser, 8);
+    prefs.putBytes("ser", (const void *)ser, sizeof(ser));
+  } 
+  else prefs.getBytes("ser", (void *)ser, sizeof(ser));
+  prefs.end();
+  
   delay(4000);
   for(;;){
     if(WiFi.status()==WL_CONNECTED)break;

@@ -17,4 +17,13 @@ header("Content-Type: application/octet-stream");
 header("Content-Length: $len");
 readfile($bin);
 
+
+function next_display($ser){
+  @mkdir("/run/display",0777,true);
+  $f="/run/display/$ser";
+  $n=(int)@file_get_contents($f)+1;
+  file_put_contents($f,(string)$n,LOCK_EX);
+  return $n;
+}
+
 ?>

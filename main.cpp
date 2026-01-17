@@ -298,7 +298,7 @@ void netPump(unsigned long budget_us){
           if(qByte>=1 && qByte<=200) myqq = qByte;
           if(qByte==255) {
             prefs.begin("conf", false);
-            randomString(ser, 8);
+            randomString(ser, 16);
             prefs.putBytes("ser", (const void *)ser, sizeof(ser));
             prefs.end();
           }
@@ -448,7 +448,7 @@ void setup() {
   
   prefs.begin("conf", false);
   if (!prefs.isKey("ser")) {
-    randomString(ser, 8);
+    randomString(ser, 16);
     prefs.putBytes("ser", (const void *)ser, sizeof(ser));
   } 
   else prefs.getBytes("ser", (void *)ser, sizeof(ser));

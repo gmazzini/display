@@ -296,12 +296,6 @@ void netPump(unsigned long budget_us){
           if(v<0){ netFail(); return; }
           qByte = (unsigned char)v;
           if(qByte>=1 && qByte<=200) myqq = qByte;
-          if(qByte==255) {
-            prefs.begin("conf", false);
-            randomString(ser, 16);
-            prefs.putBytes("ser", (const void *)ser, sizeof(ser));
-            prefs.end();
-          }
           payloadPos = 0;
           netState = NET_PAYLOAD;
           continue;

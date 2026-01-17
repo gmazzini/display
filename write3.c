@@ -118,7 +118,8 @@ int main(int argc,char **argv){
   int x,j;
   double len,x1,x2,y1,y2,ad,bd,dd,yd,xd;
   unsigned long rl,gl,bl,al;
-  
+
+  myqq=50;
   // name.des out.bin
   memcpy(F,"farbfeld",8);
   memcpy(F+8,"\x00\x00\x00\x40",4);

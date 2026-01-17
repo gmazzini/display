@@ -115,7 +115,7 @@ int main(int argc,char **argv){
   char buf[100],buf1[100];
   FILE *fp,*fp2;
   unsigned int y,n,m,r,g,b,t,l,k,v,vv,w,ww,rb,gb,bb,tb,ml,ax,cc,*c,yy,ty,xx,xxx,yyy;
-  int x,m,j;
+  int x,j;
   double len,x1,x2,y1,y2,ad,bd,dd,yd,xd;
   unsigned long rl,gl,bl,al;
   

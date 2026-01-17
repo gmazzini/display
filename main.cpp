@@ -94,7 +94,7 @@ unsigned char TTl[]={0,1,2,2,4,4,4,4,8,8,8,8,8,8,8,8};
 unsigned char TTh[]={0,16,32,32,64,64,64,64,128,128,128,128,128,128,128,128};
 
 uint32_t rowSet[32],rowClr[32];
-char ser[9];
+char ser[17];
 
 WiFiClient client;
 IPAddress dispIP, ip, tmp;
@@ -374,10 +374,18 @@ void netPump(unsigned long budget_us){
 
 // Task rete su core 0
 void netTask(void *pv){
+  static unsigned long lastWd=0;
   // Questo task gira sempre e pompa la rete. Il display resta nel loop() su core 1.
   for(;;){
     netPump(myPUMP);
-    vTaskDelay(1); // 1 tick: evita di “mangiarsi” tutto il core; puoi provare 0/1/2
+    if(millis()-lastWd > 500UL){
+      lastWd = millis();
+      if(valid && lastNetOk && (millis()-lastNetOk > 30000UL)){
+        forceNetRestart = 1;
+        lastNetOk = millis(); // evita richieste continue
+      }
+    }
+    vTaskDelay(1);
   }
 }
 
@@ -531,10 +539,6 @@ void loop() {
 
   if(++refresh>=15){
     refresh=0;
-    if(valid && (millis() - lastNetOk > 30000UL)){
-      forceNetRestart = 1;
-      lastNetOk = millis(); 
-    }
     yield();
   }
 }

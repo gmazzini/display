@@ -105,6 +105,8 @@ unsigned long tt=0;
 unsigned long netT0=0;
 enum NetState { NET_IDLE, NET_DNS, NET_CONNECT, NET_SEND, NET_HDR, NET_QBYTE, NET_PAYLOAD, NET_DECODE, NET_SWAP, NET_FAIL };
 NetState netState = NET_IDLE;
+volatile unsigned long lastNetOk = 0;
+volatile int forceNetRestart = 0; 
 int hdrState=0;
 int payloadPos=0;
 unsigned char qByte=0;
@@ -173,6 +175,17 @@ void netFail(){
 
 void netPump(unsigned long budget_us){
   pump_t0 = micros();
+  if(forceNetRestart){
+    client.stop();
+    wantClose = 0;
+    hdrState = 0;
+    payloadPos = 0;
+    qByte = 0;
+    netT0 = millis();
+    netState = NET_IDLE;
+    forceNetRestart = 0;
+    return;
+  }
   if(wantClose){
     client.stop();
     wantClose=0;
@@ -240,8 +253,7 @@ void netPump(unsigned long budget_us){
         client.print("Host: ");
         client.println(myWEB);
         client.println("User-Agent: ArduinoWiFi/1.1");
-        client.println("Connection: keep-alive");
-        client.println("Keep-Alive: timeout=10, max=1000");
+        client.println("Connection: close");
         client.println();
 
         netResetCycle();
@@ -354,7 +366,8 @@ void netPump(unsigned long budget_us){
         swapTmp=front; front=back; back=swapTmp;
         valid=1;
         portEXIT_CRITICAL(&swapMux);
-
+        lastNetOk = millis();
+        client.stop(); 
         netState = NET_IDLE;
         return;
 
@@ -524,8 +537,10 @@ void loop() {
 
   if(++refresh>=15){
     refresh=0;
-    // IMPORTANT: qui NON chiamiamo più netPump(), perché la rete gira nel task su core 0
-    // yield() qui va bene per cooperare con Arduino/RTOS sul core del display
+    if(valid && (millis() - lastNetOk > 30000UL)){
+      forceNetRestart = 1;
+      lastNetOk = millis(); 
+    }
     yield();
   }
 }

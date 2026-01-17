@@ -111,15 +111,15 @@ int myparse(unsigned char *ss,int n,...){
 }
 
 int main(int argc,char **argv){
-  unsigned char F[32784],F2[32784],*a,*a2,*ss,img[10];
+  unsigned char F[32784],F2[32784],*a,*a2,*ss,img[10],*aa,myqq,zz;
   char buf[100],buf1[100];
   FILE *fp,*fp2;
   unsigned int y,n,m,r,g,b,t,l,k,v,vv,w,ww,rb,gb,bb,tb,ml,ax,cc,*c,yy,ty,xx,xxx,yyy;
-  int x;
+  int x,m,j;
   double len,x1,x2,y1,y2,ad,bd,dd,yd,xd;
   unsigned long rl,gl,bl,al;
   
-  // name.des out.ff
+  // name.des out.bin
   memcpy(F,"farbfeld",8);
   memcpy(F+8,"\x00\x00\x00\x40",4);
   memcpy(F+12,"\x00\x00\x00\x40",4);
@@ -136,6 +136,10 @@ int main(int argc,char **argv){
     fgets(buf,100,fp);
     if(feof(fp))break;
     switch(buf[0]){
+
+      case '0':
+        myparse(buf+1,1,4,&myqq);
+        break;
       
       case '1':
         v=myparse(buf+1,5,1,&x,2,&y,3,&r,&g,&b,&t,3,&rb,&gb,&bb,&tb,2,&ty);
@@ -358,9 +362,18 @@ int main(int argc,char **argv){
     }
   }
   fclose(fp);
-  
-  // write ff file
+
   fp=fopen(argv[2],"wb");
-  fwrite(F,32784,1,fp);
+  fwrite(&myqq,1,1,fp);
+  for(j=0;j<3;j++){
+    aa=F+16+j*2;
+    for(m=0;m<2048;m++){
+      zz=(*aa)&0xF0;
+      aa+=8;
+      zz|=(*aa)>>4;
+      aa+=8;
+      fwrite(&zz,1,1,fp);
+    }
+  }
   fclose(fp);
 }

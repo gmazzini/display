@@ -107,7 +107,7 @@ int myparse(unsigned char *ss,int n,...){
       case 7:
         for(;*a==' ';a++){};
         for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0'; a++;
-        puc=va_arg(args,int *); *puc=atoi(b);
+        puc=va_arg(args,unsigned char *); *puc=atoi(b);
         break;
     }
   }

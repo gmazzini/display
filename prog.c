@@ -28,7 +28,7 @@ void main(int argc,char *argv[]){
   fgets(buf,100,fp);
   v[0]=atol(buf);
   fclose(fp);
-  sprintf(buf,"/home/www/display/pgr/%s.mat",argv[1]);
+  sprintf(buf,"/run/display/pgr/%s.mat",argv[1]);
   fp=fopen(buf,"rt");
   fgets(seq,100,fp);
   l=strlen(seq); seq[l-1]='\0';
@@ -36,7 +36,7 @@ void main(int argc,char *argv[]){
 
   sprintf(buf,"/run/display/%s.des",argv[1]);
   fp1=fopen(buf,"wt");
-  sprintf(buf,"/home/www/display/pgr/%s.seq",seq);
+  sprintf(buf,"/run/display/pgr/%s.seq",seq);
   fp=fopen(buf,"rt");
   fgets(buf,100,fp);
   tot=atoi(buf);

@@ -104,6 +104,11 @@ int myparse(unsigned char *ss,int n,...){
         for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0'; a++;
         pui=va_arg(args,unsigned int *); *pui=atoi(b+1);
         break;
+      case 7:
+        for(;*a==' ';a++){};
+        for(b=a;*a!=' '&&*a!='\0';a++){}; *a='\0'; a++;
+        puc=va_arg(args,int *); *puc=atoi(b);
+        break;
     }
   }
   va_end(args);
@@ -119,8 +124,8 @@ int main(int argc,char **argv){
   double len,x1,x2,y1,y2,ad,bd,dd,yd,xd;
   unsigned long rl,gl,bl,al;
 
+  // name.des out.ff out.bin
   myqq=50;
-  // name.des out.bin
   memcpy(F,"farbfeld",8);
   memcpy(F+8,"\x00\x00\x00\x40",4);
   memcpy(F+12,"\x00\x00\x00\x40",4);
@@ -139,7 +144,7 @@ int main(int argc,char **argv){
     switch(buf[0]){
 
       case '0':
-        myparse(buf+1,1,4,&myqq);
+        myparse(buf+1,1,7,&myqq);
         break;
       
       case '1':

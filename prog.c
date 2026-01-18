@@ -6,7 +6,7 @@
 // v[0]=n v[1]=hh v[2]=mm v[3]=ss
 void main(int argc,char *argv[]){
   FILE *fp,*fp1;
-  char buf[100],*p1,*p2,*p3,*q1,*q2,*q3,*q4,*x;
+  char buf[100],seq[100],*p1,*p2,*p3,*q1,*q2,*q3,*q4,*x;
   int l,tot,ln,go,min,max,i;
   long v[100];
   time_t now;
@@ -23,12 +23,16 @@ void main(int argc,char *argv[]){
   fgets(buf,100,fp);
   v[0]=atol(buf);
   fclose(fp);
+  sprintf(buf,"/home/www/display/pgr/%s.mat",argv[1]);
+  fp=fopen(buf,"rt");
+  fgets(seq,100,fp);
+  fclose(fp);
   srand((unsigned)time(NULL));
 
   sprintf(buf,"/run/display/%s.des",argv[1]);
   fp1=fopen(buf,"wt");
-
-  fp=fopen("/home/www/display/pgr/001.seq","rt");
+  sprintf(buf,"/home/www/display/pgr/%s.seq",seq);
+  fp=fopen(buf,"rt");
   fgets(buf,100,fp);
   tot=atoi(buf);
   ln=v[0]%tot;

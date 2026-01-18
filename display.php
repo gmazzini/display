@@ -9,7 +9,7 @@ $ff="/run/display/$ser.ff";
 $n=(int)@file_get_contents("/run/display/$ser.step")+1;
 file_put_contents("/run/display/$ser.step",(string)$n."\n",LOCK_EX);
 
-shell_exec("/home/www/display/pgr/q1 $ser; /home/www/display/write3 $des $bin");
+shell_exec("/home/www/display/pgr/q1 $ser; /home/www/display/write3 $des $ff $bin");
 
 @ini_set("zlib.output_compression","0");
 @apache_setenv("no-gzip","1");

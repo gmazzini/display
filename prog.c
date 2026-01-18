@@ -6,7 +6,7 @@
 // v[0]=n v[1]=hh v[2]=mm v[3]=ss
 void main(int argc,char *argv[]){
   FILE *fp,*fp1;
-  char buf[100],seq[100],*p1,*p2,*p3,*q1,*q2,*q3,*q4,*x;
+  char buf[100],seq[100],*p1,*p2,*q1,*q2,*q3,*q4,*x;
   int l,tot,ln,go,min,max,i;
   long v[100];
   time_t now;
@@ -45,8 +45,7 @@ void main(int argc,char *argv[]){
 
     if(go==0 && buf[0]=='['){
       p1=strtok(buf+1," ");
-      p2=strtok(NULL," ");
-      p3=strtok(NULL," ]");
+      p2=strtok(NULL," ]\n");
       if(ln>=atoi(p1) && ln<=atoi(p2))go=1;
       continue;
     }

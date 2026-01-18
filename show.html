@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Matrix Viewer</title>
+  <style>
+    body { background:#111; color:#ddd; font-family:sans-serif; }
+    canvas { background:#000; display:block; margin:16px 0; }
+  </style>
+</head>
+<body>
+
+<canvas id="myCanvas" width="578" height="578"></canvas>
+<div id="status"></div>
+
+<script>
+  const canvas = document.getElementById("myCanvas");
+  const ctx = canvas.getContext("2d");
+  const statusEl = document.getElementById("status");
+
+  function componentToHex(c) {
+    const hex = c.toString(16);
+    return hex.length === 1 ? "0" + hex : hex;
+  }
+  function rgbToHex(r, g, b) {
+    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+  }
+
+  function renderFrame(arrayBuffer) {
+    const x = new Uint8Array(arrayBuffer);
+
+    if (x.length < 6145) {
+      statusEl.textContent = `Frame troppo corto: ${x.length} bytes (attesi >= 6145)`;
+      return;
+    }
+
+    ctx.globalAlpha = 1.0;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    let z = 1; // byte 0 ignorato completamente
+    for (let j = 0; j < 64; j++) {
+      for (let i = 0; i < 64; i++) {
+        let r, g, b;
+
+        if (i % 2 === 0) {
+          r = x[z]        & 240;
+          g = x[z + 2048] & 240;
+          b = x[z + 4096] & 240;
+        } else {
+          r = (x[z]        & 15) << 4;
+          g = (x[z + 2048] & 15) << 4;
+          b = (x[z + 4096] & 15) << 4;
+          z++;
+        }
+
+        ctx.fillStyle = rgbToHex(r, g, b);
+        ctx.beginPath();
+        ctx.arc(5 + i * 9, 5 + j * 9, 4, 0, Math.PI * 2, true);
+        ctx.fill();
+      }
+    }
+
+    statusEl.textContent = `Frame ricevuto: ${x.length} bytes`;
+  }
+
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  async function start() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const ser = urlParams.get("ser") || "0000";
+
+    statusEl.textContent = `In attesa di frame per ser=${ser}...`;
+
+    while (true) {
+      try {
+        const resp = await fetch(`shop.php?ser=${encodeURIComponent(ser)}`, {
+          method: "GET",
+          cache: "no-store",
+        });
+
+        // Consigliato per long-poll:
+        // 200 -> frame
+        // 204 -> timeout/no frame
+        if (resp.status === 204) {
+          // nessun frame: riprova quasi subito
+          await sleep(50);
+          continue;
+        }
+
+        if (!resp.ok) {
+          statusEl.textContent = `Errore HTTP: ${resp.status}`;
+          await sleep(500);
+          continue;
+        }
+
+        const buf = await resp.arrayBuffer();
+        renderFrame(buf);
+
+      } catch (e) {
+        statusEl.textContent = `Errore rete: ${e}`;
+        await sleep(1000);
+      }
+    }
+  }
+
+  start();
+</script>
+
+</body>
+</html>

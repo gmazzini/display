@@ -103,7 +103,7 @@ const unsigned long DNS_TTL=300000UL;
 unsigned long lastWifiTry=0;
 unsigned long tt=0;
 unsigned long netT0=0;
-enum NetState { NET_IDLE, NET_DNS, NET_CONNECT, NET_SEND, NET_HDR, NET_QBYTE, NET_PAYLOAD, NET_DECODE, NET_SWAP, NET_FAIL };
+enum NetState { NET_IDLE, NET_DNS, NET_CONNECT, NET_SEND, NET_HDR, NET_QBYTE, NET_PAYLOAD, NET_DECODE, NET_SWAP };
 NetState netState = NET_IDLE;
 volatile unsigned long lastNetOk = 0;
 volatile int forceNetRestart = 0; 
@@ -114,7 +114,6 @@ int dec_k1=0;
 int dec_k2=0;
 unsigned char *dec_aa=nullptr;
 unsigned long dec_oo=0;
-int decodeWords=0;
 volatile int wantClose=0;
 unsigned long pump_t0=0;
 int v=0;
@@ -326,8 +325,8 @@ void netPump(unsigned long budget_us){
         return;
 
       case NET_DECODE:
-        decodeWords = 16; // 16 word per pump
-        while(decodeWords-- > 0){
+        for(;;){
+          if(budget_expired(pump_t0, budget_us)) return;
 
           if(dec_k1 >= 15){
             netState = NET_SWAP;
@@ -352,7 +351,7 @@ void netPump(unsigned long budget_us){
             dec_aa = buf;
           }
         }
-        return;
+        continue;  // invece di return: prosegue subito a NET_SWAP nello stesso pump
 
       case NET_SWAP:
         // SWAP ATOMICO (perché display legge front dall’altro core)
@@ -364,10 +363,7 @@ void netPump(unsigned long budget_us){
         client.stop(); 
         netState = NET_IDLE;
         return;
-
-      case NET_FAIL:
-        netFail();
-        return;
+      
     }
   }
 }

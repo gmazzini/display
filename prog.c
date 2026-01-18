@@ -11,7 +11,10 @@ void main(int argc,char *argv[]){
   long v[100];
   time_t now;
   struct tm tmv;
-
+  struct timeval tv;
+  
+  gettimeofday(&tv,NULL);
+  srand((unsigned)(tv.tv_sec ^ tv.tv_usec ^ getpid()));
   now=time(NULL);
   localtime_r(&now,&tmv);
   v[1]=tmv.tm_hour;
@@ -28,7 +31,6 @@ void main(int argc,char *argv[]){
   fgets(seq,100,fp);
   l=strlen(seq); seq[l-1]='\0';
   fclose(fp);
-  srand((unsigned)time(NULL));
 
   sprintf(buf,"/run/display/%s.des",argv[1]);
   fp1=fopen(buf,"wt");

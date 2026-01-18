@@ -2,16 +2,58 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Matrix Viewer</title>
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, viewport-fit=cover" />
+  <title>Matrix Display</title>
   <style>
-    body { background:#111; color:#ddd; font-family:sans-serif; }
-    canvas { background:#000; display:block; margin:16px 0; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: #000;
+    }
+
+    /* Centro perfetto */
+    body {
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    /* Wrapper che prende tutta la pagina */
+    .stage {
+      width: 100vw;
+      height: 100vh;
+      display: grid;
+      place-items: center;
+    }
+
+    /* Il canvas mantiene dimensione logica per il render, ma viene scalato via CSS */
+    canvas {
+      width: min(100vw, 100vh);
+      height: min(100vw, 100vh);
+      background: #000;
+      display: block;
+      image-rendering: pixelated; /* non indispensabile con i cerchi, ma ok */
+    }
+
+    /* (Opzionale) status discreto */
+    #status {
+      position: fixed;
+      left: 12px;
+      bottom: 10px;
+      color: #aaa;
+      font: 12px/1.2 sans-serif;
+      user-select: none;
+      opacity: .8;
+    }
   </style>
 </head>
-<body>
 
-<canvas id="myCanvas" width="578" height="578"></canvas>
-<div id="status"></div>
+<body>
+  <div class="stage">
+    <!-- dimensione "logica" per disegnare esattamente come prima -->
+    <canvas id="myCanvas" width="578" height="578"></canvas>
+  </div>
+  <div id="status"></div>
 
 <script>
   const canvas = document.getElementById("myCanvas");
@@ -30,14 +72,14 @@
     const x = new Uint8Array(arrayBuffer);
 
     if (x.length < 6145) {
-      statusEl.textContent = `Frame troppo corto: ${x.length} bytes (attesi >= 6145)`;
+      statusEl.textContent = `Frame troppo corto: ${x.length} bytes`;
       return;
     }
 
     ctx.globalAlpha = 1.0;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    let z = 1; // byte 0 ignorato completamente
+    let z = 1; // byte 0 IGNORATO
     for (let j = 0; j < 64; j++) {
       for (let i = 0; i < 64; i++) {
         let r, g, b;
@@ -69,20 +111,16 @@
     const urlParams = new URLSearchParams(window.location.search);
     const ser = urlParams.get("ser") || "0000";
 
-    statusEl.textContent = `In attesa di frame per ser=${ser}...`;
+    statusEl.textContent = `In attesa frame per ser=${ser}...`;
 
     while (true) {
       try {
-        const resp = await fetch(`show.php?ser=${encodeURIComponent(ser)}`, {
+        const resp = await fetch(`/shop.php?ser=${encodeURIComponent(ser)}`, {
           method: "GET",
           cache: "no-store",
         });
 
-        // Consigliato per long-poll:
-        // 200 -> frame
-        // 204 -> timeout/no frame
         if (resp.status === 204) {
-          // nessun frame: riprova quasi subito
           await sleep(50);
           continue;
         }
@@ -96,6 +134,7 @@
         const buf = await resp.arrayBuffer();
         renderFrame(buf);
 
+        // riparte subito (nessuna tempificazione)
       } catch (e) {
         statusEl.textContent = `Errore rete: ${e}`;
         await sleep(1000);
@@ -105,6 +144,5 @@
 
   start();
 </script>
-
 </body>
 </html>

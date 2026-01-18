@@ -26,6 +26,7 @@ void main(int argc,char *argv[]){
   sprintf(buf,"/home/www/display/pgr/%s.mat",argv[1]);
   fp=fopen(buf,"rt");
   fgets(seq,100,fp);
+  l=strlen(seq); seq[l-1]='\0';
   fclose(fp);
   srand((unsigned)time(NULL));
 

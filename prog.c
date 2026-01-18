@@ -46,6 +46,21 @@ void main(int argc,char *argv[]){
       continue;
     }
 
+    if(go==1 && *buf=='[')break;
+
+    if(go==0)continue;
+
+    if(buf[0]=='@'){
+      q1=strtok(buf+1," ");
+      q2=strtok(NULL," ");
+      if(strcmp(q2,"RAND")==0){
+        q3=strtok(NULL," "); min=atoi(q3);
+        q4=strtok(NULL," \n"); max=atoi(q4);
+        v[atoi(q1)]=min+rand()%(max-min+1);
+      }
+      continue;
+    }
+
     for(x=buf;*x!='\0';x++){
       if(*x=='@'){
         q1=x+1; for(x=q1;*x!='$';x++); *x='\0';
@@ -61,18 +76,3 @@ void main(int argc,char *argv[]){
   fclose(fp);
   fclose(fp1);
 }
-root@s018:/hom
-    if(go==1 && *buf=='[')break;
-
-    if(go==0)continue;
-
-    if(buf[0]=='@'){
-      q1=strtok(buf+1," ");
-      q2=strtok(NULL," ");
-      if(strcmp(q2,"RAND")==0){
-        q3=strtok(NULL," "); min=atoi(q3);
-        q4=strtok(NULL," \n"); max=atoi(q4);
-        v[atoi(q1)]=min+rand()%(max-min+1);
-      }
-      continue;
-    }

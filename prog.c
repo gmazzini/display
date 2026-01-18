@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <sys/time.h>
+#include <unistd.h>
 
 // v[0]=n v[1]=hh v[2]=mm v[3]=ss
 void main(int argc,char *argv[]){

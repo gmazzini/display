@@ -10,7 +10,7 @@
 // LCG <len> <mod> <base>
 void main(int argc,char *argv[]){
   FILE *fp,*fp1,*fp2;
-  char buf[100],seq[100],*p1,*p2,*q,*x;
+  char buf[100],seq[100],*p1,*p2,*q,*q1,*q2,*x;
   int l,tot,ln,go,a0,a1,a2,a3,i;
   long v[100];
   time_t now;

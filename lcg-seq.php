@@ -12,6 +12,6 @@ function lcg($seed,$m,$a,$c){
 $m=$argv[1];
 $seq=lcg(rand(0,$m-1),$m,$argv[2],$argv[3]);
 foreach($seq as $k => $v){
-  file_put_contents("$m-$k.lcg","$v\n");
+  file_put_contents("/run/display/lcg/$m-$k.lcg","$v\n");
 }
 ?>

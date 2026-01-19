@@ -6,10 +6,12 @@
 #include <unistd.h>
 
 // v[0]=n v[1]=hh v[2]=mm v[3]=ss
+// RAND <start> <end>
+// LCG <len> <mod> <base>
 void main(int argc,char *argv[]){
-  FILE *fp,*fp1;
-  char buf[100],seq[100],*p1,*p2,*q1,*q2,*q3,*q4,*x;
-  int l,tot,ln,go,min,max,i;
+  FILE *fp,*fp1,*fp2;
+  char buf[100],seq[100],*p1,*p2,*q1,*q2,*q3,*q4,*q5,*x;
+  int l,tot,ln,go,a1,a2,a3,i;
   long v[100];
   time_t now;
   struct tm tmv;
@@ -61,11 +63,24 @@ void main(int argc,char *argv[]){
     if(buf[0]=='@'){
       q1=strtok(buf+1," ");
       q2=strtok(NULL," ");
+      
       if(strcmp(q2,"RAND")==0){
-        q3=strtok(NULL," "); min=atoi(q3);
-        q4=strtok(NULL," \n"); max=atoi(q4);
-        v[atoi(q1)]=min+rand()%(max-min+1);
+        q3=strtok(NULL," "); a1=atoi(q3);
+        q4=strtok(NULL," \n"); a2=atoi(q4);
+        v[atoi(q1)]=a1+rand()%(a2-a1+1);
       }
+
+      else if(strcmp(q2,"LCG")==0){
+        q3=strtok(NULL," "); a1=atoi(q3);
+        q4=strtok(NULL," "); a2=atoi(q4);
+        q5=strtok(NULL," \n"); a3=atoi(q5);
+        sprintf(buf,"/run/display/lcg/%d-%d.lcg",a1,v[0]%a2);
+        fp2=fopen(buf,"rt");
+        fgets(buf,100,fp2);
+        v[atoi(q1)]=a3+atol(buf);
+        fclose(fp2);
+      }
+      
       continue;
     }
 

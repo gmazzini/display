@@ -6,8 +6,8 @@
 #include "soc/gpio_struct.h"
 #include "soc/gpio_periph.h"
 #include "driver/gpio.h"
-#include <Preferences.h>
-#include "esp_system.h" 
+#include "esp_system.h"
+#include "esp_efuse_mac.h"
 
 #define mySSID "EmiliaRomagnaWiFi wifiprivacy.it"
 #define myPUMP  650
@@ -77,7 +77,6 @@
 
 #define IP_IS_ZERO(ip) ((ip)[0]==0 && (ip)[1]==0 && (ip)[2]==0 && (ip)[3]==0)
 
-Preferences prefs;
 int row,refresh,i,j,k1,k2,myqq,n,valid;
 unsigned long zr1,zr2,zg1,zg2,zb1,zb2;
 volatile unsigned long *pr1,*pr2,*pg1,*pg2,*pb1,*pb2;
@@ -92,9 +91,10 @@ volatile unsigned long (*swapTmp)[384];
 
 unsigned char TTl[]={0,1,2,2,4,4,4,4,8,8,8,8,8,8,8,8};
 unsigned char TTh[]={0,16,32,32,64,64,64,64,128,128,128,128,128,128,128,128};
+const char hex[] = "0123456789ABCDEF";
 
 uint32_t rowSet[32],rowClr[32];
-char ser[17];
+char ser[13];
 
 WiFiClient client;
 IPAddress dispIP, ip, tmp;
@@ -133,18 +133,6 @@ static inline volatile unsigned long (*getFrontPtr())[384] {
   return p;
 }
 // ----------------------------------------------------------------
-
-static void randomString(char *out, size_t len){
-  const char charset[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-  size_t i,charset_len;
-  uint32_t r;
-  charset_len = sizeof(charset) - 1;
-  for (i = 0; i < len; i++) {
-    r = esp_random();
-    out[i] = charset[r % charset_len];
-  }
-  out[len] = '\0';
-}
 
 static inline bool budget_expired(unsigned long t0, unsigned long budget_us){
   return (unsigned long)(micros() - t0) >= budget_us;
@@ -294,7 +282,8 @@ void netPump(unsigned long budget_us){
           v = client.read();
           if(v<0){ netFail(); return; }
           qByte = (unsigned char)v;
-          if(qByte>=1 && qByte<=200) myqq = qByte;
+          if(qByte>=1 && qByte<=50) myqq = qByte * 10;
+          else if(qByte>=101 && qByte<=150) myqq = qByte - 100;
           payloadPos = 0;
           netState = NET_PAYLOAD;
           continue;
@@ -388,6 +377,7 @@ void netTask(void *pv){
 void setup() {
   int r;
   uint32_t s;
+  uint8_t factory[6];
 
   refresh=0;
   valid=0;
@@ -443,14 +433,13 @@ void setup() {
     pLATl
     pOEh
   }
-  
-  prefs.begin("conf", false);
-  if (!prefs.isKey("ser")) {
-    randomString(ser, 16);
-    prefs.putBytes("ser", (const void *)ser, sizeof(ser));
-  } 
-  else prefs.getBytes("ser", (void *)ser, sizeof(ser));
-  prefs.end();
+
+  esp_efuse_mac_get_default(factory);
+  for (r = 0; r < 6; r++) {
+    ser[r*2]     = hex[(factory[r] >> 4) & 0x0F];
+    ser[r*2 + 1] = hex[ factory[r]       & 0x0F];
+  }
+  ser[12] = '\0';
   
   delay(4000);
   for(;;){

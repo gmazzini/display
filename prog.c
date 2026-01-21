@@ -81,7 +81,7 @@ void main(int argc,char *argv[]){
         sprintf(buf,"/run/display/lcg/%d-%d.lcg",a1,atol(v[2])%a2);
         fp2=fopen(buf,"rt");
         fgets(buf,100,fp2);
-        sprintf(v[a0],fmt,a3+atol(buf));
+        sprintf(v[a0],"%04d",a3+atol(buf));
         fclose(fp2);
       }
       

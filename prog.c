@@ -11,7 +11,7 @@
 // LCG <fmt> <len> <mod> <base>
 void main(int argc,char *argv[]){
   FILE *fp,*fp1,*fp2;
-  char buf[100],*p1,*p2,*q,*q1,*q2,*x;
+  char buf[100],*p1,*p2,*q,*q1,*q2,*x,*fmt;
   int l,tot,ln,go,a0,a1,a2,a3,i;
   char v[100][100];
   struct timespec ts;
@@ -66,19 +66,21 @@ void main(int argc,char *argv[]){
       q=strtok(NULL," ");
       
       if(strcmp(q,"RAND")==0){
+        fmt=strtok(NULL," ");
         q=strtok(NULL," "); a1=atoi(q);
         q=strtok(NULL," \n"); a2=atoi(q);
-        v[a0]=a1+rand()%(a2-a1+1);
+        sprintf(v[a0],fmt,a1+rand()%(a2-a1+1));
       }
 
       else if(strcmp(q,"LCG")==0){
+        fmt=strtok(NULL," ");
         q=strtok(NULL," "); a1=atoi(q);
         q=strtok(NULL," "); a2=atoi(q);
         q=strtok(NULL," \n"); a3=atoi(q);
         sprintf(buf,"/run/display/lcg/%d-%d.lcg",a1,v[0]%a2);
         fp2=fopen(buf,"rt");
         fgets(buf,100,fp2);
-        v[a0]=a3+atol(buf);
+        sprintf(v[a0],fmt,a3+atol(buf));
         fclose(fp2);
       }
       
@@ -88,8 +90,7 @@ void main(int argc,char *argv[]){
     for(x=buf;*x!='\0';x++){
       if(*x=='@'){
         q1=x+1; for(x=q1;*x!='$';x++); *x='\0';
-        q2=x+1; for(x=q2;*x!='$';x++); *x='\0';
-        fprintf(fp1,q1,v[atoi(q2)]);
+        fprintf(fp1,"%s",q1);
         continue;
       }
       fprintf(fp1,"%c",*x);

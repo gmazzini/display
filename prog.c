@@ -12,7 +12,7 @@
 // LCG <fmt> <len> <mod> <base>
 void main(int argc,char *argv[]){
   FILE *fp,*fp1,*fp2;
-  char buf[100],*p1,*p2,*q,*q1,*q2,*x,*fmt;
+  char buf[100],*p1,*p2,*q,*q1,*q2,*x,fmt[20];
   int l,tot,ln,go,a0,a1,a2,a3,a4,i;
   char v[100][100];
   struct timespec ts;
@@ -67,14 +67,14 @@ void main(int argc,char *argv[]){
       q=strtok(NULL," ");
       
       if(strcmp(q,"RAND")==0){
-        fmt=strtok(NULL," ");
+        q=strtok(NULL," "); strcpy(fmt,q);
         q=strtok(NULL," "); a1=atoi(q);
         q=strtok(NULL," \n"); a2=atoi(q);
         sprintf(v[a0],fmt,a1+rand()%(a2-a1+1));
       }
 
       else if(strcmp(q,"LCG")==0){
-        fmt=strtok(q+4," ");
+        q=strtok(NULL," "); strcpy(fmt,q);
         q=strtok(NULL," "); a1=atoi(q);
         q=strtok(NULL," "); a2=atoi(q);
         q=strtok(NULL," \n"); a3=atoi(q);
@@ -83,7 +83,6 @@ void main(int argc,char *argv[]){
         fgets(buf,100,fp2);
         a4=atoi(buf);
         fclose(fp2);
-//        sprintf(v[a0],fmt,a3+a4);
         sprintf(v[a0],fmt,a3+a4);
       }
       

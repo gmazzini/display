@@ -13,7 +13,7 @@
 void main(int argc,char *argv[]){
   FILE *fp,*fp1,*fp2;
   char buf[100],*p1,*p2,*q,*q1,*q2,*x,*fmt;
-  int l,tot,ln,go,a0,a1,a2,a3,i;
+  int l,tot,ln,go,a0,a1,a2,a3,a4,i;
   char v[100][100];
   struct timespec ts;
   struct tm tmv;
@@ -80,9 +80,10 @@ void main(int argc,char *argv[]){
         q=strtok(NULL," \n"); a3=atoi(q);
         sprintf(buf,"/run/display/lcg/%d-%d.lcg",a1,atol(v[2])%a2);
         fp2=fopen(buf,"rt");
-        fgets(buf,100,fp2); l=strlen(buf); buf[l-1]='\0';
-        sprintf(v[a0],fmt,a3+atol(buf));
+        fgets(buf,100,fp2);
+        a4=atoi(buf);
         fclose(fp2);
+        sprintf(v[a0],fmt,a3+a4);
       }
       
       continue;

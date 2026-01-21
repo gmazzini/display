@@ -4,6 +4,7 @@
 #include <time.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include <stdint.h>
 
 // v[0]=mat v[1]=ip v[2]=step v[3]=seq
 // v[3]=hh(%02d) v[4]=mm(%02d) v[5]=ss(%02d)

@@ -74,7 +74,7 @@ void main(int argc,char *argv[]){
       }
 
       else if(strcmp(q,"LCG")==0){
-        fmt=strtok(NULL," ");
+        fmt=strtok(q+4," ");
         q=strtok(NULL," "); a1=atoi(q);
         q=strtok(NULL," "); a2=atoi(q);
         q=strtok(NULL," \n"); a3=atoi(q);

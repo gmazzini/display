@@ -91,7 +91,7 @@ void main(int argc,char *argv[]){
     for(x=buf;*x!='\0';x++){
       if(*x=='@'){
         q1=x+1; for(x=q1;*x!='$';x++); *x='\0';
-        fprintf(fp1,"%s",q1);
+        fprintf(fp1,"%s",v[q1]);
         continue;
       }
       fprintf(fp1,"%c",*x);

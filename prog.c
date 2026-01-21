@@ -15,7 +15,7 @@ void main(int argc,char *argv[]){
   int l,tot,ln,go,a0,a1,a2,a3,i;
   char v[100][100];
   struct timespec ts;
-  truct tm tmv;
+  struct tm tmv;
   uint64_t seed;
   
   strcpy(v[0],argv[1]);

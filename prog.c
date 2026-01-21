@@ -80,7 +80,7 @@ void main(int argc,char *argv[]){
         q=strtok(NULL," \n"); a3=atoi(q);
         sprintf(buf,"/run/display/lcg/%d-%d.lcg",a1,atol(v[2])%a2);
         fp2=fopen(buf,"rt");
-        fgets(buf,100,fp2);
+        fgets(buf,100,fp2); l=strlen(buf); buf[l-1]='\0';
         sprintf(v[a0],fmt,a3+atol(buf));
         fclose(fp2);
       }

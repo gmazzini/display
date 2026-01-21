@@ -18,6 +18,7 @@ void main(int argc,char *argv[]){
   struct timespec ts;
   struct tm tmv;
   uint64_t seed;
+  long lv2;
   
   strcpy(v[0],argv[1]);
   strcpy(v[1],argv[2]);
@@ -29,10 +30,14 @@ void main(int argc,char *argv[]){
   sprintf(v[5],"%02d",tmv.tm_min);
   sprintf(v[6],"%02d",tmv.tm_sec);
   
-  sprintf(buf,"/run/display/%s.step",v[0]);
-  fp=fopen(buf,"rt");
+  sprintf(buf,"/run/display/%s.step",v[0]); 
+  fp=fopen(buf,"r+");
   fgets(v[2],100,fp); l=strlen(v[2]); v[2][l-1]='\0';
+  rewind(fp);
+  lv2=atol[v[2]);
+  fprintf(fp,"%ld\n",lv2+1);
   fclose(fp);
+
   sprintf(buf,"/run/display/%s.mat",v[0]);
   fp=fopen(buf,"rt");
   fgets(v[3],100,fp); l=strlen(v[3]); v[3][l-1]='\0';
@@ -44,7 +49,7 @@ void main(int argc,char *argv[]){
   fp=fopen(buf,"rt");
   fgets(buf,100,fp);
   tot=atoi(buf);
-  ln=atol(v[2])%tot;
+  ln=lv2%tot;
   go=0;
   for(;;){
     fgets(buf,100,fp);
@@ -78,7 +83,7 @@ void main(int argc,char *argv[]){
         q=strtok(NULL," "); a1=atoi(q);
         q=strtok(NULL," "); a2=atoi(q);
         q=strtok(NULL," \n"); a3=atoi(q);
-        sprintf(buf,"/run/display/lcg/%d-%d.lcg",a1,atol(v[2])%a2);
+        sprintf(buf,"/run/display/lcg/%d-%d.lcg",a1,lv2%a2);
         fp2=fopen(buf,"rt");
         fgets(buf,100,fp2);
         a4=atoi(buf);

@@ -5,44 +5,45 @@
 #include <sys/time.h>
 #include <unistd.h>
 
-// v[0]=n v[1]=hh v[2]=mm v[3]=ss
-// RAND <start> <end>
-// LCG <len> <mod> <base>
+// v[0]=mat v[1]=ip v[2]=step v[3]=seq
+// v[3]=hh(%02d) v[4]=mm(%02d) v[5]=ss(%02d)
+// RAND <fmt> <start> <end>
+// LCG <fmt> <len> <mod> <base>
 void main(int argc,char *argv[]){
   FILE *fp,*fp1,*fp2;
-  char buf[100],seq[100],*p1,*p2,*q,*q1,*q2,*x;
+  char buf[100],*p1,*p2,*q,*q1,*q2,*x;
   int l,tot,ln,go,a0,a1,a2,a3,i;
-  long v[100];
-  time_t now;
-  struct tm tmv;
-  struct timeval tv;
+  char v[100][100];
+  struct timespec ts;
+  truct tm tmv;
+  uint64_t seed;
   
-  gettimeofday(&tv,NULL);
-  srand((unsigned)(tv.tv_sec ^ tv.tv_usec ^ getpid()));
-  now=time(NULL);
-  localtime_r(&now,&tmv);
-  v[1]=tmv.tm_hour;
-  v[2]=tmv.tm_min;
-  v[3]=tmv.tm_sec;
-
-  sprintf(buf,"/run/display/%s.step",argv[1]);
+  strcpy(v[0],argv[1]);
+  strcpy(v[1],argv[2]);
+  clock_gettime(CLOCK_REALTIME, &ts);
+  seed = (uint64_t)ts.tv_sec ^ (uint64_t)ts.tv_nsec ^ (uint64_t)getpid();
+  srand((unsigned)seed);
+  localtime_r(&ts.tv_sec, &tmv);
+  sprintf(v[4],"%02d",tmv.tm_hour);
+  sprintf(v[5],"%02d",tmv.tm_min);
+  sprintf(v[6],"%02d",tmv.tm_sec);
+  
+  sprintf(buf,"/run/display/%s.step",v[0]);
   fp=fopen(buf,"rt");
-  fgets(buf,100,fp);
-  v[0]=atol(buf);
+  fgets(v[2],100,fp); l=strlen(v[2]); v[2][l-1]='\0';
   fclose(fp);
-  sprintf(buf,"/run/display/%s.mat",argv[1]);
+  sprintf(buf,"/run/display/%s.mat",v[0]);
   fp=fopen(buf,"rt");
-  fgets(seq,100,fp);
-  l=strlen(seq); seq[l-1]='\0';
+  fgets(v[3],100,fp); l=strlen(v[3]); v[3][l-1]='\0';
   fclose(fp);
 
-  sprintf(buf,"/run/display/%s.des",argv[1]);
+  sprintf(buf,"/run/display/%s.des",v[0]);
   fp1=fopen(buf,"wt");
-  sprintf(buf,"/run/display/%s.seq",seq);
+  sprintf(buf,"/run/display/%s.seq",v[3]);
   fp=fopen(buf,"rt");
   fgets(buf,100,fp);
   tot=atoi(buf);
-  ln=v[0]%tot;
+  ln=atol(v[2])%tot;
   go=0;
   for(;;){
     fgets(buf,100,fp);

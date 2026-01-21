@@ -84,7 +84,7 @@ void main(int argc,char *argv[]){
         a4=atoi(buf);
         fclose(fp2);
 //        sprintf(v[a0],fmt,a3+a4);
-        sprintf(v[a0],"%d,%d",a4,a3);
+        sprintf(v[a0],"%d,%d",a4,a3+a4);
       }
       
       continue;

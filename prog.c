@@ -34,7 +34,7 @@ void main(int argc,char *argv[]){
   fp=fopen(buf,"r+");
   fgets(v[2],100,fp); l=strlen(v[2]); v[2][l-1]='\0';
   rewind(fp);
-  lv2=atol[v[2]);
+  lv2=atol(v[2]);
   fprintf(fp,"%ld\n",lv2+1);
   fclose(fp);
 

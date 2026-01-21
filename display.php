@@ -6,8 +6,6 @@ $ser=$_GET["ser"];
 $bin="/run/display/$ser.bin";
 $des="/run/display/$ser.des";
 $ff="/run/display/$ser.ff";
-$n=(int)@file_get_contents("/run/display/$ser.step")+1;
-file_put_contents("/run/display/$ser.step",(string)$n."\n",LOCK_EX);
 
 shell_exec("/home/www/display/prog $ser $ip; /home/www/display/write3 $des $ff $bin");
 

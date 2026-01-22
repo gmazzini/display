@@ -13,8 +13,8 @@
 // LCG <fmt> <len> <mod> <base>
 void main(int argc,char *argv[]){
   FILE *fp,*fp1,*fp2;
-  char buf[100],*p1,*p2,*q,*q1,*q2,*x,fmt[20],*gs,cmd[10000];
-  int l,tot,ln,go,a0,a1,a2,a3,a4,i;
+  char buf[100],*p1,*p2,*q,*q1,*x,*yy,fmt[20],*gs,cmd[10000];
+  int l,tot,ln,go,a0,a1,a2,a3,a4;
   char v[100][100];
   struct timespec ts;
   struct tm tmv;
@@ -27,11 +27,11 @@ void main(int argc,char *argv[]){
   for(x=gs;*x!='\0';x++){
     if(strncmp(x,"ip=",3)==0){
       yy=v[1]; for(x+=3;*x!='\0' && *x!='&' && yy-v[1]<20;x++)*yy++=*x;
-      *y='\0';
+      *yy='\0';
       continue;
     }
     if(strncmp(x,"ser=",4)==0){
-      yy=v[0]; for(x+=4;*x!='\0' && *x!='&' && yy-v[0]<20;xx++)*yy++=*x;
+      yy=v[0]; for(x+=4;*x!='\0' && *x!='&' && yy-v[0]<20;x++)*yy++=*x;
       *yy='\0';
       continue;
     }

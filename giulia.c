@@ -2,11 +2,18 @@
 #include <string.h>
 #include <stdlib.h>
 
+int hexval(int c) {
+  if (c >= '0' && c <= '9') return c - '0';
+  if (c >= 'a' && c <= 'f') return c - 'a' + 10;
+  if (c >= 'A' && c <= 'F') return c - 'A' + 10;
+  return -1;
+}
+
 void main(){
   char *gs,*x,*yy,cmd[10001];
   FILE *fp;
   long lv2;
-  int out;
+  int out,hi,lo;
   
   gs=getenv("QUERY_STRING");
   if(gs==NULL){printf("Status: 400 Bad Request\r\nContent-Type: text/plain\r\n\r\nmissing query"); exit(0); }

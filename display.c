@@ -34,6 +34,13 @@ void main(void){
   sprintf(ff,"/run/display/%s.ff", ser);
   sprintf(cmd,"/home/www/display/prog %s %s; /home/www/display/write3 %s %s %s",ser, ip, des, ff, bin);
   system(cmd);
+
+ f=fopen("/run/display/test.txt","wt");
+  fprintf(f,"%s\n%s\n%s\n",bin,des,ff);
+  fclose(f);
+
+
+  
   f = fopen(bin, "rb");
   fseek(f, 0, SEEK_END);
   n = ftell(f);

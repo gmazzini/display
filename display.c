@@ -40,11 +40,10 @@ void main(void){
   n = ftell(f);
   fseek(f, 0, SEEK_SET);
 
+printf("Status: 200 OK\r\n");
 printf("Content-Type: application/octet-stream\r\n");
 printf("Content-Encoding: identity\r\n");
-printf("Cache-Control: no-transform\r\n");
-printf("Content-Length: %ld\r\n",n);
-printf("Connection: close\r\n");
+printf("Content-Length: %ld\r\n",n;
 printf("\r\n");
 fflush(stdout);
 

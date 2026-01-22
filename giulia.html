@@ -41,7 +41,7 @@ async function mymy(){
   let vv = (mydes ? mydes.value : "");
   vv = vv.replace(/\r?\n/g, "\\"); // "\" rappresenta newline nel parametro GET
 
-  const url = "/giulia.php?des=" + encodeURIComponent(vv);
+  const url = "/giulia.cgi?des=" + encodeURIComponent(vv);
 
   const resp = await fetch(url, { cache: "no-store" });
   if (!resp.ok) return;

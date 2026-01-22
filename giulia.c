@@ -6,6 +6,7 @@ void main(){
   char *gs,*x,*yy,cmd[10001];
   FILE *fp;
   long lv2;
+  int out;
   
   gs=getenv("QUERY_STRING");
   if(gs==NULL){printf("Status: 400 Bad Request\r\nContent-Type: text/plain\r\n\r\nmissing query"); exit(0); }
@@ -17,11 +18,26 @@ void main(){
       continue;
     }
   }
-
-  fp=fopen("/run/display/giulia.des","wt");
-  for(x=cmd;*x!='\0';x++){
-    if(*x=='\\')*x='\n';
-    fputc(*x,fp);
+  for(x=cmd;*x!='\0';){
+    if(*x=='+'){
+      out=' ';
+      x++;
+    } 
+    else if(*x == '%' && x[1] != '\0' && x[2] != '\0'){
+      hi=hexval(x[1]);
+      lo=hexval(x[2]);
+      if(hi >= 0 && lo >= 0){
+        out=(hi << 4) | lo;
+        x+=3;
+      } 
+      else {
+        out=*x;
+        x++;
+      }
+    } 
+    else x++;
+    if(out=='\\')out='\n';
+    fputc(out,fp);
   }
   fclose(fp);
 

@@ -43,7 +43,7 @@ void main(void){
 printf("Content-Type: application/octet-stream\r\n");
 printf("Content-Encoding: identity\r\n");
 printf("Cache-Control: no-transform\r\n");
-printf("Content-Length: %ld\r\n",n;
+printf("Content-Length: %ld\r\n",n);
 printf("Connection: close\r\n");
 printf("\r\n");
 fflush(stdout);

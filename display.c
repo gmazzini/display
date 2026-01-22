@@ -47,7 +47,8 @@ void main(void){
   fseek(f, 0, SEEK_SET);
   printf("Content-Encoding: identity\r\n");
   printf("Content-Type: application/octet-stream\r\n");
-  printf("Content-Length: %ld\r\n\r\n", n);
+  printf("Content-Length: %ld\r\n\r\n",n);
+  fflush(stdout);
   fread(buf, 1, n, f);
   fwrite(buf, 1, n, stdout);
   fclose(f);

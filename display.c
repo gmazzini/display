@@ -41,7 +41,7 @@ void main(void){
   printf("Content-Encoding: identity\r\n");
   printf("Content-Type: application/octet-stream\r\n");
   printf("Content-Length: %ld\r\n\r\n", n);
-  fread(cmd, 1, n, f));
+  fread(cmd, 1, n, f);
   fwrite(cmd, 1, n, stdout);
   fclose(f);
 

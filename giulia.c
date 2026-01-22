@@ -44,7 +44,10 @@ void main(){
         x++;
       }
     } 
-    else x++;
+    else {
+      out=*x;
+      x++;
+    }
     if(out=='\\')out='\n';
     fputc(out,fp);
   }

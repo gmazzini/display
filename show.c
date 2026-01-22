@@ -8,7 +8,7 @@
 #include <sys/stat.h>
 
 void main(){
-  char *gs,*x,ser[21],buf[100],cmd[10000];
+  char *gs,*x,*yy,ser[21],buf[100],cmd[10000];
   FILE *fp;
   long lv2;
   
@@ -17,7 +17,7 @@ void main(){
   *ser='\0';
   for(x=gs;*x!='\0';x++){
     if(strncmp(x,"ser=",4)==0){
-      yy=ser; for(x+=4;*x!='\0' && *x!='&' && yy-v[0]<20;x++)*yy++=*x;
+      yy=ser; for(x+=4;*x!='\0' && *x!='&' && yy-ser<20;x++)*yy++=*x;
       *yy='\0';
       continue;
     }

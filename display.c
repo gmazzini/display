@@ -126,7 +126,7 @@ void main(int argc,char *argv[]){
   sprintf(cmd,"/home/www/display/write3 /run/display/%s.des /run/display/%s.ff /run/display/%s.bin",v[0],v[0],v[0]);
   system(cmd);
   sprintf(buf,"/run/display/%s.bin",v[0]);
-  fp=fopen(bin,"rb");
+  fp=fopen(buf,"rb");
   fseek(fp,0,SEEK_END);
   lv2=ftell(fp);
   fseek(fp,0,SEEK_SET);

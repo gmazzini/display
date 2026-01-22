@@ -4,16 +4,11 @@
 #include <sys/stat.h>
 
 void main(void){
-  const char *qs;
-  char qbuf[1024], ip[256], ser[256];
-  char bin[512], des[512], ff[512];
-  char cmd[1400];
-  char *tok, *eq;
+  char ip[21],ser[21],*gs,*xx,*yy;
+  char bin[512],des[512],ff[512],cmd[512],buf[10000];
   FILE *f;
   long n;
-
-  char ip[21],ser[21],*gs,*xx,*yy;
-
+  
   gs=getenv("QUERY_STRING");
   if(gs==NULL){
     printf("Status: 400 Bad Request\r\nContent-Type: text/plain\r\n\r\nmissing query");
@@ -34,29 +29,20 @@ void main(void){
   }
 
   mkdir("/run/display", 0777);
-
-  snprintf(bin, sizeof(bin), "/run/display/%s.bin", ser);
-  snprintf(des, sizeof(des), "/run/display/%s.des", ser);
-  snprintf(ff,  sizeof(ff),  "/run/display/%s.ff",  ser);
-
-  snprintf(cmd, sizeof(cmd),
-           "/home/www/display/prog %s %s; /home/www/display/write3 %s %s %s",
-           ser, ip, des, ff, bin);
+  sprintf(bin,"/run/display/%s.bin",ser);
+  sprintf(des,"/run/display/%s.des",ser);
+  sprintf(ff,"/run/display/%s.ff", ser);
+  sprintf(cmd,"/home/www/display/prog %s %s; /home/www/display/write3 %s %s %s",ser, ip, des, ff, bin);
   system(cmd);
-
   f = fopen(bin, "rb");
-  if (!f) { puts("Status: 500\r\nContent-Type: text/plain\r\n\r\nmissing bin"); return 0; }
-
   fseek(f, 0, SEEK_END);
   n = ftell(f);
   fseek(f, 0, SEEK_SET);
-
   printf("Content-Encoding: identity\r\n");
   printf("Content-Type: application/octet-stream\r\n");
   printf("Content-Length: %ld\r\n\r\n", n);
-
-  while ((n = fread(cmd, 1, sizeof(cmd), f)) > 0) fwrite(cmd, 1, (size_t)n, stdout);
+  fread(cmd, 1, n, f));
+  fwrite(cmd, 1, n, stdout);
   fclose(f);
 
-  return 0;
 }

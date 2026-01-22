@@ -35,20 +35,19 @@ void main(void){
   sprintf(cmd,"/home/www/display/prog %s %s; /home/www/display/write3 %s %s %s",ser, ip, des, ff, bin);
   system(cmd);
 
- f=fopen("/run/display/test.txt","wt");
-  fprintf(f,"%s\n%s\n%s\n",bin,des,ff);
-  fclose(f);
-
-
-  
   f = fopen(bin, "rb");
   fseek(f, 0, SEEK_END);
   n = ftell(f);
   fseek(f, 0, SEEK_SET);
-  printf("Content-Encoding: identity\r\n");
-  printf("Content-Type: application/octet-stream\r\n");
-  printf("Content-Length: %ld\r\n\r\n",n);
-  fflush(stdout);
+
+printf("Content-Type: application/octet-stream\r\n");
+printf("Content-Encoding: identity\r\n");
+printf("Cache-Control: no-transform\r\n");
+printf("Content-Length: %ld\r\n",n;
+printf("Connection: close\r\n");
+printf("\r\n");
+fflush(stdout);
+
   fread(buf, 1, n, f);
   fwrite(buf, 1, n, stdout);
   fclose(f);

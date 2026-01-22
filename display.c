@@ -39,16 +39,13 @@ void main(void){
   fseek(f, 0, SEEK_END);
   n = ftell(f);
   fseek(f, 0, SEEK_SET);
-
-printf("Status: 200 OK\r\n");
-printf("Content-Type: application/octet-stream\r\n");
-printf("Content-Encoding: identity\r\n");
-printf("Content-Length: 6145\r\n");
-printf("\r\n");
-fflush(stdout);
-
-  fread(buf, 1, n, f);
-  fwrite(buf, 1, n, stdout);
+  printf("Content-Type: application/octet-stream\r\n");
+  printf("Content-Encoding: identity\r\n");
+  printf("Content-Length: %ld\r\n",n);
+  printf("\r\n");
+  fflush(stdout);
+  fread(buf,1,n,f);
+  fwrite(buf,1,n,stdout);
   fclose(f);
 
 }

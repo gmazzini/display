@@ -43,7 +43,7 @@ void main(void){
 printf("Status: 200 OK\r\n");
 printf("Content-Type: application/octet-stream\r\n");
 printf("Content-Encoding: identity\r\n");
-printf("Content-Length: %ld\r\n",n;
+printf("Content-Length: %ld\r\n",n);
 printf("\r\n");
 fflush(stdout);
 

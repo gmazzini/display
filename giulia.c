@@ -25,6 +25,8 @@ void main(){
       continue;
     }
   }
+
+  fp=fopen("/run/display/giulia.des","wt");
   for(x=cmd;*x!='\0';){
     if(*x=='+'){
       out=' ';

@@ -1,11 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <time.h>
-#include <sys/time.h>
-#include <unistd.h>
-#include <stdint.h>
-#include <sys/stat.h>
 
 void main(){
   char *gs,*x,*yy,ser[21],buf[100],cmd[10000];

@@ -3,13 +3,13 @@
 #include <stdlib.h>
 
 void main(){
-  char *gs,*x,*yy,buf[100],cmd[10001];
+  char *gs,*x,*yy,cmd[10001];
   FILE *fp;
   long lv2;
   
   gs=getenv("QUERY_STRING");
   if(gs==NULL){printf("Status: 400 Bad Request\r\nContent-Type: text/plain\r\n\r\nmissing query"); exit(0); }
-  *ser='\0';
+  *cmd='\0';
   for(x=gs;*x!='\0';x++){
     if(strncmp(x,"des=",4)==0){
       yy=cmd; for(x+=4;*x!='\0' && *x!='&' && yy-cmd<10000;x++)*yy++=*x;
@@ -19,7 +19,7 @@ void main(){
   }
 
   fp=fopen("/run/display/giulia.des","wt");
-  for(x=yy;*x!='\0';x++){
+  for(x=cmd;*x!='\0';x++){
     if(*x=='\\')*x='\n';
     fputc(*x,fp);
   }

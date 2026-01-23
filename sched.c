@@ -19,7 +19,7 @@ long interval_ms = 40;
 
 void *client(void *p){
   int fd,one,got,r,sent;
-  char *buf,v[100][100];
+  char *buf,v[100][100],aux[100];
   unsigned long t,now;
   struct timeval tv;
   FILE *fp;
@@ -34,8 +34,8 @@ void *client(void *p){
     if(r<=0){close(fd); return 0;}
   }
   v[0][SER]=0;
-  sprintf(buf,"/run/display/%s.mat",v[0]);
-  fp=fopen(buf,"rt");
+  sprintf(aux,"/run/display/%s.mat",v[0]);
+  fp=fopen(aux,"rt");
   fgets(v[3],100,fp); r=strlen(v[3]); v[3][r-1]='\0';
   fclose(fp);
   printf("SER=%s SEQ=%s\n",v[0],v[3]);

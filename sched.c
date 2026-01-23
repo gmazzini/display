@@ -62,6 +62,7 @@ void *client(void *p){
     sprintf(aux,"/run/display/%s.des",v[0]);
     fp=fopen(buf,"wt");
     for(r=0;r<eseq;r++){
+      printf("r=%d\n",r);
       if(go==0 && seq[r][0]=='['){
         p1=strtok(seq[r]+1," ");
         p2=strtok(NULL," ]");

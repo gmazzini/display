@@ -11,10 +11,10 @@
 
 #define PORT 5000
 #define LEN  6144
+#define TOT  3000
 
-static unsigned char f1[LEN];
-static unsigned char f2[LEN];
-static unsigned long interval_ms = 1000;
+char **bin;
+long interval_ms = 1000;
 
 void *cl(void *p){
   int fd,one,i,got,r,sent;
@@ -37,19 +37,18 @@ void *cl(void *p){
   printf("SER=%s\n", ser);
 
   gettimeofday(&tv, 0);
-  t = (unsigned long)(tv.tv_sec * 1000UL + tv.tv_usec / 1000UL);
+  t = tv.tv_sec * 1000UL + tv.tv_usec / 1000UL;
 
   i = 0;
   for (;;) {
     gettimeofday(&tv, 0);
-    now = (unsigned long)(tv.tv_sec * 1000UL + tv.tv_usec / 1000UL);
-    if ((long)(now - t) < 0) {usleep(1000); continue;}
+    now = tv.tv_sec * 1000UL + tv.tv_usec / 1000UL;
+    if (now - t < 0) {usleep(1000); continue;}
 
-    buf = (i & 1) ? f2 : f1;
-    
+    buf = bin[i];    
     sent = 0;
     while (sent < LEN) {
-      r = send(fd, (const char *)buf + sent, LEN - sent, 0);
+      r = send(fd, buf + sent, LEN - sent, 0);
       if (r <= 0) {close(fd); return 0;}
       sent += r;
     }
@@ -64,7 +63,20 @@ void main(){
   struct sockaddr_in a;
   size_t nread;
   pthread_t th;
-  
+  FILE *fp;
+  char aux[100],x;
+
+  bin=(char **)malloc(TOT*sizeof(char *));
+  for(s=0; s<TOT; s++)bin[s]=(char *)malloc(LEN*sizeof(char));
+
+  for(s=0;s<2;s++){
+    strncpy(aux,"/root/%d.bin",s);
+    fp=fopen(aux,"rb");
+    fread(fp,1,1,&x);
+    fread(fp,1,LEN,bin[s]);
+    fclose(fp);
+  }
+
   s = socket(AF_INET, SOCK_STREAM, 0);
   one = 1;
   setsockopt(s, SOL_SOCKET, SO_REUSEADDR, (char *)&one, sizeof(one));

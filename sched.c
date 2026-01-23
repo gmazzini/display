@@ -15,7 +15,7 @@
 #define SER  12
 
 char **bin;
-long interval_ms = 1000;
+long interval_ms = 40;
 
 void *cl(void *p){
   int fd,one,i,got,r,sent;
@@ -46,7 +46,7 @@ void *cl(void *p){
     now = tv.tv_sec * 1000UL + tv.tv_usec / 1000UL;
     if (now < t) {usleep(1000); continue;}
 
-    buf = bin[i%2];
+    buf = bin[i%2445];
     sent = 0;
     while (sent < LEN) {
       r = send(fd, buf + sent, LEN - sent, 0);
@@ -69,15 +69,13 @@ void main(){
   bin=(char **)malloc(TOT*sizeof(char *));
   for(s=0; s<TOT; s++)bin[s]=(char *)malloc(LEN*sizeof(char));
 
-  for(s=0;s<2;s++){
-    sprintf(aux,"/root/%d.bin",s);
+  for(s=0;s<2445;s++){
+    sprintf(aux,"/root/prova2/%04d.bin",s+1);
     fp=fopen(aux,"rb");
     fread(&x,1,1,fp);
     fread(bin[s],1,LEN,fp);
     fclose(fp);
   }
-
-  printf("xx\n");
 
   s = socket(AF_INET, SOCK_STREAM, 0);
   one = 1;

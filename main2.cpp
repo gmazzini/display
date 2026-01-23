@@ -219,7 +219,6 @@ static void netPump(unsigned long budget_us){
       case NET_CONNECT:
         client.setTimeout(0);
         client.setNoDelay(true);
-        client.keepAlive(30,10,3);
 
         if(!client.connected()){
           client.stop();

@@ -19,7 +19,7 @@ long interval_ms = 500;
 
 void *client(void *p){
   int fd,one,got,r,sent,eseq,tot,ln,go,a0,a1,a2;
-  char *buf,v[30][30],seq[100][50],aux[100],*p1,*p2,*q,*q1,*x,fmt[20];
+  char *buf,v[30][30],seq[100][50],aux[100],*p1,*p2,*q,*q1,*x,fmt[20],cmd[10000],xx;
   unsigned long t,now;
   struct timeval tv;
   FILE *fp;
@@ -56,18 +56,15 @@ void *client(void *p){
     now=tv.tv_sec*1000UL+tv.tv_usec/1000UL;
     if(now<t){usleep(1000); continue;}
 
-  printf("%ld\n",i);
     go=0; ln=i%tot;
     sprintf(aux,"/run/display/%s.des",v[0]);
     fp=fopen(aux,"wt");
     for(r=0;r<eseq;r++){
-printf("r=%d go=%d\n",r,go);
       if(go==0 && seq[r][0]=='['){
         for(x=seq[r]+1;*x==' ';x++);
         for(a0=0;*x!=' ';x++)a0=a0*10+(*x-'0');
         for(;*x==' ';x++);
         for(a1=0;*x!=' ' && *x!=']';x++)a1=a1*10+(*x-'0');
-printf("2-%d-%d-\n",a0,a1);
         if(ln>=a0 && ln<=a1)go=1;
         continue;
       }
@@ -84,7 +81,6 @@ printf("2-%d-%d-\n",a0,a1);
           for(a1=0;*x!=' ';x++)a1=a1*10+(*x-'0');
           for(;*x==' ';x++);
           for(a2=0;*x!=' ';x++)a2=a2*10+(*x-'0');
-  printf("3-%s-%d-%d-\n",fmt,a1,a2);
           sprintf(v[a0],fmt,a1+rand()%(a2-a1+1));
         }    
         continue;
@@ -101,8 +97,16 @@ printf("2-%d-%d-\n",a0,a1);
     }
     fclose(fp);
 
+    sprintf(cmd,"/home/www/display/write3 /run/display/%s.des /run/display/%s.ff /run/display/%s.bin",v[0],v[0],v[0]);
+    system(cmd);
+    sprintf(buf,"/run/display/%s.bin",v[0]);
+    fp=fopen(aux,"rb");
+    fread(&xx,1,1,fp);
+    fread(bin[2999],1,LEN,fp);
+    fclose(fp);
     
-    buf=bin[i%2445];
+    // buf=bin[i%2445];
+    buf=bin[2999];
     
     for(sent=0;sent<LEN;sent+=r){
       r=send(fd,buf+sent,LEN-sent,0);

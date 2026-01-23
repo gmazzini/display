@@ -19,7 +19,7 @@ long interval_ms = 500;
 
 void *client(void *p){
   int fd,one,got,r,sent,eseq,tot,ln,go,a0,a1,a2;
-  char *buf,v[30][30],seq[100][50],aux[100],*p1,*p2,*q,*q1,*x,fmt[20],cmd[10000],xx;
+  char *buf,v[30][30],seq[100][50],aux[100],*p1,*p2,*q,*q1,*x,fmt[20],cmd[300],xx;
   unsigned long t,now;
   struct timeval tv;
   FILE *fp;

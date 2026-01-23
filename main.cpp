@@ -1,4 +1,4 @@
-// Display on ESP32S3 Rel 20260115 by GM Copyright 2023-25
+// Display on ESP32S3 Rel 20260123 by GM Copyright 2023-26
 
 #include <Arduino.h>
 #include <WiFi.h>
@@ -12,7 +12,7 @@
 #define mySSID "EmiliaRomagnaWiFi wifiprivacy.it"
 #define myPUMP  650
 #define myWEB  "display.mazzini.org"
-#define myPGR  "display.php"
+#define myPGR  "display.cgi"
 // #define myWEB  "matrix.lepida.it"
 // #define myPGR  "matrix.php"
 

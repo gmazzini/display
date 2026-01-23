@@ -94,6 +94,7 @@ void *client(void *p){
     }
     fclose(fp);
 
+    printf(">>> %ld\n",i);
     
     buf=bin[i%2445];
     

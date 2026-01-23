@@ -77,6 +77,8 @@ void main(){
     fclose(fp);
   }
 
+  printf("xx\n");
+
   s = socket(AF_INET, SOCK_STREAM, 0);
   one = 1;
   setsockopt(s, SOL_SOCKET, SO_REUSEADDR, (char *)&one, sizeof(one));

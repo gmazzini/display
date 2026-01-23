@@ -63,33 +63,44 @@ void *client(void *p){
     for(r=0;r<eseq;r++){
   printf("r=%d go=%d\n",r,go);
       if(go==0 && seq[r][0]=='['){
+  printf("1\n");
         p1=strtok(seq[r]+1," ");
         p2=strtok(NULL,"]");
+    printf("2\n");
         if(ln>=atoi(p1) && ln<=atoi(p2))go=1;
+      printf("3\n");
         continue;
       }
       if(go==1 && seq[r][0]=='[')break;
+      printf("4\n");
       if(go==0)continue;
+        printf("5\n");
       if(seq[r][0]=='@'){
+          printf("6\n");
         q=strtok(seq[r]+1," "); a0=atoi(q);
+          printf("7\n");
         q=strtok(NULL," ");
+          printf("8\n");
         if(strcmp(q,"RAND")==0){
+            printf("9\n");
           q=strtok(NULL," "); strcpy(fmt,q);
+            printf("10\n");
           q=strtok(NULL," "); a1=atoi(q);
+           printf("11\n"); 
           q=strtok(NULL," "); a2=atoi(q);
+          printf("12\n");  
           sprintf(v[a0],fmt,a1+rand()%(a2-a1+1));
+            printf("13\n");
         }
         
         continue;
       }
       for(x=seq[r];*x!='\0';x++){
-        /*
         if(*x=='@'){
           q1=x+1; for(x=q1;*x!='$';x++); *x='\0';
           fprintf(fp,"%s",v[atoi(q1)]);
           continue;
         }
-        */
         fprintf(fp,"%c",*x);
       }
       fprintf(fp,"\n");

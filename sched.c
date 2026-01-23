@@ -104,7 +104,8 @@ void *client(void *p){
     fread(&xx,1,1,fp);
     fread(bin[2999],1,LEN,fp);
     fclose(fp);
-    
+
+    printf("11\n");
     // buf=bin[i%2445];
     buf=bin[2999];
     

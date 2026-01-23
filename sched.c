@@ -15,10 +15,10 @@
 #define SER  12
 
 char **bin;
-long interval_ms = 40;
+long interval_ms = 1000;
 
 void *client(void *p){
-  int fd,one,got,r,sent,eseq;
+  int fd,one,got,r,sent,eseq,tot,ln;
   char *buf,v[30][30],seq[100][50],aux[100];
   unsigned long t,now;
   struct timeval tv;
@@ -41,10 +41,11 @@ void *client(void *p){
   sprintf(aux,"/run/display/%s.seq",v[3]);
   fp=fopen(aux,"rt");
   for(eseq=0;eseq<100;eseq++){
-    fgets(seq[eseq],50,fp);
+    fgets(seq[eseq],50,fp); r=strlen(seq[eseq]); seq[eseq][r-1]='\0';
     if(feof(fp))break;
   }
   fclose(fp);
+  tot=atoi(seq[0]);
   
   printf("SER=%s SEQ=%s ESEQ=%d\n",v[0],v[3],eseq);
   gettimeofday(&tv,0);
@@ -55,6 +56,41 @@ void *client(void *p){
     now=tv.tv_sec*1000UL+tv.tv_usec/1000UL;
     if(now<t){usleep(1000); continue;}
 
+    go=0; ln=i%tot;
+    sprintf(aux,"/run/display/%s.des",v[0]);
+    fp=fopen(buf,"wt");
+    for(r=0;r<eseq;r++){
+      if(go==0 && seq[r][0]=='['){
+        p1=strtok(seq[r]+1," ");
+        p2=strtok(NULL," ]");
+        if(ln>=atoi(p1) && ln<=atoi(p2))go=1;
+        continue;
+      }
+      if(go==1 && seq[r][0]=='[')break;
+      if(go==0)continue;
+      if(seq[r][0]=='@'){
+        q=strtok(seq[r]+1," "); a0=atoi(q);
+        q=strtok(NULL," ");
+        if(strcmp(q,"RAND")==0){
+          q=strtok(NULL," "); strcpy(fmt,q);
+          q=strtok(NULL," "); a1=atoi(q);
+          q=strtok(NULL," \n"); a2=atoi(q);
+          sprintf(v[a0],fmt,a1+rand()%(a2-a1+1));
+        }
+        continue;
+      }
+      for(x=seq[r];*x!='\0';x++){
+        if(*x=='@'){
+          q1=x+1; for(x=q1;*x!='$';x++); *x='\0';
+          fprintf(fp,"%s",v[atoi(q1)]);
+          continue;
+        }
+        fprintf(fp,"%c",*x);
+      }
+    }
+    fclose(fp);
+
+    
     buf=bin[i%2445];
     
     for(sent=0;sent<LEN;sent+=r){

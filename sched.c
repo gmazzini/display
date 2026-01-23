@@ -15,18 +15,18 @@
 #define SER  12
 
 char **bin;
-long interval_ms = 1000;
 
 void *client(void *p){
-  int fd,one,got,r,sent,eseq,tot,ln,go,a0,a1,a2;
-  char *buf,v[30][30],seq[100][50],aux[100],*p1,*p2,*q,*q1,*x,fmt[20],cmd[300],xx;
+  int fd,one,got,r,sent,eseq,tot,ln,go,a0,a1,a2,interval_ms;
+  char *buf,v[30][30],seq[100][50],aux[100],*p1,*x,fmt[20],cmd[300],xx;
   unsigned long t,now;
   struct timeval tv;
   FILE *fp;
   struct timespec ts;
   struct tm tmv;
   uint64_t seed,i;
-
+  
+  interval_ms=1000;
   fd=*(int *)p;
   free(p);
   one=1;
@@ -63,7 +63,7 @@ void *client(void *p){
     if(now<t){usleep(1000); continue;}
 
     clock_gettime(CLOCK_REALTIME,&ts);
-    localtime_r(&ts.tv_sec, &tmv);
+    localtime_r(&ts.tv_sec,&tmv);
     sprintf(v[4],"%02d",tmv.tm_hour);
     sprintf(v[5],"%02d",tmv.tm_min);
     sprintf(v[6],"%02d",tmv.tm_sec);
@@ -82,6 +82,11 @@ void *client(void *p){
       }
       if(go==1 && seq[r][0]=='[')break;
       if(go==0)continue;
+      if(seq[r][0]=='!'){
+        for(a0=0,x=seq[r]+1;*x!=' ' && *x!='\0';x++)a0=a0*10+(*x-'0');
+        interval_ms=a0;
+        continue;
+      }
       if(seq[r][0]=='@'){
         for(a0=0,x=seq[r]+1;*x!=' ';x++)a0=a0*10+(*x-'0');
         for(;*x==' ';x++);
@@ -94,7 +99,6 @@ void *client(void *p){
           for(;*x==' ';x++);
           for(a2=0;*x!=' ' && *x!='\0';x++)a2=a2*10+(*x-'0');
           sprintf(v[a0],fmt,a1+rand()%(a2-a1+1));
-    printf("--- %d %d %d %s %s\n",a0,a1,a2,fmt,v[a0]);
         }    
         continue;
       }

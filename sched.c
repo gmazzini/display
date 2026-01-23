@@ -18,8 +18,8 @@ char **bin;
 long interval_ms = 40;
 
 void *client(void *p){
-  int fd,one,got,r,sent;
-  char *buf,v[100][100],aux[100];
+  int fd,one,got,r,sent,eseq;
+  char *buf,v[30][30],seq[50][30],aux[100];
   unsigned long t,now;
   struct timeval tv;
   FILE *fp;
@@ -36,9 +36,17 @@ void *client(void *p){
   v[0][SER]=0;
   sprintf(aux,"/run/display/%s.mat",v[0]);
   fp=fopen(aux,"rt");
-  fgets(v[3],100,fp); r=strlen(v[3]); v[3][r-1]='\0';
+  fgets(v[3],30,fp); r=strlen(v[3]); v[3][r-1]='\0';
   fclose(fp);
-  printf("SER=%s SEQ=%s\n",v[0],v[3]);
+  sprintf(aux,"/run/display/%s.seq",v[3]);
+  fp=fopen(aux,"rt");
+  for(eseq=0;eseq<50;eseq++){
+    fgets(seq[eseq],30,fp);
+    if(feof(fp))break;
+  }
+  fclose(fp);
+  
+  printf("SER=%s SEQ=%s ESEQ=%d\n",v[0],v[3],eeq);
   gettimeofday(&tv,0);
   t=tv.tv_sec*1000UL+tv.tv_usec/1000UL;
 

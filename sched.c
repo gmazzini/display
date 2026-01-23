@@ -88,7 +88,7 @@ void *client(void *p){
         p1=x;
         if(strncmp(p1,"RAND",4)==0){
           for(x+=4;*x==' ';x++);
-          p1=x; for(x++;*x!=' ';x++); strncpy(fmt,p1,x-p1);
+          p1=x; for(x++;*x!=' ';x++); strncpy(fmt,p1,x-p1); fmt[x-p1]='\0';
           for(;*x==' ';x++);
           for(a1=0;*x!=' ';x++)a1=a1*10+(*x-'0');
           for(;*x==' ';x++);

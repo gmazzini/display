@@ -90,6 +90,7 @@ void *client(void *p){
         }
         fprintf(fp,"%c",*x);
       }
+      fprintf(fp,"\n",*x);
     }
     fclose(fp);
 

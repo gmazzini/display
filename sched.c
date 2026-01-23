@@ -17,18 +17,12 @@ static unsigned char f1[LEN];
 static unsigned char f2[LEN];
 static unsigned long interval_ms = 1000;
 
-static void *cl(void *p){
-    int fd;
-    int one;
-    int i;
-    unsigned char ser[SER + 1];
-    unsigned long t;
-    struct timeval tv;
-    unsigned long now;
-    int got;
-    int r;
-    int sent;
-    const unsigned char *buf;
+void *cl(void *p){
+  int fd,one.i,got,r,sent;
+  unsigned char ser[SER + 1];
+  unsigned long t,now;
+  struct timeval tv;
+  unsigned char *buf;
 
     fd = *(int *)p;
     free(p);
@@ -79,9 +73,6 @@ static void *cl(void *p){
         i++;
         t += interval_ms;
     }
-
-    /* NOTREACHED */
-    /* return 0; */
 }
 
 void main(){

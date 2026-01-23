@@ -19,12 +19,12 @@ char **bin;
 void *client(void *p){
   int fd,one,got,r,sent,eseq,tot,ln,go,a0,a1,a2,interval_ms;
   char *buf,v[30][30],seq[100][50],aux[100],*p1,*x,fmt[20],cmd[300],xx;
-  unsigned long t,now;
+  unsigned long t,now,i;
   struct timeval tv;
   FILE *fp;
   struct timespec ts;
   struct tm tmv;
-  uint64_t seed,i;
+  uint64_t seed;
   
   interval_ms=1000;
   fd=*(int *)p;
@@ -67,6 +67,7 @@ void *client(void *p){
     sprintf(v[4],"%02d",tmv.tm_hour);
     sprintf(v[5],"%02d",tmv.tm_min);
     sprintf(v[6],"%02d",tmv.tm_sec);
+    sprintf(v[2],"%lu",i);
 
     go=0; ln=i%tot;
     sprintf(aux,"/run/display/%s.des",v[0]);

@@ -1,4 +1,3 @@
-/* gcc -std=c89 -O2 -pthread server.c -o server */
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -11,49 +10,105 @@
 #include <stdlib.h>
 
 #define PORT 5000
-#define SER 12
-#define LEN 6144
+#define SER  12
+#define LEN  6144
 
-static unsigned char f1[LEN], f2[LEN];
-static unsigned long interval_ms = 40;
-
-static int ra(int fd, void *b, int n){ int g=0,r; while(g<n){ r=recv(fd,(char*)b+g,n-g,0); if(r<=0) return r; g+=r; } return g; }
-static int sa(int fd, const void *b, int n){ int s=0,r; while(s<n){ r=send(fd,(char*)b+s,n-s,0); if(r<=0) return r; s+=r; } return s; }
-static unsigned long ms(void){ struct timeval tv; gettimeofday(&tv,0); return (unsigned long)(tv.tv_sec*1000UL + tv.tv_usec/1000UL); }
+static unsigned char f1[LEN];
+static unsigned char f2[LEN];
+static unsigned long interval_ms = 1000;
 
 static void *cl(void *p){
-  int fd=*(int*)p, one=1, i=0; unsigned char ser[SER+1]; unsigned long t=ms();
-  free(p);
-  setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, (char*)&one, sizeof(one));
-  ra(fd, ser, SER); ser[SER]=0; printf("SER=%s\n", ser);
-  for(;;){
-    unsigned long now=ms();
-    if((long)(now-t)>=0){
-      sa(fd, (i&1)?f2:f1, LEN);
-      i++; t += interval_ms;
-    } else usleep(1000);
-  }
-  return 0;
+    int fd;
+    int one;
+    int i;
+    unsigned char ser[SER + 1];
+    unsigned long t;
+    struct timeval tv;
+    unsigned long now;
+    int got;
+    int r;
+    int sent;
+    const unsigned char *buf;
+
+    fd = *(int *)p;
+    free(p);
+
+    one = 1;
+    setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, (char *)&one, sizeof(one));
+
+    /* leggi SER (esattamente SER byte) */
+    got = 0;
+    while (got < SER) {
+        r = recv(fd, (char *)ser + got, SER - got, 0);
+        if (r <= 0) {
+            close(fd);
+            return 0;
+        }
+        got += r;
+    }
+
+    ser[SER] = 0;
+    printf("SER=%s\n", ser);
+
+    gettimeofday(&tv, 0);
+    t = (unsigned long)(tv.tv_sec * 1000UL + tv.tv_usec / 1000UL);
+
+    i = 0;
+    for (;;) {
+        gettimeofday(&tv, 0);
+        now = (unsigned long)(tv.tv_sec * 1000UL + tv.tv_usec / 1000UL);
+
+        if ((long)(now - t) < 0) {
+            usleep(1000);
+            continue;
+        }
+
+        buf = (i & 1) ? f2 : f1;
+
+        /* invia LEN byte (gestione parziali) */
+        sent = 0;
+        while (sent < LEN) {
+            r = send(fd, (const char *)buf + sent, LEN - sent, 0);
+            if (r <= 0) {
+                close(fd);
+                return 0;
+            }
+            sent += r;
+        }
+
+        i++;
+        t += interval_ms;
+    }
+
+    /* NOTREACHED */
+    /* return 0; */
 }
-int main(int argc, char **argv){
-  int s, one=1; struct sockaddr_in a;
-  FILE *f; unsigned char tmp[1+LEN];
 
-  if(argc>1) interval_ms=(unsigned long)atoi(argv[1]);
-
-  f=fopen("1.bin","rb"); fread(tmp,1,1+LEN,f); fclose(f); memcpy(f1,tmp+1,LEN);
-  f=fopen("2.bin","rb"); fread(tmp,1,1+LEN,f); fclose(f); memcpy(f2,tmp+1,LEN);
-
-  s=socket(AF_INET,SOCK_STREAM,0);
-  setsockopt(s,SOL_SOCKET,SO_REUSEADDR,(char*)&one,sizeof(one));
-  memset(&a,0,sizeof(a)); a.sin_family=AF_INET; a.sin_port=htons(PORT); a.sin_addr.s_addr=htonl(INADDR_ANY);
-  bind(s,(struct sockaddr*)&a,sizeof(a));
-  listen(s,32);
-  printf("listening :%d interval=%lums\n", PORT, interval_ms);
-
-  for(;;){
-    int c=accept(s,0,0), *pc=(int*)malloc(sizeof(int)); pthread_t th;
-    *pc=c; pthread_create(&th,0,cl,pc); pthread_detach(th);
+void main(){
+  int s,one,c,*pc,prc;
+  struct sockaddr_in a;
+  size_t nread;
+  pthread_t th;
+  
+  s = socket(AF_INET, SOCK_STREAM, 0);
+  one = 1;
+  setsockopt(s, SOL_SOCKET, SO_REUSEADDR, (char *)&one, sizeof(one));
+  memset(&a, 0, sizeof(a));
+  a.sin_family = AF_INET;
+  a.sin_port = htons(PORT);
+  a.sin_addr.s_addr = htonl(INADDR_ANY);
+  bind(s, (struct sockaddr *)&a, sizeof(a));
+  listen(s, 32);
+  
+  for (;;) {
+    c = accept(s, 0, 0);
+    if (c < 0) continue;
+    pc = (int *)malloc(sizeof(int));
+    if (pc == 0) {close(c); continue; }
+    *pc = c;
+    prc = pthread_create(&th, 0, cl, pc);
+    if (prc != 0) {close(c); free(pc); continue;}
+    pthread_detach(th);
   }
-  return 0;
 }
+

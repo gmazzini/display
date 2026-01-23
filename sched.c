@@ -31,7 +31,7 @@ void *cl(void *p){
   got = 0;
   while (got < SER) {
     r = recv(fd, ser + got, SER - got, 0);
-    if (r <= 0) {close(fd); return ;}
+    if (r <= 0) {close(fd); return;}
     got += r;
   }
   ser[SER] = 0;
@@ -62,7 +62,6 @@ void *cl(void *p){
 void main(){
   int s,one,c,*pc,prc;
   struct sockaddr_in a;
-  size_t nread;
   pthread_t th;
   FILE *fp;
   char aux[100],x;

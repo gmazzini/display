@@ -10,7 +10,6 @@
 #include <stdlib.h>
 
 #define PORT 5000
-#define SER  12
 #define LEN  6144
 
 static unsigned char f1[LEN];
@@ -18,61 +17,46 @@ static unsigned char f2[LEN];
 static unsigned long interval_ms = 1000;
 
 void *cl(void *p){
-  int fd,one.i,got,r,sent;
-  unsigned char ser[SER + 1];
+  int fd,one,i,got,r,sent;
+  char ser[13],*buf;
   unsigned long t,now;
   struct timeval tv;
-  unsigned char *buf;
 
-    fd = *(int *)p;
-    free(p);
+  fd = *(int *)p;
+  free(p);
+  one = 1;
+  setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, (char *)&one, sizeof(one));
 
-    one = 1;
-    setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, (char *)&one, sizeof(one));
+  got = 0;
+  while (got < SER) {
+    r = recv(fd, ser + got, SER - got, 0);
+    if (r <= 0) {close(fd); return ;}
+    got += r;
+  }
+  ser[SER] = 0;
+  printf("SER=%s\n", ser);
 
-    /* leggi SER (esattamente SER byte) */
-    got = 0;
-    while (got < SER) {
-        r = recv(fd, (char *)ser + got, SER - got, 0);
-        if (r <= 0) {
-            close(fd);
-            return 0;
-        }
-        got += r;
-    }
+  gettimeofday(&tv, 0);
+  t = (unsigned long)(tv.tv_sec * 1000UL + tv.tv_usec / 1000UL);
 
-    ser[SER] = 0;
-    printf("SER=%s\n", ser);
-
+  i = 0;
+  for (;;) {
     gettimeofday(&tv, 0);
-    t = (unsigned long)(tv.tv_sec * 1000UL + tv.tv_usec / 1000UL);
+    now = (unsigned long)(tv.tv_sec * 1000UL + tv.tv_usec / 1000UL);
+    if ((long)(now - t) < 0) {usleep(1000); continue;}
 
-    i = 0;
-    for (;;) {
-        gettimeofday(&tv, 0);
-        now = (unsigned long)(tv.tv_sec * 1000UL + tv.tv_usec / 1000UL);
-
-        if ((long)(now - t) < 0) {
-            usleep(1000);
-            continue;
-        }
-
-        buf = (i & 1) ? f2 : f1;
-
-        /* invia LEN byte (gestione parziali) */
-        sent = 0;
-        while (sent < LEN) {
-            r = send(fd, (const char *)buf + sent, LEN - sent, 0);
-            if (r <= 0) {
-                close(fd);
-                return 0;
-            }
-            sent += r;
-        }
-
-        i++;
-        t += interval_ms;
+    buf = (i & 1) ? f2 : f1;
+    
+    sent = 0;
+    while (sent < LEN) {
+      r = send(fd, (const char *)buf + sent, LEN - sent, 0);
+      if (r <= 0) {close(fd); return 0;}
+      sent += r;
     }
+
+    i++;
+    t += interval_ms;
+  }
 }
 
 void main(){

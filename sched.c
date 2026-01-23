@@ -46,7 +46,7 @@ void *client(void *p){
   }
   fclose(fp);
   
-  printf("SER=%s SEQ=%s ESEQ=%d\n",v[0],v[3],eeq);
+  printf("SER=%s SEQ=%s ESEQ=%d\n",v[0],v[3],eseq);
   gettimeofday(&tv,0);
   t=tv.tv_sec*1000UL+tv.tv_usec/1000UL;
 

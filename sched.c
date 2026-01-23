@@ -31,7 +31,7 @@ void *cl(void *p){
   got = 0;
   while (got < SER) {
     r = recv(fd, ser + got, SER - got, 0);
-    if (r <= 0) {close(fd); return;}
+    if (r <= 0) {close(fd); return 0;}
     got += r;
   }
   ser[SER] = 0;
@@ -44,9 +44,9 @@ void *cl(void *p){
   for (;;) {
     gettimeofday(&tv, 0);
     now = tv.tv_sec * 1000UL + tv.tv_usec / 1000UL;
-    if (now - t < 0) {usleep(1000); continue;}
+    if (now < t) {usleep(1000); continue;}
 
-    buf = bin[i];    
+    buf = bin[i%2];
     sent = 0;
     while (sent < LEN) {
       r = send(fd, buf + sent, LEN - sent, 0);

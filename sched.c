@@ -74,12 +74,17 @@ void *client(void *p){
       if(go==1 && seq[r][0]=='[')break;
       if(go==0)continue;
       if(seq[r][0]=='@'){
-        q=strtok(seq[r]+1," "); a0=atoi(q);
-        q=strtok(NULL," ");
-        if(strcmp(q,"RAND")==0){
-          q=strtok(NULL," "); strcpy(fmt,q);
-          q=strtok(NULL," "); a1=atoi(q);
-          q=strtok(NULL," "); a2=atoi(q);
+        for(a0=0;*x!=' ';x++)a0=a0*10+(*x-'0');
+        for(;*x==' ';x++);
+        p1=x;
+        if(strncmp(p1,"RAND",4)==0){
+          for(x+=4;*x==' ';x++);
+          p1=x; for(x++;*x!=' ';x++); strncpy(fmt,p1,x-p1);
+          for(;*x==' ';x++);
+          for(a1=0;*x!=' ';x++)a1=a1*10+(*x-'0');
+          for(;*x==' ';x++);
+          for(a2=0;*x!=' ';x++)a2=a2*10+(*x-'0');
+          printf("3-%s-%d-%d-\n",fmt,a1,a2);
           sprintf(v[a0],fmt,a1+rand()%(a2-a1+1));
         }    
         continue;

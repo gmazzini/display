@@ -70,15 +70,11 @@ void *client(void *p){
       }
       if(go==1 && seq[r][0]=='[')break;
       if(go==0)continue;
+      
       if(seq[r][0]=='@'){
         q=strtok(seq[r]+1," "); a0=atoi(q);
         q=strtok(NULL," ");
-        if(strcmp(q,"RAND")==0){
-          q=strtok(NULL," "); strcpy(fmt,q);
-          q=strtok(NULL," "); a1=atoi(q);
-          q=strtok(NULL," "); a2=atoi(q);
-          sprintf(v[a0],fmt,a1+rand()%(a2-a1+1));
-        }
+        
         continue;
       }
       for(x=seq[r];*x!='\0';x++){

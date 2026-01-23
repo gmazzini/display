@@ -97,15 +97,19 @@ void *client(void *p){
     }
     fclose(fp);
 
+
+    printf("11\n");
     sprintf(cmd,"/home/www/display/write3 /run/display/%s.des /run/display/%s.ff /run/display/%s.bin",v[0],v[0],v[0]);
     system(cmd);
-    sprintf(buf,"/run/display/%s.bin",v[0]);
+
+    printf("22\n");
+    sprintf(aux,"/run/display/%s.bin",v[0]);
     fp=fopen(aux,"rb");
     fread(&xx,1,1,fp);
     fread(bin[2999],1,LEN,fp);
     fclose(fp);
 
-    printf("11\n");
+    printf("33\n");
     // buf=bin[i%2445];
     buf=bin[2999];
     

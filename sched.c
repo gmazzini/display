@@ -65,7 +65,7 @@ void *client(void *p){
       printf("r=%d\n",r);
       if(go==0 && seq[r][0]=='['){
         p1=strtok(seq[r]+1," ");
-        p2=strtok(NULL," ]");
+        p2=strtok(NULL,"]");
         if(ln>=atoi(p1) && ln<=atoi(p2))go=1;
         continue;
       }
@@ -77,7 +77,7 @@ void *client(void *p){
         if(strcmp(q,"RAND")==0){
           q=strtok(NULL," "); strcpy(fmt,q);
           q=strtok(NULL," "); a1=atoi(q);
-          q=strtok(NULL," \n"); a2=atoi(q);
+          q=strtok(NULL," "); a2=atoi(q);
           sprintf(v[a0],fmt,a1+rand()%(a2-a1+1));
         }
         continue;

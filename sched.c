@@ -66,7 +66,7 @@ void *client(void *p){
   printf("1\n");
         p1=strtok(seq[r]+1," ");
         p2=strtok(NULL,"]");
-    printf("2\n");
+    printf("2-%s-%s-\n",p1,p2);
  //       if(ln>=atoi(p1) && ln<=atoi(p2))go=1;
       printf("3\n");
         continue;

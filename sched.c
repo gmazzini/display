@@ -15,7 +15,7 @@
 #define SER  12
 
 char **bin;
-long interval_ms = 1000;
+long interval_ms = 5000;
 
 void *client(void *p){
   int fd,one,got,r,sent,eseq,tot,ln,go,a0,a1,a2;

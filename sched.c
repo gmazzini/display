@@ -19,7 +19,7 @@ long interval_ms = 40;
 
 void *client(void *p){
   int fd,one,got,r,sent,eseq;
-  char *buf,v[30][30],seq[50][30],aux[100];
+  char *buf,v[30][30],seq[100][50],aux[100];
   unsigned long t,now;
   struct timeval tv;
   FILE *fp;
@@ -40,8 +40,8 @@ void *client(void *p){
   fclose(fp);
   sprintf(aux,"/run/display/%s.seq",v[3]);
   fp=fopen(aux,"rt");
-  for(eseq=0;eseq<50;eseq++){
-    fgets(seq[eseq],30,fp);
+  for(eseq=0;eseq<100;eseq++){
+    fgets(seq[eseq],50,fp);
     if(feof(fp))break;
   }
   fclose(fp);

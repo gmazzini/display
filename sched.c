@@ -70,7 +70,7 @@ void main(){
   for(s=0; s<TOT; s++)bin[s]=(char *)malloc(LEN*sizeof(char));
 
   for(s=0;s<2;s++){
-    strncpy(aux,"/root/%d.bin",s);
+    sprintf(aux,"/root/%d.bin",s);
     fp=fopen(aux,"rb");
     fread(&x,1,1,fp);
     fread(bin[s],1,LEN,fp);

@@ -10,7 +10,7 @@
 #include "esp_mac.h"
 
 #define mySSID "EmiliaRomagnaWiFi wifiprivacy.it"
-#define myPUMP  8000
+#define myPUMP  3000
 
 #define myWEB  "display.mazzini.org"
 #define DISP_PORT 5000
@@ -366,7 +366,7 @@ void netTask(void *pv){
       }
     }
 
-    vTaskDelay(0);
+    vTaskDelay(1);
   }
 }
 

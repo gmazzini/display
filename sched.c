@@ -94,6 +94,7 @@ void *client(void *p){
           for(;*x==' ';x++);
           for(a2=0;*x!=' ';x++)a2=a2*10+(*x-'0');
           sprintf(v[a0],fmt,a1+rand()%(a2-a1+1));
+    printf("--- %d %d %d %s %s\n",a0,a1,a2,fmt,v[a0]);
         }    
         continue;
       }

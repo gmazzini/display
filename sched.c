@@ -23,7 +23,9 @@ void *client(void *p){
   unsigned long t,now;
   struct timeval tv;
   FILE *fp;
-  unsigned long long i;
+  struct timespec ts;
+  struct tm tmv;
+  uint64_t seed,i;
 
   fd=*(int *)p;
   free(p);
@@ -51,10 +53,20 @@ void *client(void *p){
   gettimeofday(&tv,0);
   t=tv.tv_sec*1000UL+tv.tv_usec/1000UL;
 
+  clock_gettime(CLOCK_REALTIME,&ts);
+  seed=(uint64_t)ts.tv_sec ^ (uint64_t)ts.tv_nsec ^ (uint64_t)getpid();
+  srand((unsigned)seed);
+
   for(i=0;;){
     gettimeofday(&tv,0);
     now=tv.tv_sec*1000UL+tv.tv_usec/1000UL;
     if(now<t){usleep(1000); continue;}
+
+    clock_gettime(CLOCK_REALTIME,&ts);
+    localtime_r(&ts.tv_sec, &tmv);
+    sprintf(v[4],"%02d",tmv.tm_hour);
+    sprintf(v[5],"%02d",tmv.tm_min);
+    sprintf(v[6],"%02d",tmv.tm_sec);
 
     go=0; ln=i%tot;
     sprintf(aux,"/run/display/%s.des",v[0]);

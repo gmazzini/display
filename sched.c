@@ -91,8 +91,8 @@ printf("2-%d-%d-\n",a0,a1);
       }
       for(x=seq[r];*x!='\0';x++){
         if(*x=='@'){
-          q1=x+1; for(x=q1;*x!='$';x++); *x='\0';
-          fprintf(fp,"%s",v[atoi(q1)]);
+          for(a0=0,x++;*x!='$';x++)a0=a0*10+(*x-'0');
+          fprintf(fp,"%s",v[a0]);
           continue;
         }
         fprintf(fp,"%c",*x);

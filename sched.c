@@ -34,7 +34,11 @@ void *client(void *p){
     if(r<=0){close(fd); return 0;}
   }
   v[0][SER]=0;
-  printf("SER=%s\n",v[0]);
+  sprintf(buf,"/run/display/%s.mat",v[0]);
+  fp=fopen(buf,"rt");
+  fgets(v[3],100,fp); r=strlen(v[3]); v[3][r-1]='\0';
+  fclose(fp);
+  printf("SER=%s SEQ=%s\n",v[0],v[3]);
   gettimeofday(&tv,0);
   t=tv.tv_sec*1000UL+tv.tv_usec/1000UL;
 

@@ -56,6 +56,8 @@ void *client(void *p){
     now=tv.tv_sec*1000UL+tv.tv_usec/1000UL;
     if(now<t){usleep(1000); continue;}
 
+    printf("%ld\n",i);
+
     go=0; ln=i%tot;
     sprintf(aux,"/run/display/%s.des",v[0]);
     fp=fopen(buf,"wt");

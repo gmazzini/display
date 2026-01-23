@@ -17,45 +17,41 @@
 char **bin;
 long interval_ms = 40;
 
-void *cl(void *p){
-  int fd,one,i,got,r,sent;
-  char ser[SER+1],*buf;
+void *client(void *p){
+  int fd,one,got,r,sent;
+  char *buf,v[100][100];
   unsigned long t,now;
   struct timeval tv;
+  FILE *fp;
+  unsigned long long i;
 
-  fd = *(int *)p;
+  fd=*(int *)p;
   free(p);
-  one = 1;
-  setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, (char *)&one, sizeof(one));
-
-  got = 0;
-  while (got < SER) {
-    r = recv(fd, ser + got, SER - got, 0);
-    if (r <= 0) {close(fd); return 0;}
-    got += r;
+  one=1;
+  setsockopt(fd,IPPROTO_TCP,TCP_NODELAY,(char *)&one,sizeof(one));
+  for(got=0;got<SER;got+=r){
+    r=recv(fd,v[0]+got,SER-got,0);
+    if(r<=0){close(fd); return 0;}
   }
-  ser[SER] = 0;
-  printf("SER=%s\n", ser);
+  v[0][SER]=0;
+  printf("SER=%s\n",v[0]);
+  gettimeofday(&tv,0);
+  t=tv.tv_sec*1000UL+tv.tv_usec/1000UL;
 
-  gettimeofday(&tv, 0);
-  t = tv.tv_sec * 1000UL + tv.tv_usec / 1000UL;
+  for(i=0;;){
+    gettimeofday(&tv,0);
+    now=tv.tv_sec*1000UL+tv.tv_usec/1000UL;
+    if(now<t){usleep(1000); continue;}
 
-  i = 0;
-  for (;;) {
-    gettimeofday(&tv, 0);
-    now = tv.tv_sec * 1000UL + tv.tv_usec / 1000UL;
-    if (now < t) {usleep(1000); continue;}
-
-    buf = bin[i%2445];
-    sent = 0;
-    while (sent < LEN) {
-      r = send(fd, buf + sent, LEN - sent, 0);
-      if (r <= 0) {close(fd); return 0;}
-      sent += r;
+    buf=bin[i%2445];
+    
+    for(sent=0;sent<LEN;sent+=r){
+      r=send(fd,buf+sent,LEN-sent,0);
+      if(r<=0){close(fd); return 0;}
     }
 
     i++;
-    t += interval_ms;
+    t+=interval_ms;
   }
 }
 
@@ -93,7 +89,7 @@ void main(){
     pc = (int *)malloc(sizeof(int));
     if (pc == 0) {close(c); continue; }
     *pc = c;
-    prc = pthread_create(&th, 0, cl, pc);
+    prc = pthread_create(&th, 0, client, pc);
     if (prc != 0) {close(c); free(pc); continue;}
     pthread_detach(th);
   }

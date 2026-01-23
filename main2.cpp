@@ -10,7 +10,7 @@
 #include "esp_mac.h"
 
 #define mySSID "EmiliaRomagnaWiFi wifiprivacy.it"
-#define myPUMP  650
+#define myPUMP  8000
 
 #define myWEB  "display.mazzini.org"
 #define DISP_PORT 5000
@@ -266,12 +266,12 @@ static void netPump(unsigned long budget_us){
           nextSerMs = millis() + 30000UL;
         }
 
-        localBudget = 512;
-        while(client.available() && payloadPos < 6144 && localBudget--){
-          v = client.read();
-          if(v < 0) break;
-          buf[payloadPos++] = (unsigned char)v;
-        }
+        int need, r;
+need = 6144 - payloadPos;
+if(need > 0){
+  r = client.read((unsigned char*)buf + payloadPos, need);
+  if(r > 0) payloadPos += r;
+}
 
         if(payloadPos >= 6144){
           /* frame completo -> decode in back */
@@ -366,7 +366,7 @@ void netTask(void *pv){
       }
     }
 
-    vTaskDelay(1);
+    vTaskDelay(0);
   }
 }
 

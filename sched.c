@@ -12,13 +12,14 @@
 #define PORT 5000
 #define LEN  6144
 #define TOT  3000
+#define SER  12
 
 char **bin;
 long interval_ms = 1000;
 
 void *cl(void *p){
   int fd,one,i,got,r,sent;
-  char ser[13],*buf;
+  char ser[SER+1],*buf;
   unsigned long t,now;
   struct timeval tv;
 

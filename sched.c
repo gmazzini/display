@@ -18,8 +18,8 @@ char **bin;
 long interval_ms = 1000;
 
 void *client(void *p){
-  int fd,one,got,r,sent,eseq,tot,ln;
-  char *buf,v[30][30],seq[100][50],aux[100];
+  int fd,one,got,r,sent,eseq,tot,ln,go;
+  char *buf,v[30][30],seq[100][50],aux[100]:p1,*p2,*q,fmt[20];
   unsigned long t,now;
   struct timeval tv;
   FILE *fp;

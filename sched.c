@@ -73,8 +73,8 @@ void main(){
   for(s=0;s<2;s++){
     strncpy(aux,"/root/%d.bin",s);
     fp=fopen(aux,"rb");
-    fread(fp,1,1,&x);
-    fread(fp,1,LEN,bin[s]);
+    fread(&x,1,1,fp);
+    fread(bin[s],1,LEN,fp);
     fclose(fp);
   }
 

@@ -61,20 +61,20 @@ void *client(void *p){
     sprintf(aux,"/run/display/%s.des",v[0]);
     fp=fopen(aux,"wt");
     for(r=0;r<eseq;r++){
-  printf("r=%d go=%d\n",r,go);
+printf("r=%d go=%d\n",r,go);
       if(go==0 && seq[r][0]=='['){
         for(x=seq[r]+1;*x==' ';x++);
         for(a0=0;*x!=' ';x++)a0=a0*10+(*x-'0');
         for(;*x==' ';x++);
         for(a1=0;*x!=' ' && *x!=']';x++)a1=a1*10+(*x-'0');
-    printf("2-%d-%d-\n",a0,a1);
+printf("2-%d-%d-\n",a0,a1);
         if(ln>=a0 && ln<=a1)go=1;
         continue;
       }
       if(go==1 && seq[r][0]=='[')break;
       if(go==0)continue;
       if(seq[r][0]=='@'){
-        for(a0=0;*x!=' ';x++)a0=a0*10+(*x-'0');
+        for(a0=0,x=seq[r]+1;*x!=' ';x++)a0=a0*10+(*x-'0');
         for(;*x==' ';x++);
         p1=x;
         if(strncmp(p1,"RAND",4)==0){
@@ -84,7 +84,7 @@ void *client(void *p){
           for(a1=0;*x!=' ';x++)a1=a1*10+(*x-'0');
           for(;*x==' ';x++);
           for(a2=0;*x!=' ';x++)a2=a2*10+(*x-'0');
-          printf("3-%s-%d-%d-\n",fmt,a1,a2);
+  printf("3-%s-%d-%d-\n",fmt,a1,a2);
           sprintf(v[a0],fmt,a1+rand()%(a2-a1+1));
         }    
         continue;

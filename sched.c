@@ -27,7 +27,7 @@ char **bin;
 
 void *client(void *p){
   int fd,one,got,r,sent,eseq,tot,ln,go,a0,a1,a2,interval_ms,start_seq[10000],s,end_seq[10000],e,base_end;
-  char *buf,v[30][30],seq[100][50],aux[100],*p1,*x,fmt[20],cmd[300],xx;
+  char *buf,v[30][30],seq[100][50],aux[100],*p1,*x,fmt[20],cmd[300],xx,desfile[100],binfile[100];
   unsigned long t,now,step;
   struct timeval tv;
   FILE *fp;
@@ -73,7 +73,8 @@ void *client(void *p){
   clock_gettime(CLOCK_REALTIME,&ts);
   seed=(uint64_t)ts.tv_sec ^ (uint64_t)ts.tv_nsec ^ (uint64_t)getpid();
   srand((unsigned)seed);
-  sprintf(aux,"/run/display/%s.des",v[0]);
+  sprintf(desfile,"/run/display/%s.des",v[0]);
+  sprintf(binfile,"/run/display/%s.bin",v[0]);
 
   for(step=0;;){
     gettimeofday(&tv,0);
@@ -94,7 +95,7 @@ void *client(void *p){
     }
     
     if(seq[s][0]=='['){
-      fp=fopen(aux,"wt");
+      fp=fopen(desfile,"wt");
       clock_gettime(CLOCK_REALTIME,&ts);
       localtime_r(&ts.tv_sec,&tmv);
       sprintf(v[4],"%02d",tmv.tm_hour);
@@ -136,8 +137,7 @@ void *client(void *p){
       }
       sprintf(cmd,"/home/www/display/write3 /run/display/%s.des /run/display/%s.ff /run/display/%s.bin",v[0],v[0],v[0]);
       system(cmd);
-      sprintf(aux,"/run/display/%s.bin",v[0]);
-      fp=fopen(aux,"rb");
+      fp=fopen(binfile,"rb");
       fread(&xx,1,1,fp);
       fread(bin[2999],1,LEN,fp);
       fclose(fp);
@@ -148,7 +148,7 @@ void *client(void *p){
       r=send(fd,buf+sent,LEN-sent,0);
       if(r<=0){close(fd); return 0;}
     }
-    step+è;
+    step++;
     t+=interval_ms;
   }
 }

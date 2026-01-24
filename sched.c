@@ -166,7 +166,7 @@ void main(){
   char aux[100],x;
 
   bin=(char **)malloc(TOT*sizeof(char *));
-  for(s=0; s<TOT; s++)bin[s]=(char *)malloc(LEN*sizeof(char));
+  for(s=0;s<TOT;s++)bin[s]=(char *)malloc(LEN*sizeof(char));
 
   for(s=0;s<2445;s++){
     sprintf(aux,"/root/prova2/%04d.bin",s+1);
@@ -176,25 +176,23 @@ void main(){
     fclose(fp);
   }
 
-  s = socket(AF_INET, SOCK_STREAM, 0);
-  one = 1;
-  setsockopt(s, SOL_SOCKET, SO_REUSEADDR, (char *)&one, sizeof(one));
-  memset(&a, 0, sizeof(a));
-  a.sin_family = AF_INET;
-  a.sin_port = htons(PORT);
-  a.sin_addr.s_addr = htonl(INADDR_ANY);
-  bind(s, (struct sockaddr *)&a, sizeof(a));
-  listen(s, 32);
-  
-  for (;;) {
-    c = accept(s, 0, 0);
-    if (c < 0) continue;
-    pc = (int *)malloc(sizeof(int));
-    if (pc == 0) {close(c); continue; }
-    *pc = c;
-    prc = pthread_create(&th, 0, client, pc);
-    if (prc != 0) {close(c); free(pc); continue;}
+  s=socket(AF_INET,SOCK_STREAM,0);
+  one=1;
+  setsockopt(s,SOL_SOCKET,SO_REUSEADDR,(char *)&one,sizeof(one));
+  memset(&a,0,sizeof(a));
+  a.sin_family=AF_INET;
+  a.sin_port=htons(PORT);
+  a.sin_addr.s_addr=htonl(INADDR_ANY);
+  bind(s,(struct sockaddr *)&a,sizeof(a));
+  listen(s,32);
+  for(;;){
+    c=accept(s,0,0);
+    if(c<0)continue;
+    pc=(int *)malloc(sizeof(int));
+    if(pc==0){close(c); continue;}
+    *pc=c;
+    prc=pthread_create(&th,0,client,pc);
+    if(prc!=0){close(c); free(pc); continue;}
     pthread_detach(th);
   }
 }
-

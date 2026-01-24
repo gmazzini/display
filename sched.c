@@ -26,7 +26,7 @@
 char **bin;
 
 void *client(void *p){
-  int fd,one,got,r,sent,eseq,tot,ln,go,a0,a1,a2,interval_ms,start_seq[10000],s,end_seq[10000],e,base_end;
+  int fd,one,got,r,sent,eseq,tot,ln,a0,a1,a2,interval_ms,start_seq[10000],s,end_seq[10000],e,base_end;
   char *buf,v[30][30],seq[100][50],aux[100],*p1,*x,fmt[20],cmd[300],xx,desfile[100],binfile[100];
   unsigned long t,now,step;
   struct timeval tv;
@@ -80,7 +80,7 @@ void *client(void *p){
     gettimeofday(&tv,0);
     now=tv.tv_sec*1000UL+tv.tv_usec/1000UL;
     if(now<t){usleep(1000); continue;}
-    ln=i%tot; s=start_seq[ln]; e=end_seq[ln];
+    ln=step%tot; s=start_seq[ln]; e=end_seq[ln];
 
     if(seq[s][0]=='('){
       for(r=s+1;r<=e;r++){

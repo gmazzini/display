@@ -81,10 +81,6 @@ void *client(void *p){
     now=tv.tv_sec*1000UL+tv.tv_usec/1000UL;
     if(now<t){usleep(1000); continue;}
     ln=step%tot; s=start_seq[ln]; e=end_seq[ln];
-
-
-printf("%ld-%d-%d ",step,s,e);
-
     
     if(seq[s][0]=='('){
       for(r=s+1;r<=e;r++){
@@ -138,6 +134,7 @@ printf("%ld-%d-%d ",step,s,e);
         }
         fprintf(fp,"\n");
       }
+      fclose(fp);
       sprintf(cmd,"/home/www/display/write3 /run/display/%s.des /run/display/%s.ff /run/display/%s.bin",v[0],v[0],v[0]);
       system(cmd);
       fp=fopen(binfile,"rb");

@@ -64,6 +64,7 @@ void *client(void *p){
       for(;tot<=a0;tot++)start_seq[tot]=eseq;
     }
   }
+  for(r=base_end;r<tot;r++)end_seq[r]=eseq-1;
   fclose(fp);
   
   printf("SER=%s SEQ=%s ESEQ=%d tot=%d\n",v[0],v[3],eseq,tot);

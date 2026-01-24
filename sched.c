@@ -9,6 +9,13 @@
 #include <arpa/inet.h>
 #include <stdlib.h>
 
+// tot --> steps as first row
+// [<fron> <to>] --> activation section range until other activation
+// @<num> RAND <fmt> <from> <to> --> random generator
+// !<num> -->> set intevals in ms
+// any row description with @<num>$ variables
+// reserved @0$ serial, @1$ IP, @2$ step, @3$ seq, @4$ hh, @5$ mm, @6$ ss
+
 #define PORT 5000
 #define LEN  6144
 #define TOT  3000

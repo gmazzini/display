@@ -26,9 +26,9 @@
 char **bin;
 
 void *client(void *p){
-  int fd,one,got,r,sent,eseq,tot,ln,go,a0,a1,a2,interval_ms,start_seq[10000],end_seq[10000],base_end;
+  int fd,one,got,r,sent,eseq,tot,ln,go,a0,a1,a2,interval_ms,start_seq[10000],s,end_seq[10000],e,base_end;
   char *buf,v[30][30],seq[100][50],aux[100],*p1,*x,fmt[20],cmd[300],xx;
-  unsigned long t,now,i;
+  unsigned long t,now,step;
   struct timeval tv;
   FILE *fp;
   struct timespec ts;
@@ -70,29 +70,33 @@ void *client(void *p){
   printf("SER=%s SEQ=%s ESEQ=%d tot=%d\n",v[0],v[3],eseq,tot);
   gettimeofday(&tv,0);
   t=tv.tv_sec*1000UL+tv.tv_usec/1000UL;
-
-
-
-  for(r=0;r<tot;r++)printf("%d %d %d\n",r,start_seq[r],end_seq[r]);
-  exit(0);
-
   clock_gettime(CLOCK_REALTIME,&ts);
   seed=(uint64_t)ts.tv_sec ^ (uint64_t)ts.tv_nsec ^ (uint64_t)getpid();
   srand((unsigned)seed);
 
-  for(i=0;;){
+  for(step=0;;){
     gettimeofday(&tv,0);
     now=tv.tv_sec*1000UL+tv.tv_usec/1000UL;
     if(now<t){usleep(1000); continue;}
+    ln=i%tot; s=start_seq[ln]; e=end_seq[ln];
 
-    clock_gettime(CLOCK_REALTIME,&ts);
-    localtime_r(&ts.tv_sec,&tmv);
-    sprintf(v[4],"%02d",tmv.tm_hour);
-    sprintf(v[5],"%02d",tmv.tm_min);
-    sprintf(v[6],"%02d",tmv.tm_sec);
-    sprintf(v[2],"%lu",i);
+    if(seq[s][0]=='('){
+      for(r=s+1;r<=e;r++){
+      }
+      continue;
+    }
+    if(seq[s][0]=='['){
+      clock_gettime(CLOCK_REALTIME,&ts);
+      localtime_r(&ts.tv_sec,&tmv);
+      sprintf(v[4],"%02d",tmv.tm_hour);
+      sprintf(v[5],"%02d",tmv.tm_min);
+      sprintf(v[6],"%02d",tmv.tm_sec);
+      sprintf(v[2],"%lu",step);
+      continue;
+    }
 
-    go=0; ln=i%tot;
+  
+
     
     sprintf(aux,"/run/display/%s.des",v[0]);
     fp=fopen(aux,"wt");

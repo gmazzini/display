@@ -52,7 +52,7 @@ void *client(void *p){
   
   sprintf(aux,"/home/www/display/pgr/%s.seq",v[3]);
   fp=fopen(aux,"rt");
-  for(end=-1,tot=0,eseq=0;eseq<100;eseq++){
+  for(base_end=-1,tot=0,eseq=0;eseq<100;eseq++){
     fgets(seq[eseq],50,fp);
     if(feof(fp))break;
     r=strlen(seq[eseq]); seq[eseq][r-1]='\0';
@@ -93,7 +93,7 @@ void *client(void *p){
     sprintf(aux,"/run/display/%s.des",v[0]);
     fp=fopen(aux,"wt");
     
-    for(r=pseq[ln];r<eseq;r++){
+    for(r=0000;r<eseq;r++){
       
       if(seq[r][0]=='['){
         

@@ -91,6 +91,7 @@ void *client(void *p){
         if(ln>=a0 && ln<=a1){
           buf=bin[ln+a2];
           interval_ms=40;
+          fclose(fp);
           goto video;
         }
         continue;

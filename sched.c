@@ -11,13 +11,12 @@
 
 // tot --> steps as first row (TOGLI)
 // (<to> --> section with direct render ending with <to>
-//   v <base> frame at position step+base
+//   v <base> -->> set frame at position step+base
 // [<to> --> section with write3 render ending with <to>
-
-// @<num> RAND <fmt> <from> <to> --> random generator
-// !<num> -->> set intevals in ms for the section
-// any "des" description processed by write3 with @<num>$ variables
-// reserved @0$ serial, @1$ IP (TBD), @2$ step, @3$ seq, @4$ hh, @5$ mm, @6$ ss
+//   ! <stay> -->> set intevals of staying in ms for the section
+//   @ <num> R <fmt> <from> <to> --> random generator
+//   any "des" description processed by write3 with @<num>$ variables
+//   reserved @0$ serial, @1$ IP (TBD), @2$ step, @3$ seq, @4$ hh, @5$ mm, @6$ ss
 
 #define PORT 5000
 #define LEN  6144
@@ -74,6 +73,7 @@ void *client(void *p){
   clock_gettime(CLOCK_REALTIME,&ts);
   seed=(uint64_t)ts.tv_sec ^ (uint64_t)ts.tv_nsec ^ (uint64_t)getpid();
   srand((unsigned)seed);
+  sprintf(aux,"/run/display/%s.des",v[0]);
 
   for(step=0;;){
     gettimeofday(&tv,0);
@@ -85,103 +85,70 @@ void *client(void *p){
       for(r=s+1;r<=e;r++){
         if(seq[r][0]=='v'){
           for(x=seq[r]+1;*x==' ';x++);
-          for(a0=0;*x!=' ';x++)a0=a0*10+(*x-'0');
+          for(a0=0;*x!=' ' && *x!='\0';x++)a0=a0*10+(*x-'0');
+          buf=bin[ln+a0];
+          interval_ms=40;
         }
       }
       continue;
     }
     
     if(seq[s][0]=='['){
+      fp=fopen(aux,"wt");
       clock_gettime(CLOCK_REALTIME,&ts);
       localtime_r(&ts.tv_sec,&tmv);
       sprintf(v[4],"%02d",tmv.tm_hour);
       sprintf(v[5],"%02d",tmv.tm_min);
       sprintf(v[6],"%02d",tmv.tm_sec);
       sprintf(v[2],"%lu",step);
-      continue;
-    }
-
-  
-
-    
-    sprintf(aux,"/run/display/%s.des",v[0]);
-    fp=fopen(aux,"wt");
-    
-    for(r=0000;r<eseq;r++){
-      
-      if(seq[r][0]=='['){
-        
-        for(x=seq[r]+1;*x==' ';x++);
-        for(a0=0;*x!=' ';x++)a0=a0*10+(*x-'0');
-        for(;*x==' ';x++);
-        for(a1=0;*x!=' ' && *x!='\0';x++)a1=a1*10+(*x-'0');
-        
-        if(ln>=a0 && ln<=a1){
-          buf=bin[ln+a2];
-          interval_ms=40;
-          fclose(fp);
-          goto video;
-        }
-        continue;
-      }
-      if(go==0 && seq[r][0]=='['){
-        for(x=seq[r]+1;*x==' ';x++);
-        for(a0=0;*x!=' ';x++)a0=a0*10+(*x-'0');
-        for(;*x==' ';x++);
-        for(a1=0;*x!=' ' && *x!=']';x++)a1=a1*10+(*x-'0');
-        if(ln>=a0 && ln<=a1)go=1;
-        continue;
-      }
-      if(go==1 && seq[r][0]=='[')break;
-      if(go==0)continue;
-      if(seq[r][0]=='!'){
-        for(a0=0,x=seq[r]+1;*x!=' ' && *x!='\0';x++)a0=a0*10+(*x-'0');
-        interval_ms=a0;
-        continue;
-      }
-      if(seq[r][0]=='@'){
-        for(a0=0,x=seq[r]+1;*x!=' ';x++)a0=a0*10+(*x-'0');
-        for(;*x==' ';x++);
-        p1=x;
-        if(strncmp(p1,"RAND",4)==0){
-          for(x+=4;*x==' ';x++);
-          p1=x; for(x++;*x!=' ';x++); strncpy(fmt,p1,x-p1); fmt[x-p1]='\0';
-          for(;*x==' ';x++);
-          for(a1=0;*x!=' ';x++)a1=a1*10+(*x-'0');
-          for(;*x==' ';x++);
-          for(a2=0;*x!=' ' && *x!='\0';x++)a2=a2*10+(*x-'0');
-          sprintf(v[a0],fmt,a1+rand()%(a2-a1+1));
-        }    
-        continue;
-      }
-      for(x=seq[r];*x!='\0';x++){
-        if(*x=='@'){
-          for(a0=0,x++;*x!='$';x++)a0=a0*10+(*x-'0');
-          fprintf(fp,"%s",v[a0]);
+      for(r=s+1;r<=e;r++){
+        if(seq[r][0]=='!'){
+          for(x=seq[r]+1;*x==' ';x++);
+          for(a0=0;*x!=' ' && *x!='\0';x++)a0=a0*10+(*x-'0');
+          interval_ms=a0;
           continue;
         }
-        fprintf(fp,"%c",*x);
+        if(seq[r][0]=='@'){
+          for(x=seq[r]+1;*x==' ';x++);
+          for(a0=0;*x!=' ';x++)a0=a0*10+(*x-'0');
+          for(;*x==' ';x++);
+          if(*x=='R'){
+            for(x++;*x==' ';x++);
+            p1=x; for(;*x!=' ';x++); strncpy(fmt,p1,x-p1); fmt[x-p1]='\0';
+            for(;*x==' ';x++);
+            for(a1=0;*x!=' ';x++)a1=a1*10+(*x-'0');
+            for(;*x==' ';x++);
+            for(a2=0;*x!=' ' && *x!='\0';x++)a2=a2*10+(*x-'0');
+            sprintf(v[a0],fmt,a1+rand()%(a2-a1+1));
+            continue;
+          }
+          continue;
+        }
+        for(x=seq[r];*x!='\0';x++){
+          if(*x=='@'){
+            for(a0=0,x++;*x!='$';x++)a0=a0*10+(*x-'0');
+            fprintf(fp,"%s",v[a0]);
+            continue;
+          }
+          fprintf(fp,"%c",*x);
+        }
+        fprintf(fp,"\n");
       }
-      fprintf(fp,"\n");
+      sprintf(cmd,"/home/www/display/write3 /run/display/%s.des /run/display/%s.ff /run/display/%s.bin",v[0],v[0],v[0]);
+      system(cmd);
+      sprintf(aux,"/run/display/%s.bin",v[0]);
+      fp=fopen(aux,"rb");
+      fread(&xx,1,1,fp);
+      fread(bin[2999],1,LEN,fp);
+      fclose(fp);
+      buf=bin[2999];
     }
-    fclose(fp);
 
-    sprintf(cmd,"/home/www/display/write3 /run/display/%s.des /run/display/%s.ff /run/display/%s.bin",v[0],v[0],v[0]);
-    system(cmd);
-    sprintf(aux,"/run/display/%s.bin",v[0]);
-    fp=fopen(aux,"rb");
-    fread(&xx,1,1,fp);
-    fread(bin[2999],1,LEN,fp);
-    fclose(fp);
-    buf=bin[2999];
-    
-video:    
     for(sent=0;sent<LEN;sent+=r){
       r=send(fd,buf+sent,LEN-sent,0);
       if(r<=0){close(fd); return 0;}
     }
-
-    i++;
+    step+è;
     t+=interval_ms;
   }
 }

@@ -9,11 +9,11 @@
 #include <arpa/inet.h>
 #include <stdlib.h>
 
-// tot --> steps as first row
-// (<from> <to> <base>) --> atomic video section range with format %06d.bin (TBD)
-// [<fron> <to>] --> activation section range until other [] activation
+// tot --> steps as first row (TOGLI)
+// (<to> <base> --> atomic video section range with format %06d.bin (TBD)
+// [<to> --> activation section range until other [ or ( activation
 // @<num> RAND <fmt> <from> <to> --> random generator
-// !<num> -->> set intevals in ms
+// !<num> -->> set intevals in ms for the section
 // any "des" description processed by write3 with @<num>$ variables
 // reserved @0$ serial, @1$ IP (TBD), @2$ step, @3$ seq, @4$ hh, @5$ mm, @6$ ss
 
@@ -25,7 +25,7 @@
 char **bin;
 
 void *client(void *p){
-  int fd,one,got,r,sent,eseq,tot,ln,go,a0,a1,a2,interval_ms;
+  int fd,one,got,r,sent,eseq,tot,ln,go,a0,a1,a2,interval_ms,start_seq[10000],end_seq[10000];
   char *buf,v[30][30],seq[100][50],aux[100],*p1,*x,fmt[20],cmd[300],xx;
   unsigned long t,now,i;
   struct timeval tv;
@@ -48,16 +48,35 @@ void *client(void *p){
   fp=fopen(aux,"rt");
   fgets(v[3],30,fp); r=strlen(v[3]); v[3][r-1]='\0';
   fclose(fp);
+  
   sprintf(aux,"/home/www/display/pgr/%s.seq",v[3]);
   fp=fopen(aux,"rt");
-  for(eseq=0;eseq<100;eseq++){
-    fgets(seq[eseq],50,fp); r=strlen(seq[eseq]); seq[eseq][r-1]='\0';
+  for(end=-1,tot=0,eseq=0;eseq<100;eseq++){
+    fgets(seq[eseq],50,fp);
     if(feof(fp))break;
+    r=strlen(seq[eseq]); seq[eseq][r-1]='\0';
+    if(seq[eseq][0]=='£'){
+      for(x=seq[eseq]+1;*x==' ';x++);
+      for(a0=0;*x!=' ';x++)a0=a0*10+(*x-'0');
+      for(;tot<=a0;tot++)pseq[tot]=eseq;
+      continue;
+    }
+    if(seq[eseq][0]=='('){
+      for(x=seq[eseq]+1;*x==' ';x++);
+      for(a0=0;*x!=' ';x++)a0=a0*10+(*x-'0');
+      for(;tot<=a0;tot++)start_seq[tot]=eseq;
+      continue;
+    }
+    if(seq[eseq][0]=='['){
+      for(x=seq[eseq]+1;*x==' ';x++);
+      for(a0=0;*x!=' ';x++)a0=a0*10+(*x-'0');
+      for(;tot<=a0;tot++)start_seq[tot]=eseq;
+      continue;
+    }
   }
   fclose(fp);
-  tot=atoi(seq[0]);
   
-  printf("SER=%s SEQ=%s ESEQ=%d\n",v[0],v[3],eseq);
+  printf("SER=%s SEQ=%s ESEQ=%d tot=%d\n",v[0],v[3],eseq,tot);
   gettimeofday(&tv,0);
   t=tv.tv_sec*1000UL+tv.tv_usec/1000UL;
 
@@ -78,16 +97,19 @@ void *client(void *p){
     sprintf(v[2],"%lu",i);
 
     go=0; ln=i%tot;
+    
     sprintf(aux,"/run/display/%s.des",v[0]);
     fp=fopen(aux,"wt");
-    for(r=0;r<eseq;r++){
-      if(go==0 && seq[r][0]=='('){
+    
+    for(r=pseq[ln];r<eseq;r++){
+      
+      if(seq[r][0]=='['){
+        
         for(x=seq[r]+1;*x==' ';x++);
         for(a0=0;*x!=' ';x++)a0=a0*10+(*x-'0');
         for(;*x==' ';x++);
-        for(a1=0;*x!=' ';x++)a1=a1*10+(*x-'0');
-        for(;*x==' ';x++);
-        for(a2=0;*x!=' ' && *x!=')';x++)a2=a2*10+(*x-'0');
+        for(a1=0;*x!=' ' && *x!='\0';x++)a1=a1*10+(*x-'0');
+        
         if(ln>=a0 && ln<=a1){
           buf=bin[ln+a2];
           interval_ms=40;

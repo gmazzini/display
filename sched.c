@@ -63,13 +63,13 @@ void *client(void *p){
     }
     if(seq[eseq][0]=='('){
       for(x=seq[eseq]+1;*x==' ';x++);
-      for(a0=0;*x!=' ';x++)a0=a0*10+(*x-'0');
+      for(a0=0;*x!=' ' && *x!='\0';x++)a0=a0*10+(*x-'0');
       for(;tot<=a0;tot++)start_seq[tot]=eseq;
       continue;
     }
     if(seq[eseq][0]=='['){
       for(x=seq[eseq]+1;*x==' ';x++);
-      for(a0=0;*x!=' ';x++)a0=a0*10+(*x-'0');
+      for(a0=0;*x!=' ' && *x!='\0';x++)a0=a0*10+(*x-'0');
       for(;tot<=a0;tot++)start_seq[tot]=eseq;
       continue;
     }

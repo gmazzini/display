@@ -44,11 +44,11 @@ void *client(void *p){
     if(r<=0){close(fd); return 0;}
   }
   v[0][SER]=0;
-  sprintf(aux,"/run/display/%s.mat",v[0]);
+  sprintf(aux,"/home/www/display/pgr/%s.mat",v[0]);
   fp=fopen(aux,"rt");
   fgets(v[3],30,fp); r=strlen(v[3]); v[3][r-1]='\0';
   fclose(fp);
-  sprintf(aux,"/run/display/%s.seq",v[3]);
+  sprintf(aux,"/home/www/display/pgr/%s.seq",v[3]);
   fp=fopen(aux,"rt");
   for(eseq=0;eseq<100;eseq++){
     fgets(seq[eseq],50,fp); r=strlen(seq[eseq]); seq[eseq][r-1]='\0';

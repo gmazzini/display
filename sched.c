@@ -10,11 +10,12 @@
 #include <stdlib.h>
 
 // tot --> steps as first row
-// [<fron> <to>] --> activation section range until other activation
+// (<from> <to> <base>) --> atomic video section range with format %06d.bin (TBD)
+// [<fron> <to>] --> activation section range until other [] activation
 // @<num> RAND <fmt> <from> <to> --> random generator
 // !<num> -->> set intevals in ms
-// any row description with @<num>$ variables
-// reserved @0$ serial, @1$ IP, @2$ step, @3$ seq, @4$ hh, @5$ mm, @6$ ss
+// any "des" description processed by write3 with @<num>$ variables
+// reserved @0$ serial, @1$ IP (TBD), @2$ step, @3$ seq, @4$ hh, @5$ mm, @6$ ss
 
 #define PORT 5000
 #define LEN  6144
@@ -80,6 +81,20 @@ void *client(void *p){
     sprintf(aux,"/run/display/%s.des",v[0]);
     fp=fopen(aux,"wt");
     for(r=0;r<eseq;r++){
+      if(go==0 && seq[r][0]=='('){
+        for(x=seq[r]+1;*x==' ';x++);
+        for(a0=0;*x!=' ';x++)a0=a0*10+(*x-'0');
+        for(;*x==' ';x++);
+        for(a1=0;*x!=' ';x++)a1=a1*10+(*x-'0');
+        for(;*x==' ';x++);
+        for(a2=0;*x!=' ' && *x!=')';x++)a2=a2*10+(*x-'0');
+        if(ln>=a0 && ln<=a1){
+          buf=bin(ln+a2);
+          interval_ms=40;
+          goto video;
+        }
+        continue;
+      }
       if(go==0 && seq[r][0]=='['){
         for(x=seq[r]+1;*x==' ';x++);
         for(a0=0;*x!=' ';x++)a0=a0*10+(*x-'0');
@@ -124,16 +139,14 @@ void *client(void *p){
 
     sprintf(cmd,"/home/www/display/write3 /run/display/%s.des /run/display/%s.ff /run/display/%s.bin",v[0],v[0],v[0]);
     system(cmd);
-
     sprintf(aux,"/run/display/%s.bin",v[0]);
     fp=fopen(aux,"rb");
     fread(&xx,1,1,fp);
     fread(bin[2999],1,LEN,fp);
     fclose(fp);
-
-    // buf=bin[i%2445];
     buf=bin[2999];
     
+video:    
     for(sent=0;sent<LEN;sent+=r){
       r=send(fd,buf+sent,LEN-sent,0);
       if(r<=0){close(fd); return 0;}

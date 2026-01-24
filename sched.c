@@ -11,6 +11,7 @@
 
 // tot --> steps as first row (TOGLI)
 // (<to> --> section with direct render ending with <to>
+//   v <base> frame at position step+base
 // [<to> --> section with write3 render ending with <to>
 
 // @<num> RAND <fmt> <from> <to> --> random generator
@@ -82,9 +83,14 @@ void *client(void *p){
 
     if(seq[s][0]=='('){
       for(r=s+1;r<=e;r++){
+        if(seq[r][0]=='v'){
+          for(x=seq[r]+1;*x==' ';x++);
+          for(a0=0;*x!=' ';x++)a0=a0*10+(*x-'0');
+        }
       }
       continue;
     }
+    
     if(seq[s][0]=='['){
       clock_gettime(CLOCK_REALTIME,&ts);
       localtime_r(&ts.tv_sec,&tmv);

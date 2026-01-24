@@ -70,6 +70,9 @@ void *client(void *p){
   gettimeofday(&tv,0);
   t=tv.tv_sec*1000UL+tv.tv_usec/1000UL;
 
+
+
+  for(r=0;r<tot;r++)printf("%d %d %d\n",r,start_seq[r],end_seq[r]);
   exit(0);
 
   clock_gettime(CLOCK_REALTIME,&ts);

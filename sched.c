@@ -95,7 +95,6 @@ printf("%ld-%d-%d ",step,s,e);
           interval_ms=40;
         }
       }
-      continue;
     }
     
     if(seq[s][0]=='['){

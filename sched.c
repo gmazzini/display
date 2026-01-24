@@ -89,7 +89,7 @@ void *client(void *p){
         for(;*x==' ';x++);
         for(a2=0;*x!=' ' && *x!=')';x++)a2=a2*10+(*x-'0');
         if(ln>=a0 && ln<=a1){
-          buf=bin(ln+a2);
+          buf=bin[ln+a2];
           interval_ms=40;
           goto video;
         }

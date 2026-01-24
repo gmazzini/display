@@ -82,6 +82,10 @@ void *client(void *p){
     if(now<t){usleep(1000); continue;}
     ln=step%tot; s=start_seq[ln]; e=end_seq[ln];
 
+
+printf("%ld-%d-%d ",step,s,e);
+
+    
     if(seq[s][0]=='('){
       for(r=s+1;r<=e;r++){
         if(seq[r][0]=='v'){

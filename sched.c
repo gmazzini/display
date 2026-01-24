@@ -59,7 +59,7 @@ void *client(void *p){
     if(seq[eseq][0]=='(' || seq[eseq][0]=='['){
       for(x=seq[eseq]+1;*x==' ';x++);
       for(a0=0;*x!=' ' && *x!='\0';x++)a0=a0*10+(*x-'0');
-      if(end>=0)for(r=base_end;r<tot;r++)end_seq[r]=eseq-1;
+      if(base_end>=0)for(r=base_end;r<tot;r++)end_seq[r]=eseq-1;
       base_end=tot;
       for(;tot<=a0;tot++)start_seq[tot]=eseq;
     }

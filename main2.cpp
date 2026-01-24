@@ -94,7 +94,7 @@ unsigned char TTh[]={0,16,32,32,64,64,64,64,128,128,128,128,128,128,128,128};
 const char hex[] = "0123456789ABCDEF";
 
 uint32_t rowSet[32],rowClr[32];
-char ser[13]; /* 12 hex + '\0' */
+char serip[16];
 
 WiFiClient client;
 IPAddress dispIP, tmp;
@@ -237,8 +237,7 @@ static void netPump(unsigned long budget_us){
         continue;
 
       case NET_SENDSER:
-        /* invia SER: ESATTAMENTE 12 byte, senza \0 e senza \n */
-        if(client.write((const unsigned char*)ser, 12) != 12){
+        if(client.write((const unsigned char*)serip, 16) != 16){
           netFailHard();
           netT0 = millis();
           return;
@@ -258,7 +257,7 @@ static void netPump(unsigned long budget_us){
 
         /* keepalive applicativo SER */
         if((long)(millis() - nextSerMs) >= 0){
-          if(client.write((const unsigned char*)ser, 12) != 12){
+          if(client.write((const unsigned char*)serip, 16) != 16){
             netFailHard();
             netT0 = millis();
             return;
@@ -375,6 +374,8 @@ void setup() {
   int r;
   uint32_t s;
   uint8_t factory[6];
+  esp_netif_ip_info_t ipinfo;
+
 
   refresh=0;
   valid=0;
@@ -431,13 +432,13 @@ void setup() {
     pOEh
   }
 
-  /* seriale 12 hex chars */
   esp_efuse_mac_get_default(factory);
   for (r = 0; r < 6; r++) {
-    ser[r*2]     = hex[(factory[r] >> 4) & 0x0F];
-    ser[r*2 + 1] = hex[ factory[r]       & 0x0F];
+    serip[r*2]     = hex[(factory[r] >> 4) & 0x0F];
+    serip[r*2 + 1] = hex[ factory[r]       & 0x0F];
   }
-  ser[12] = '\0';
+  esp_netif_get_ip_info(netif, &ipinfo);
+  memcpy(&serip[12], &ipinfo.ip.addr, 4);
 
   /* LUT decode */
   buildLUT();

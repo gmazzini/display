@@ -10,8 +10,9 @@
 #include <stdlib.h>
 
 // tot --> steps as first row (TOGLI)
-// (<to> <base> --> atomic video section range with format %06d.bin (TBD)
-// [<to> --> activation section range until other [ or ( activation
+// (<to> --> section with direct render ending with <to>
+// [<to> --> section with write3 render ending with <to>
+
 // @<num> RAND <fmt> <from> <to> --> random generator
 // !<num> -->> set intevals in ms for the section
 // any "des" description processed by write3 with @<num>$ variables
@@ -25,7 +26,7 @@
 char **bin;
 
 void *client(void *p){
-  int fd,one,got,r,sent,eseq,tot,ln,go,a0,a1,a2,interval_ms,start_seq[10000],end_seq[10000];
+  int fd,one,got,r,sent,eseq,tot,ln,go,a0,a1,a2,interval_ms,start_seq[10000],end_seq[10000],base_end;
   char *buf,v[30][30],seq[100][50],aux[100],*p1,*x,fmt[20],cmd[300],xx;
   unsigned long t,now,i;
   struct timeval tv;
@@ -55,23 +56,12 @@ void *client(void *p){
     fgets(seq[eseq],50,fp);
     if(feof(fp))break;
     r=strlen(seq[eseq]); seq[eseq][r-1]='\0';
-    if(seq[eseq][0]=='£'){
-      for(x=seq[eseq]+1;*x==' ';x++);
-      for(a0=0;*x!=' ';x++)a0=a0*10+(*x-'0');
-      for(;tot<=a0;tot++)pseq[tot]=eseq;
-      continue;
-    }
-    if(seq[eseq][0]=='('){
+    if(seq[eseq][0]=='(' || seq[eseq][0]=='['){
       for(x=seq[eseq]+1;*x==' ';x++);
       for(a0=0;*x!=' ' && *x!='\0';x++)a0=a0*10+(*x-'0');
+      if(end>=0)for(r=base_end;r<tot;r++)end_seq[r]=eseq-1;
+      base_end=tot;
       for(;tot<=a0;tot++)start_seq[tot]=eseq;
-      continue;
-    }
-    if(seq[eseq][0]=='['){
-      for(x=seq[eseq]+1;*x==' ';x++);
-      for(a0=0;*x!=' ' && *x!='\0';x++)a0=a0*10+(*x-'0');
-      for(;tot<=a0;tot++)start_seq[tot]=eseq;
-      continue;
     }
   }
   fclose(fp);
@@ -79,6 +69,8 @@ void *client(void *p){
   printf("SER=%s SEQ=%s ESEQ=%d tot=%d\n",v[0],v[3],eseq,tot);
   gettimeofday(&tv,0);
   t=tv.tv_sec*1000UL+tv.tv_usec/1000UL;
+
+  exit(0);
 
   clock_gettime(CLOCK_REALTIME,&ts);
   seed=(uint64_t)ts.tv_sec ^ (uint64_t)ts.tv_nsec ^ (uint64_t)getpid();

@@ -437,7 +437,7 @@ void setup() {
     macip[r*2]     = hex[(factory[r] >> 4) & 0x0F];
     macip[r*2 + 1] = hex[ factory[r]       & 0x0F];
   }
-  p = WiFi.localIP();
+  ip = WiFi.localIP();
   macip[12] = ip[0]; macip[13] = ip[1]; macip[14] = ip[2]; macip[15] = ip[3];
 
   /* LUT decode */

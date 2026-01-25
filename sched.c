@@ -67,7 +67,7 @@ void *client(void *p){
   for(r=base_end;r<tot;r++)end_seq[r]=eseq-1;
   fclose(fp);
   
-  printf("SER=%s SEQ=%s ESEQ=%d tot=%d\n",v[0],v[3],eseq,tot);
+  printf("SER=%s IP=%s SEQ=%s ESEQ=%d tot=%d\n",v[0],v[1],v[3],eseq,tot);
   gettimeofday(&tv,0);
   t=tv.tv_sec*1000UL+tv.tv_usec/1000UL;
   clock_gettime(CLOCK_REALTIME,&ts);

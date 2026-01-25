@@ -11,7 +11,7 @@
 
 // tot --> steps as first row (TOGLI)
 // (<to> --> section with direct render ending with <to>
-//   v <base> -->> set frame at position step+base
+//   V <base> -->> Video reproduction set frame at position step+base
 // [<to> --> section with write3 render ending with <to>
 //   ! <stay> -->> set intevals of staying in ms for the section
 //   @ <num> R <fmt> <from> <to> --> random generator
@@ -84,7 +84,7 @@ void *client(void *p){
     
     if(seq[s][0]=='('){
       for(r=s+1;r<=e;r++){
-        if(seq[r][0]=='v'){
+        if(seq[r][0]=='V'){
           for(x=seq[r]+1;*x==' ';x++);
           for(a0=0;*x!=' ' && *x!='\0';x++)a0=a0*10+(*x-'0');
           buf=bin[ln+a0];

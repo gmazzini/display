@@ -94,7 +94,7 @@ unsigned char TTh[]={0,16,32,32,64,64,64,64,128,128,128,128,128,128,128,128};
 const char hex[] = "0123456789ABCDEF";
 
 uint32_t rowSet[32],rowClr[32];
-char serip[16];
+char macip[16];
 
 WiFiClient client;
 IPAddress dispIP, tmp;
@@ -237,7 +237,7 @@ static void netPump(unsigned long budget_us){
         continue;
 
       case NET_SENDSER:
-        if(client.write((const unsigned char*)serip, 16) != 16){
+        if(client.write((const unsigned char*)macip, 16) != 16){
           netFailHard();
           netT0 = millis();
           return;
@@ -257,7 +257,7 @@ static void netPump(unsigned long budget_us){
 
         /* keepalive applicativo SER */
         if((long)(millis() - nextSerMs) >= 0){
-          if(client.write((const unsigned char*)serip, 16) != 16){
+          if(client.write((const unsigned char*)macip, 16) != 16){
             netFailHard();
             netT0 = millis();
             return;
@@ -434,11 +434,11 @@ void setup() {
 
   esp_efuse_mac_get_default(factory);
   for (r = 0; r < 6; r++) {
-    serip[r*2]     = hex[(factory[r] >> 4) & 0x0F];
-    serip[r*2 + 1] = hex[ factory[r]       & 0x0F];
+    macip[r*2]     = hex[(factory[r] >> 4) & 0x0F];
+    macip[r*2 + 1] = hex[ factory[r]       & 0x0F];
   }
   esp_netif_get_ip_info(netif, &ipinfo);
-  memcpy(&serip[12], &ipinfo.ip.addr, 4);
+  memcpy(&macip[12], &ipinfo.ip.addr, 4);
 
   /* LUT decode */
   buildLUT();

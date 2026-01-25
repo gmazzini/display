@@ -15,6 +15,7 @@
 
 #include <SDL.h>
 
+#define MAC "AABBCCDDEEFF"
 #define HOST_DEFAULT "display.mazzini.org"
 #define PORT_DEFAULT 5000
 
@@ -178,10 +179,8 @@ int main(int argc, char **argv) {
 
     host = HOST_DEFAULT;   /* display.mazzini.org */
     port = PORT_DEFAULT;   /* 5000 */
-
-    /* MAC fisso richiesto: AABBCCDDEEFF (12 ASCII) */
     memset(macip, 0, sizeof(macip));
-    memcpy(macip, "AABBCCDDEEFF", 12);
+    memcpy(macip, MAC, 12);
 
     fd = connect_tcp_dns(host, port);
     if (fd < 0) {

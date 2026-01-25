@@ -1,5 +1,5 @@
 // virtual implementation
-// cc -O3 virtpanel.c -o virtpanel $(sdl2-config --cflags --libs)
+// gcc -O3 display/virtpanel.c -o virtpanel $(sdl2-config --cflags --libs)
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>

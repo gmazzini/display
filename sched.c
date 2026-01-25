@@ -22,7 +22,7 @@
 
 #define PORT 5000
 #define LEN  6144
-#define TOT  3000
+#define TOT  5000
 
 static char **bin;
 
@@ -253,8 +253,8 @@ int main(void) {
     if (bin[s] == 0) return 1;
   }
 
-  for (s = 0; s < 2445; s++) {
-    snprintf(aux, sizeof(aux), "/root/prova2/%04d.bin", s + 1);
+  for (s = 0; s < TOT; s++) {
+    snprintf(aux, sizeof(aux), "/home/www/display/video/%05d.bin", s + 1);
     fp = fopen(aux, "rb");
     if (fp == 0) continue;
     fread(&x, 1, 1, fp);

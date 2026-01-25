@@ -175,7 +175,6 @@ int main(int argc, char **argv) {
     }
 
     scale = atoi(argv[1]);
-    if (scale < 2) scale = 2;
 
     host = HOST_DEFAULT;   /* display.mazzini.org */
     port = PORT_DEFAULT;   /* 5000 */

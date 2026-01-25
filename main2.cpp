@@ -1,8 +1,7 @@
-// Display on ESP32S3 Rel 20260123 by GM Copyright 2023-26
+// Display on ESP32S3 Rel 20260125 by GM Copyright 2023-26
 
 #include <Arduino.h>
 #include <WiFi.h>
-#include <SPI.h>
 #include "soc/gpio_struct.h"
 #include "soc/gpio_periph.h"
 #include "driver/gpio.h"
@@ -76,7 +75,7 @@
 
 #define IP_IS_ZERO(ip) ((ip)[0]==0 && (ip)[1]==0 && (ip)[2]==0 && (ip)[3]==0)
 
-int row,refresh,i,j,k1,k2,myqq,n,valid;
+int row,refresh,i,j,valid;
 unsigned long zr1,zr2,zg1,zg2,zb1,zb2;
 volatile unsigned long *pr1,*pr2,*pg1,*pg2,*pb1,*pb2;
 unsigned long oo;

@@ -11,6 +11,15 @@
 #include <signal.h>
 #include <errno.h>
 
+// tot --> steps as first row (TOGLI)
+// (<to> --> section with direct render ending with <to>
+//   V <base> -->> Video reproduction set frame at position step+base
+// [<to> --> section with write3 render ending with <to>
+//   ! <stay> -->> set intevals of staying in ms for the section
+//   @ <num> R <fmt> <from> <to> --> random generator
+//   any "des" description processed by write3 with @<num>$ variables
+//   reserved @0$ serial, @1$ IP (TBD), @2$ step, @3$ seq, @4$ hh, @5$ mm, @6$ ss
+
 #define PORT 5000
 #define LEN  6144
 #define TOT  3000

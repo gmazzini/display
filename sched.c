@@ -27,8 +27,8 @@
 static char **bin;
 
 static void *client(void *p) {
-  int fd, one, got, r, sent, eseq, tot, ln, a0, a1, a2, interval_ms, s, e, base_end;
-  int start_seq[10000], end_seq[10000];
+  int fd, one, got, r, sent, eseq, tot, ln, a0, a1, a2, interval_ms, s, e, base_end, mm;
+  int start_seq[10000], end_seq[10000], base_seq[100];
   char *buf;
   char v[30][30];
   char seq[100][50];
@@ -87,6 +87,7 @@ static void *client(void *p) {
     if (seq[eseq][0] == '(' || seq[eseq][0] == '[') {
       for (x = seq[eseq] + 1; *x == ' '; x++) {}
       for (a0 = 0; *x != ' ' && *x != '\0'; x++) a0 = a0 * 10 + (*x - '0');
+      base_seq[eseq] = tot;
 
       if (base_end >= 0) {
         for (r = base_end; r < tot; r++) end_seq[r] = eseq - 1;
@@ -137,7 +138,8 @@ static void *client(void *p) {
           for (x = seq[r] + 1; *x == ' '; x++) {}
           for (a0 = 0; *x != ' ' && *x != '\0'; x++) a0 = a0 * 10 + (*x - '0');
 
-          if (ln + a0 >= 0 && ln + a0 < TOT) buf = bin[ln + a0];
+          mm = ln - base_seq[s] + a0;
+          if (mm >= 0 && mm < TOT) buf = bin[mm];
           interval_ms = 40;
         }
       }
@@ -213,10 +215,10 @@ static void *client(void *p) {
       fp = fopen(binfile, "rb");
       if (fp == 0) { close(fd); return 0; }
       fread(&xx, 1, 1, fp);
-      fread(bin[2999], 1, LEN, fp);
+      fread(bin[TOT - 1], 1, LEN, fp);
       fclose(fp);
 
-      buf = bin[2999];
+      buf = bin[TOT - 1];
     }
 
     if (buf == 0) { close(fd); return 0; }

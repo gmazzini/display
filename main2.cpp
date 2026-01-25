@@ -251,7 +251,7 @@ static void netPump(unsigned long budget_us) {
 
             if (!client.connected()) {
                 client.stop();
-                if (!client.connect(, DISP_PORT)) {
+                if (!client.connect(dispIP, DISP_PORT)) {
                     netFailHard();
                     netT0 = millis();
                     if (backoffMs < 8000UL) backoffMs <<= 1;

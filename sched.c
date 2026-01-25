@@ -21,7 +21,6 @@
 #define PORT 5000
 #define LEN  6144
 #define TOT  3000
-#define SER  12
 
 char **bin;
 
@@ -40,11 +39,12 @@ void *client(void *p){
   free(p);
   one=1;
   setsockopt(fd,IPPROTO_TCP,TCP_NODELAY,(char *)&one,sizeof(one));
-  for(got=0;got<SER;got+=r){
-    r=recv(fd,v[0]+got,SER-got,0);
+  for(got=0;got<16;got+=r){
+    r=recv(fd,aux+got,16-got,0);
     if(r<=0){close(fd); return 0;}
   }
-  v[0][SER]=0;
+  sprintf(v[0],"%.12s",aux);
+  sprintf(v[1],"%u.%u.%u.%u\n",(uint_8)aux[12],(uint_8)aux[13],(uint_8)aux[14],(uint_8)aux[15]);
   sprintf(aux,"/home/www/display/pgr/%s.mat",v[0]);
   fp=fopen(aux,"rt");
   fgets(v[3],30,fp); r=strlen(v[3]); v[3][r-1]='\0';

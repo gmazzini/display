@@ -181,6 +181,15 @@ static void netFailHard(void) {
     dec_p = 0;
 }
 
+static void macip_update_ip(void) {
+    IPAddress ip;
+    ip = WiFi.localIP();
+    macip[12] = ip[0];
+    macip[13] = ip[1];
+    macip[14] = ip[2];
+    macip[15] = ip[3];
+}
+
 static void netPump(unsigned long budget_us) {
     unsigned long pump_t0;
     int avail;
@@ -242,7 +251,7 @@ static void netPump(unsigned long budget_us) {
 
             if (!client.connected()) {
                 client.stop();
-                if (!client.connect(dispIP, DISP_PORT)) {
+                if (!client.connect(, DISP_PORT)) {
                     netFailHard();
                     netT0 = millis();
                     if (backoffMs < 8000UL) backoffMs <<= 1;
@@ -257,6 +266,7 @@ static void netPump(unsigned long budget_us) {
             continue;
 
         case NET_SENDSER:
+            macip_update_ip();
             if (client.write((const unsigned char *)macip, 16) != 16) {
                 netFailHard();
                 netT0 = millis();
@@ -278,6 +288,7 @@ static void netPump(unsigned long budget_us) {
 
             /* keepalive applicativo SER */
             if ((long)(millis() - nextSerMs) >= 0) {
+                macip_update_ip();
                 if (client.write((const unsigned char *)macip, 16) != 16) {
                     netFailHard();
                     netT0 = millis();
@@ -392,7 +403,6 @@ void setup() {
     int r;
     uint32_t s;
     uint8_t factory[6];
-    IPAddress ip;
 
     refresh = 0;
     valid = 0;
@@ -457,12 +467,6 @@ void setup() {
         macip[r * 2]     = hex[(factory[r] >> 4) & 0x0F];
         macip[r * 2 + 1] = hex[ factory[r]       & 0x0F];
     }
-
-    ip = WiFi.localIP();
-    macip[12] = ip[0];
-    macip[13] = ip[1];
-    macip[14] = ip[2];
-    macip[15] = ip[3];
 
     /* LUT decode */
     buildLUT();

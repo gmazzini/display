@@ -44,7 +44,7 @@ void *client(void *p){
     if(r<=0){close(fd); return 0;}
   }
   sprintf(v[0],"%.12s",aux);
-  sprintf(v[1],"%u.%u.%u.%u\n",(uint8_t)aux[12],(uint8_t)aux[13],(uint8_t)aux[14],(uint8_t)aux[15]);
+  sprintf(v[1],"%u.%u.%u.%u",(uint8_t)aux[12],(uint8_t)aux[13],(uint8_t)aux[14],(uint8_t)aux[15]);
   sprintf(aux,"/home/www/display/pgr/%s.mat",v[0]);
   fp=fopen(aux,"rt");
   fgets(v[3],30,fp); r=strlen(v[3]); v[3][r-1]='\0';

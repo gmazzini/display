@@ -75,7 +75,7 @@
 
 #define IP_IS_ZERO(ip) ((ip)[0]==0 && (ip)[1]==0 && (ip)[2]==0 && (ip)[3]==0)
 
-int row,refresh,i,j,valid;
+int row,refresh,i,j,myqq,valid;
 unsigned long zr1,zr2,zg1,zg2,zb1,zb2;
 volatile unsigned long *pr1,*pr2,*pg1,*pg2,*pb1,*pb2;
 unsigned long oo;

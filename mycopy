@@ -1,2 +1,0 @@
-rm -rf display
-git clone https://github.com/gmazzini/display

@@ -39,6 +39,30 @@ typedef struct {
 static char **bin;
 ThreadMonitor monitor[MAX_THREADS];
 pthread_mutex_t mon_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_rwlock_t bin_rwlock = PTHREAD_RWLOCK_INITIALIZER;
+
+int load_bin_range(int from, int to) {
+  int i, loaded;
+  char path[100], x;
+  FILE *fp;
+  size_t n;
+  char tmp[LEN];
+  loaded = 0;
+
+  if (from < 0 || to >= TOT - 2 || from > to) return 0;
+  for (i = from; i <= to; i++) {
+    sprintf(path, "home/www/displa/video/%05d.bin", i);
+    fp = fopen(path, "rb");
+    if (fp == NULL) continue;
+    fread(&x, 1, 1, fp);
+    pthread_rwlock_wrlock(&bin_rwlock);
+    fread(bin[i], 1, LEN, fp);
+    pthread_rwlock_unlock(&bin_rwlock);
+    fclose(fp);
+    loaded++;
+  }
+  return loaded;
+}
 
 void *whois_interface(void *arg) {
   int server_fd, client_fd, opt, n, i, len, target_idx;
@@ -82,15 +106,13 @@ void *whois_interface(void *arg) {
       if (pwd && strcmp(pwd, MONITOR_PWD) == 0 && cmd) {
         if (strcmp(cmd, "status") == 0) {
           ora = time(NULL);
-          len = snprintf(resp, sizeof(resp), "SNAPSHOT: %s%-3s | %-12s | %-15s | %-10s\n", 
-                         ctime(&ora), "IDX", "SERIALE", "IP CLIENT", "STEP");
+          len = snprintf(resp, sizeof(resp), "SNAPSHOT: %s%-3s | %-12s | %-15s | %-10s\n", ctime(&ora), "IDX", "SERIALE", "IP CLIENT", "STEP");
           send(client_fd, resp, (size_t)len, 0);
 
           pthread_mutex_lock(&mon_mutex);
           for (i = 0; i < MAX_THREADS; i++) {
             if (monitor[i].active) {
-              len = snprintf(resp, sizeof(resp), "%03d | %-12s | %-15s | %lu\n", 
-                             i, monitor[i].ser, monitor[i].ip, (unsigned long)monitor[i].step);
+              len = snprintf(resp, sizeof(resp), "%03d | %-12s | %-15s | %lu\n", i, monitor[i].ser, monitor[i].ip, (unsigned long)monitor[i].step);
               send(client_fd, resp, (size_t)len, 0);
             }
           }
@@ -161,8 +183,7 @@ static void *client(void *p) {
   }
 
   snprintf(v[0], sizeof(v[0]), "%.12s", aux);
-  snprintf(v[1], sizeof(v[1]), "%u.%u.%u.%u",
-           (uint8_t)aux[12], (uint8_t)aux[13], (uint8_t)aux[14], (uint8_t)aux[15]);
+  snprintf(v[1], sizeof(v[1]), "%u.%u.%u.%u", (uint8_t)aux[12], (uint8_t)aux[13], (uint8_t)aux[14], (uint8_t)aux[15]);
 
   // Registrazione nel monitor
   pthread_mutex_lock(&mon_mutex);
@@ -294,7 +315,8 @@ static void *client(void *p) {
             if (x > p1) {
               strncpy(fmt, p1, (size_t)(x - p1));
               fmt[x - p1] = '\0';
-            } else {
+            } 
+            else {
               fmt[0] = '\0';
             }
 
@@ -324,9 +346,7 @@ static void *client(void *p) {
 
       fclose(fp);
 
-      snprintf(cmd, sizeof(cmd),
-               "/home/www/display/write3 /run/display/%s.des /run/display/%s.ff /run/display/%s.bin",
-               v[0], v[0], v[0]);
+      sprintf(cmd, "/home/www/display/write3 /run/display/%s.des /run/display/%s.ff /run/display/%s.bin", v[0], v[0], v[0]);
       system(cmd);
 
       fp = fopen(binfile, "rb");
@@ -340,10 +360,15 @@ static void *client(void *p) {
 
     if (buf == 0) goto cleanup;
 
+    pthread_rwlock_rdlock(&bin_rwlock);
     for (sent = 0; sent < LEN; sent += r) {
       r = (int)send(fd, buf + sent, LEN - sent, 0);
-      if (r <= 0) goto cleanup;
+      if (r <= 0) {
+        pthread_rwlock_unlock(&bin_rwlock);
+        goto cleanup;
+      }
     }
+    pthread_rwlock_unlock(&bin_rwlock);
 
     step++;
     t += (unsigned long)interval_ms;
@@ -366,21 +391,21 @@ int main() {
   pthread_t tid, monitor_tid;
   int opt = 1;
 
-  // 1. Alloca memoria per i buffer video (come nel codice originale)
+  // Alloca memoria per i buffer video (come nel codice originale)
   bin = (char **)malloc(TOT * sizeof(char *));
   for (int i = 0; i < TOT; i++) {
     bin[i] = (char *)malloc(LEN);
     memset(bin[i], 0, LEN);
   }
 
-  // 2. Avvia il thread dell'interfaccia Whois (Porta 5001)
+  // Avvia il thread dell'interfaccia Whois (Porta 5001)
   if (pthread_create(&monitor_tid, NULL, whois_interface, NULL) != 0) {
     perror("Failed to create monitor thread");
     return 1;
   }
   pthread_detach(monitor_tid);
 
-  // 3. Setup del Server principale (Porta 5000)
+  // Setup del Server principale (Porta 5000)
   server_fd = socket(AF_INET, SOCK_STREAM, 0);
   if (server_fd < 0) { perror("Socket failed"); return 1; }
 
@@ -400,14 +425,14 @@ int main() {
     return 1;
   }
 
-  // 4. Inizializzazione monitor
+  // Inizializzazione monitor
   pthread_mutex_lock(&mon_mutex);
   for (int i = 0; i < MAX_THREADS; i++) monitor[i].active = 0;
   pthread_mutex_unlock(&mon_mutex);
 
   printf("Server started. Port: %d, Whois Monitor: 5001\n", PORT);
 
-  // 5. Ciclo principale accettazione client
+  // Ciclo principale accettazione client
   for (;;) {
     client_fd = accept(server_fd, (struct sockaddr *)&client_addr, &addr_len);
     if (client_fd < 0) {

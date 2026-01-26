@@ -64,7 +64,7 @@ int load_bin_range(int from, int to) {
 }
 
 void *whois_interface(void *arg) {
-  int server_fd, client_fd, opt, n, i, len, target_idx;
+  int server_fd, client_fd, opt, n, i, len, target_idx, from, to, nloaded;
   struct sockaddr_in addr;
   char cmd_buf[256], resp[1024], *pwd, *cmd, *arg_val, *arg_val2;
   time_t ora;

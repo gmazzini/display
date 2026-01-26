@@ -51,62 +51,47 @@ void *whois_interface(void *arg) {
 
   addr.sin_family = AF_INET;
   addr.sin_addr.s_addr = INADDR_ANY;
-  addr.sin_port = htons(5001);
+  addr.sin_port = htons(43); // Porta standard WHOIS (richiede sudo) o 5001
 
-  bind(server_fd, (struct sockaddr *)&addr, sizeof(addr));
+  if (bind(server_fd, (struct sockaddr *)&addr, sizeof(addr)) < 0) return NULL;
   listen(server_fd, 5);
 
-  for (;;) { 
+  for (;;) {
     client_fd = accept(server_fd, NULL, NULL);
     if (client_fd < 0) continue;
 
-    send(client_fd, "Password: ", 10, 0);
     memset(cmd_buf, 0, sizeof(cmd_buf));
     int n = recv(client_fd, cmd_buf, sizeof(cmd_buf) - 1, 0);
-    if (n <= 0) { close(client_fd); continue; }
-    
-    cmd_buf[strcspn(cmd_buf, "\r\n")] = 0;
-
-    if (strcmp(cmd_buf, MONITOR_PWD) != 0) {
-      send(client_fd, "Access Denied.\n", 15, 0);
-      close(client_fd);
-      continue;
-    }
-
-    send(client_fd, "Logged in. Commands: status, exit\n> ", 35, 0);
-
-    for (;;) {
-      memset(cmd_buf, 0, sizeof(cmd_buf));
-      n = recv(client_fd, cmd_buf, sizeof(cmd_buf) - 1, 0);
-      if (n <= 0) break;
-      
+    if (n > 0) {
       cmd_buf[strcspn(cmd_buf, "\r\n")] = 0;
+      
+      // Split password e comando (formato: "password comando")
+      char *pwd = strtok(cmd_buf, " ");
+      char *cmd = strtok(NULL, " ");
 
-      if (strcmp(cmd_buf, "status") == 0) {
-        time_t ora = time(NULL);
-        int len = snprintf(resp, sizeof(resp), "\n--- SNAPSHOT: %s%-3s | %-12s | %-15s | %-10s\n", 
-                           ctime(&ora), "IDX", "SERIALE", "IP CLIENT", "STEP");
-        send(client_fd, resp, len, 0);
+      if (pwd && strcmp(pwd, MONITOR_PWD) == 0 && cmd) {
+        if (strcmp(cmd, "status") == 0) {
+          time_t ora = time(NULL);
+          int len = snprintf(resp, sizeof(resp), "\n--- SNAPSHOT: %s%-3s | %-12s | %-15s | %-10s\n", 
+                             ctime(&ora), "IDX", "SERIALE", "IP CLIENT", "STEP");
+          send(client_fd, resp, len, 0);
 
-        pthread_mutex_lock(&mon_mutex);
-        for (int i = 0; i < MAX_THREADS; i++) {
-          if (monitor[i].active) {
-            len = snprintf(resp, sizeof(resp), "%03d | %-12s | %-15s | %lu\n", 
-                           i, monitor[i].ser, monitor[i].ip, (unsigned long)monitor[i].step);
-            send(client_fd, resp, len, 0);
+          pthread_mutex_lock(&mon_mutex);
+          for (int i = 0; i < MAX_THREADS; i++) {
+            if (monitor[i].active) {
+              len = snprintf(resp, sizeof(resp), "%03d | %-12s | %-15s | %lu\n", 
+                             i, monitor[i].ser, monitor[i].ip, (unsigned long)monitor[i].step);
+              send(client_fd, resp, len, 0);
+            }
           }
+          pthread_mutex_unlock(&mon_mutex);
+        } else if (strcmp(cmd, "exit") == 0) {
+          send(client_fd, "Shutdown triggered.\n", 20, 0);
+          close(client_fd);
+          exit(0);
         }
-        pthread_mutex_unlock(&mon_mutex);
-        send(client_fd, "> ", 2, 0);
-
-      } 
-      else if (strcmp(cmd_buf, "exit") == 0) {
-        send(client_fd, "Shutdown triggered.\n", 20, 0);
-        close(client_fd);
-        exit(0); 
-      } 
-      else {
-        send(client_fd, "Unknown command.\n> ", 19, 0);
+      } else {
+        send(client_fd, "Invalid credentials or command.\n", 32, 0);
       }
     }
     close(client_fd);

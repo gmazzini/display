@@ -82,7 +82,7 @@ void *whois_interface(void *arg) {
       if (pwd && strcmp(pwd, MONITOR_PWD) == 0 && cmd) {
         if (strcmp(cmd, "status") == 0) {
           ora = time(NULL);
-          len = snprintf(resp, sizeof(resp), "\n--- SNAPSHOT: %s%-3s | %-12s | %-15s | %-10s\n", 
+          len = snprintf(resp, sizeof(resp), "SNAPSHOT: %s%-3s | %-12s | %-15s | %-10s\n", 
                          ctime(&ora), "IDX", "SERIALE", "IP CLIENT", "STEP");
           send(client_fd, resp, (size_t)len, 0);
 

@@ -169,7 +169,7 @@ static void *client(void *p) {
   for(r = 0; r < MAX_THREADS; r++) {
       if(!monitor[r].active) {
           monitor[r].active = 1;
-          monitor[r].fd = fd
+          monitor[r].fd = fd;
           strncpy(monitor[r].ser, v[0], 15);
           strncpy(monitor[r].ip, v[1], 15);
           monitor[r].step = 0;

@@ -28,10 +28,10 @@
 
 // Struttura per il monitoraggio esterno
 typedef struct {
-    volatile int active;
-    char ser[16];
-    char ip[16];
-    volatile unsigned long step;
+  volatile int active;
+  char ser[16];
+  char ip[16];
+  volatile unsigned long step;
 } ThreadMonitor;
 
 static char **bin;
@@ -40,17 +40,20 @@ pthread_mutex_t mon_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 // Gestore del segnale per stampare lo stato (kill -USR1 PID)
 void signal_print_status(int sig) {
-    int i;
-    printf("\n--- STATO THREAD ATTIVI ---\n");
-    printf("%-3s | %-12s | %-15s | %-10s\n", "IDX", "SERIALE", "IP CLIENT", "STEP");
-    pthread_mutex_lock(&mon_mutex);
-    for(i = 0; i < MAX_THREADS; i++) {
-        if(monitor[i].active) {
-            printf("%03d | %-12s | %-15s | %lu\n", i, monitor[i].ser, monitor[i].ip, monitor[i].step);
-        }
+  int i;
+  FILE *flog = fopen("/home/www/display/sched.log", "at");
+  if (flog == NULL) return;
+  time_t ora = time(NULL);
+  fprintf(flog, "\n--- SNAPSHOT: %s", ctime(&ora));
+  fprintf(flog, "%-3s | %-12s | %-15s | %-10s\n", "IDX", "SERIALE", "IP CLIENT", "STEP");
+  pthread_mutex_lock(&mon_mutex);
+  for(i = 0; i < MAX_THREADS; i++) {
+    if(monitor[i].active) {
+      fprintf(flog, "%03d | %-12s | %-15s | %lu\n", i, monitor[i].ser, monitor[i].ip, monitor[i].step);
     }
-    pthread_mutex_unlock(&mon_mutex);
-    printf("---------------------------\n\n");
+  }
+  pthread_mutex_unlock(&mon_mutex);
+  fclose(flog);
 }
 
 static void *client(void *p) {
@@ -147,9 +150,6 @@ static void *client(void *p) {
   }
 
   fclose(fp);
-
-  printf("SER=%s IP=%s SEQ=%s ESEQ=%d tot=%d\n", v[0], v[1], v[3], eseq, tot);
-  fflush(stdout);
 
   gettimeofday(&tv, 0);
   t = tv.tv_sec * 1000UL + tv.tv_usec / 1000UL;

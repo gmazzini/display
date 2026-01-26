@@ -61,7 +61,7 @@ int load_bin_range(int from, int to) {
   }
 
 
-  prointf("---%d\n",loaded);
+  printf("---%d\n",loaded);
   return loaded;
 }
 

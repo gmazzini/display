@@ -66,17 +66,12 @@ int load_bin_range(int from, int to) {
 void *whois_interface(void *arg) {
   int server_fd, client_fd, opt, n, i, len, target_idx;
   struct sockaddr_in addr;
-  char cmd_buf[256];
-  char resp[1024];
-  char *pwd;
-  char *cmd;
-  char *arg_val;
+  char cmd_buf[256], resp[1024], *pwd, *cmd, *arg_val, *arg_val2;
   time_t ora;
 
   opt = 1;
   server_fd = socket(AF_INET, SOCK_STREAM, 0);
   setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
-
   addr.sin_family = AF_INET;
   addr.sin_addr.s_addr = INADDR_ANY;
   addr.sin_port = htons(5001);
@@ -95,13 +90,13 @@ void *whois_interface(void *arg) {
       pwd = strtok(cmd_buf, " ");
       cmd = strtok(NULL, " ");
       arg_val = strtok(NULL, " ");
+      arg_val2 = strtok(NULL, " ");
 
       if (pwd && strcmp(pwd, MONITOR_PWD) == 0 && cmd) {
         if (strcmp(cmd, "status") == 0) {
           ora = time(NULL);
           len = sprintf(resp, "SNAPSHOT: %s%-3s | %-12s | %-15s | %-10s\n", ctime(&ora), "IDX", "SERIALE", "IP CLIENT", "STEP");
           send(client_fd, resp, (size_t)len, 0);
-
           pthread_mutex_lock(&mon_mutex);
           for (i = 0; i < MAX_THREADS; i++) {
             if (monitor[i].active) {
@@ -111,6 +106,7 @@ void *whois_interface(void *arg) {
           }
           pthread_mutex_unlock(&mon_mutex);
         }
+          
         else if (strcmp(cmd, "clear") == 0 && arg_val) {
           target_idx = atoi(arg_val);
           if (target_idx >= 0 && target_idx < MAX_THREADS) {
@@ -127,6 +123,15 @@ void *whois_interface(void *arg) {
             send(client_fd, resp, strlen(resp), 0);
           }
         }
+        
+        else if (strcmp(cmd, "load") == 0 && arg_val && arg_val2) {
+          from = atoi(arg_val);
+          to   = atoi(arg_val2);
+          nloaded = load_bin_range(from, to);
+          len = sprintf(resp, "OK: loaded %d frame(s) from %d to %d\n", nloaded, from, to);
+          send(client_fd, resp, (size_t)len, 0);
+        }
+        
         else if (strcmp(cmd, "exit") == 0) {
           send(client_fd, "Shutdown triggered.\n", 20, 0);
           close(client_fd);

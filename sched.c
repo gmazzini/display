@@ -82,23 +82,17 @@ void *whois_interface(void *arg) {
   addr.sin_addr.s_addr = INADDR_ANY;
   addr.sin_port = htons(5001);
 
-  if (bind(server_fd, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
-    return NULL;
-  }
+  if (bind(server_fd, (struct sockaddr *)&addr, sizeof(addr)) < 0) return NULL;
   listen(server_fd, 5);
 
   for (;;) {
     client_fd = accept(server_fd, NULL, NULL);
-    if (client_fd < 0) {
-      continue;
-    }
-
+    if (client_fd < 0) continue;
     memset(cmd_buf, 0, sizeof(cmd_buf));
     n = (int)recv(client_fd, cmd_buf, sizeof(cmd_buf) - 1, 0);
     
     if (n > 0) {
       cmd_buf[strcspn(cmd_buf, "\r\n")] = 0;
-      
       pwd = strtok(cmd_buf, " ");
       cmd = strtok(NULL, " ");
       arg_val = strtok(NULL, " ");
@@ -397,6 +391,7 @@ int main() {
     bin[i] = (char *)malloc(LEN);
     memset(bin[i], 0, LEN);
   }
+  load_bin_range(0, TOT - 2);
 
   // Avvia il thread dell'interfaccia Whois (Porta 5001)
   if (pthread_create(&monitor_tid, NULL, whois_interface, NULL) != 0) {

@@ -49,7 +49,7 @@ int load_bin_range(int from, int to) {
 
   if (from < 0 || to >= TOT - 2 || from > to) return 0;
   for (i = from; i <= to; i++) {
-    sprintf(path, "home/www/displa/video/%05d.bin", i);
+    sprintf(path, "/home/www/display/video/%05d.bin", i);
     fp = fopen(path, "rb");
     if (fp == NULL) continue;
     fread(&x, 1, 1, fp);

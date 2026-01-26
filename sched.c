@@ -98,13 +98,13 @@ void *whois_interface(void *arg) {
       if (pwd && strcmp(pwd, MONITOR_PWD) == 0 && cmd) {
         if (strcmp(cmd, "status") == 0) {
           ora = time(NULL);
-          len = snprintf(resp, sizeof(resp), "SNAPSHOT: %s%-3s | %-12s | %-15s | %-10s\n", ctime(&ora), "IDX", "SERIALE", "IP CLIENT", "STEP");
+          len = sprintf(resp, "SNAPSHOT: %s%-3s | %-12s | %-15s | %-10s\n", ctime(&ora), "IDX", "SERIALE", "IP CLIENT", "STEP");
           send(client_fd, resp, (size_t)len, 0);
 
           pthread_mutex_lock(&mon_mutex);
           for (i = 0; i < MAX_THREADS; i++) {
             if (monitor[i].active) {
-              len = snprintf(resp, sizeof(resp), "%03d | %-12s | %-15s | %lu\n", i, monitor[i].ser, monitor[i].ip, (unsigned long)monitor[i].step);
+              len = sprintf(resp, "%03d | %-12s | %-15s | %lu\n", i, monitor[i].ser, monitor[i].ip, (unsigned long)monitor[i].step);
               send(client_fd, resp, (size_t)len, 0);
             }
           }
@@ -117,10 +117,10 @@ void *whois_interface(void *arg) {
             if (monitor[target_idx].active) {
               shutdown(monitor[target_idx].fd, SHUT_RDWR);
               close(monitor[target_idx].fd);
-              snprintf(resp, sizeof(resp), "OK: Thread %d down.\n", target_idx);
+              sprintf(resp, "OK: Thread %d down.\n", target_idx);
             }
             else {
-              snprintf(resp, sizeof(resp), "ERR: Thread %d inactive.\n", target_idx);
+              sprintf(resp, "ERR: Thread %d inactive.\n", target_idx);
             }
             pthread_mutex_unlock(&mon_mutex);
             send(client_fd, resp, strlen(resp), 0);
@@ -192,7 +192,7 @@ static void *client(void *p) {
   }
   pthread_mutex_unlock(&mon_mutex);
 
-  snprintf(aux, sizeof(aux), "/home/www/display/pgr/%s.mat", v[0]);
+  sprintf(aux, "/home/www/display/pgr/%s.mat", v[0]);
   fp = fopen(aux, "rt");
   if (fp == 0) goto cleanup;
   if (fgets(v[3], (int)sizeof(v[3]), fp) == 0) { fclose(fp); goto cleanup; }
@@ -201,7 +201,7 @@ static void *client(void *p) {
   r = (int)strlen(v[3]);
   if (r > 0 && v[3][r - 1] == '\n') v[3][r - 1] = '\0';
 
-  snprintf(aux, sizeof(aux), "/home/www/display/pgr/%s.seq", v[3]);
+  sprintf(aux, "/home/www/display/pgr/%s.seq", v[3]);
   fp = fopen(aux, "rt");
   if (fp == 0) goto cleanup;
 
@@ -243,8 +243,8 @@ static void *client(void *p) {
   seed = (uint64_t)ts.tv_sec ^ (uint64_t)ts.tv_nsec ^ (uint64_t)getpid();
   srand((unsigned)seed);
 
-  snprintf(desfile, sizeof(desfile), "/run/display/%s.des", v[0]);
-  snprintf(binfile, sizeof(binfile), "/run/display/%s.bin", v[0]);
+  sprintf(desfile, "/run/display/%s.des", v[0]);
+  sprintf(binfile, "/run/display/%s.bin", v[0]);
 
   for (step = 0;;) {
     // Aggiornamento step nel monitor (veloce, senza mutex)
@@ -282,10 +282,10 @@ static void *client(void *p) {
       clock_gettime(CLOCK_REALTIME, &ts);
       localtime_r(&ts.tv_sec, &tmv);
 
-      snprintf(v[4], sizeof(v[4]), "%02d", tmv.tm_hour);
-      snprintf(v[5], sizeof(v[5]), "%02d", tmv.tm_min);
-      snprintf(v[6], sizeof(v[6]), "%02d", tmv.tm_sec);
-      snprintf(v[2], sizeof(v[2]), "%lu", step);
+      sprintf(v[4], "%02d", tmv.tm_hour);
+      sprintf(v[5], "%02d", tmv.tm_min);
+      sprintf(v[6], "%02d", tmv.tm_sec);
+      sprintf(v[2], "%lu", step);
 
       for (r = s + 1; r <= e; r++) {
         if (seq[r][0] == '!') {
@@ -318,7 +318,7 @@ static void *client(void *p) {
             for (a2 = 0; *x != ' ' && *x != '\0'; x++) a2 = a2 * 10 + (*x - '0');
 
             if (a0 >= 0 && a0 < 30 && a2 >= a1 && fmt[0] != '\0') {
-              snprintf(v[a0], sizeof(v[a0]), fmt, a1 + rand() % (a2 - a1 + 1));
+              sprintf(v[a0], fmt, a1 + rand() % (a2 - a1 + 1));
             }
             continue;
           }

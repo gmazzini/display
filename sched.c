@@ -45,8 +45,6 @@ int load_bin_range(int from, int to) {
   int i, loaded;
   char path[100], x;
   FILE *fp;
-  size_t n;
-  char tmp[LEN];
   loaded = 0;
 
   if (from < 0 || to >= TOT - 2 || from > to) return 0;

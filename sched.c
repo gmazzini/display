@@ -48,18 +48,15 @@ void *whois_interface(void *arg) {
 
   server_fd = socket(AF_INET, SOCK_STREAM, 0);
   setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
-
   addr.sin_family = AF_INET;
   addr.sin_addr.s_addr = INADDR_ANY;
   addr.sin_port = htons(43); // Porta standard WHOIS (richiede sudo) o 5001
-
   if (bind(server_fd, (struct sockaddr *)&addr, sizeof(addr)) < 0) return NULL;
   listen(server_fd, 5);
 
   for (;;) {
     client_fd = accept(server_fd, NULL, NULL);
     if (client_fd < 0) continue;
-
     memset(cmd_buf, 0, sizeof(cmd_buf));
     int n = recv(client_fd, cmd_buf, sizeof(cmd_buf) - 1, 0);
     if (n > 0) {
@@ -72,20 +69,18 @@ void *whois_interface(void *arg) {
       if (pwd && strcmp(pwd, MONITOR_PWD) == 0 && cmd) {
         if (strcmp(cmd, "status") == 0) {
           time_t ora = time(NULL);
-          int len = snprintf(resp, sizeof(resp), "\n--- SNAPSHOT: %s%-3s | %-12s | %-15s | %-10s\n", 
-                             ctime(&ora), "IDX", "SERIALE", "IP CLIENT", "STEP");
+          int len = snprintf(resp, sizeof(resp), "--- SNAPSHOT: %s%-3s | %-12s | %-15s | %-10s\n", ctime(&ora), "IDX", "SERIALE", "IP CLIENT", "STEP");
           send(client_fd, resp, len, 0);
-
           pthread_mutex_lock(&mon_mutex);
           for (int i = 0; i < MAX_THREADS; i++) {
             if (monitor[i].active) {
-              len = snprintf(resp, sizeof(resp), "%03d | %-12s | %-15s | %lu\n", 
-                             i, monitor[i].ser, monitor[i].ip, (unsigned long)monitor[i].step);
+              len = snprintf(resp, sizeof(resp), "%03d | %-12s | %-15s | %lu\n", i, monitor[i].ser, monitor[i].ip, (unsigned long)monitor[i].step);
               send(client_fd, resp, len, 0);
             }
           }
           pthread_mutex_unlock(&mon_mutex);
-        } else if (strcmp(cmd, "exit") == 0) {
+        } 
+        else if (strcmp(cmd, "exit") == 0) {
           send(client_fd, "Shutdown triggered.\n", 20, 0);
           close(client_fd);
           exit(0);

@@ -47,7 +47,7 @@ int load_bin_range(int from, int to) {
   FILE *fp;
   loaded = 0;
 
-  if (from < 0 || to >= TOT - 2 || from > to) return 0;
+  if (from < 0 || to > TOT - 2 || from > to) return 0;
   for (i = from; i <= to; i++) {
     sprintf(path, "/home/www/display/video/%05d.bin", i);
     fp = fopen(path, "rb");

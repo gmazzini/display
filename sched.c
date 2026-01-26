@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <stdint.h>
 #include <time.h>
+#include "/home/tools/sched_passwd.h"
 
 #define PORT 5000
 #define LEN  6144
@@ -37,8 +38,6 @@ typedef struct {
 static char **bin;
 ThreadMonitor monitor[MAX_THREADS];
 pthread_mutex_t mon_mutex = PTHREAD_MUTEX_INITIALIZER;
-
-#define MONITOR_PWD "segreto123"
 
 void *whois_interface(void *arg) {
   int server_fd, client_fd, opt, n, i, len;

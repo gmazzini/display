@@ -383,6 +383,8 @@ int main() {
   pthread_t tid, monitor_tid;
   int opt = 1;
 
+  signal(SIGPIPE, SIG_IGN);
+
   // Alloca memoria per i buffer video (come nel codice originale)
   bin = (char **)malloc(TOT * sizeof(char *));
   for (int i = 0; i < TOT; i++) {
@@ -401,9 +403,7 @@ int main() {
   // Setup del Server principale (Porta 5000)
   server_fd = socket(AF_INET, SOCK_STREAM, 0);
   if (server_fd < 0) { perror("Socket failed"); return 1; }
-
   setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
-
   server_addr.sin_family = AF_INET;
   server_addr.sin_addr.s_addr = INADDR_ANY;
   server_addr.sin_port = htons(PORT);
@@ -441,9 +441,8 @@ int main() {
       perror("Thread creation failed");
       close(client_fd);
       free(p_fd);
-    } else {
-      pthread_detach(tid);
-    }
+    } 
+    else pthread_detach(tid);
   }
 
   return 0;

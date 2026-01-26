@@ -33,6 +33,7 @@ typedef struct {
   char ser[16];
   char ip[16];
   volatile unsigned long step;
+  int fd;
 } ThreadMonitor;
 
 static char **bin;
@@ -40,26 +41,33 @@ ThreadMonitor monitor[MAX_THREADS];
 pthread_mutex_t mon_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void *whois_interface(void *arg) {
-  int server_fd, client_fd, opt, n, i, len;
+  int server_fd, client_fd, opt, n, i, len, target_idx;
   struct sockaddr_in addr;
   char cmd_buf[256];
   char resp[1024];
   char *pwd;
   char *cmd;
+  char *arg_val;
   time_t ora;
 
   opt = 1;
   server_fd = socket(AF_INET, SOCK_STREAM, 0);
   setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+
   addr.sin_family = AF_INET;
   addr.sin_addr.s_addr = INADDR_ANY;
   addr.sin_port = htons(5001);
-  if (bind(server_fd, (struct sockaddr *)&addr, sizeof(addr)) < 0) return NULL;
+
+  if (bind(server_fd, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
+    return NULL;
+  }
   listen(server_fd, 5);
 
   for (;;) {
     client_fd = accept(server_fd, NULL, NULL);
-    if (client_fd < 0) continue;
+    if (client_fd < 0) {
+      continue;
+    }
 
     memset(cmd_buf, 0, sizeof(cmd_buf));
     n = (int)recv(client_fd, cmd_buf, sizeof(cmd_buf) - 1, 0);
@@ -69,30 +77,49 @@ void *whois_interface(void *arg) {
       
       pwd = strtok(cmd_buf, " ");
       cmd = strtok(NULL, " ");
+      arg_val = strtok(NULL, " ");
 
       if (pwd && strcmp(pwd, MONITOR_PWD) == 0 && cmd) {
         if (strcmp(cmd, "status") == 0) {
           ora = time(NULL);
-          len = snprintf(resp, sizeof(resp), "SNAPSHOT: %s%-3s | %-12s | %-15s | %-10s\n", ctime(&ora), "IDX", "SERIALE", "IP CLIENT", "STEP");
+          len = snprintf(resp, sizeof(resp), "\n--- SNAPSHOT: %s%-3s | %-12s | %-15s | %-10s\n", 
+                         ctime(&ora), "IDX", "SERIALE", "IP CLIENT", "STEP");
           send(client_fd, resp, (size_t)len, 0);
 
           pthread_mutex_lock(&mon_mutex);
           for (i = 0; i < MAX_THREADS; i++) {
             if (monitor[i].active) {
-              len = snprintf(resp, sizeof(resp), "%03d | %-12s | %-15s | %lu\n", i, monitor[i].ser, monitor[i].ip, (unsigned long)monitor[i].step);
+              len = snprintf(resp, sizeof(resp), "%03d | %-12s | %-15s | %lu\n", 
+                             i, monitor[i].ser, monitor[i].ip, (unsigned long)monitor[i].step);
               send(client_fd, resp, (size_t)len, 0);
             }
           }
           pthread_mutex_unlock(&mon_mutex);
-        } 
+        }
+        else if (strcmp(cmd, "clear") == 0 && arg_val) {
+          target_idx = atoi(arg_val);
+          if (target_idx >= 0 && target_idx < MAX_THREADS) {
+            pthread_mutex_lock(&mon_mutex);
+            if (monitor[target_idx].active) {
+              shutdown(monitor[target_idx].fd, SHUT_RDWR);
+              close(monitor[target_idx].fd);
+              snprintf(resp, sizeof(resp), "OK: Thread %d down.\n", target_idx);
+            }
+            else {
+              snprintf(resp, sizeof(resp), "ERR: Thread %d inactive.\n", target_idx);
+            }
+            pthread_mutex_unlock(&mon_mutex);
+            send(client_fd, resp, strlen(resp), 0);
+          }
+        }
         else if (strcmp(cmd, "exit") == 0) {
           send(client_fd, "Shutdown triggered.\n", 20, 0);
           close(client_fd);
           exit(0);
         }
-      } 
+      }
       else {
-        send(client_fd, "Invalid credentials or command.\n", 32, 0);
+        send(client_fd, "Invalid request.\n", 17, 0);
       }
     }
     close(client_fd);
@@ -142,6 +169,7 @@ static void *client(void *p) {
   for(r = 0; r < MAX_THREADS; r++) {
       if(!monitor[r].active) {
           monitor[r].active = 1;
+          monitor[r].fd = fd
           strncpy(monitor[r].ser, v[0], 15);
           strncpy(monitor[r].ip, v[1], 15);
           monitor[r].step = 0;

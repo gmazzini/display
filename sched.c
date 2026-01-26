@@ -59,9 +59,7 @@ int load_bin_range(int from, int to) {
     fclose(fp);
     loaded++;
   }
-
-
-  printf("---%d\n",loaded);
+  
   return loaded;
 }
 

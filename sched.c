@@ -1,3 +1,11 @@
+// (<to> --> section with direct render ending with <to>
+//   V <base> -->> Video reproduction set frame at position step+base
+// [<to> --> section with write3 render ending with <to>
+//   ! <stay> -->> set intevals of staying in ms for the section
+//   @ <num> R <fmt> <from> <to> --> random generator
+//   any "des" description processed by write3 with @<num>$ variables
+//   reserved @0$ serial, @1$ IP (TBD), @2$ step, @3$ seq, @4$ hh, @5$ mm, @6$ ss
+
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -10,24 +18,43 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <errno.h>
-
-// tot --> steps as first row (TOGLI)
-// (<to> --> section with direct render ending with <to>
-//   V <base> -->> Video reproduction set frame at position step+base
-// [<to> --> section with write3 render ending with <to>
-//   ! <stay> -->> set intevals of staying in ms for the section
-//   @ <num> R <fmt> <from> <to> --> random generator
-//   any "des" description processed by write3 with @<num>$ variables
-//   reserved @0$ serial, @1$ IP (TBD), @2$ step, @3$ seq, @4$ hh, @5$ mm, @6$ ss
+#include <stdint.h>
+#include <time.h>
 
 #define PORT 5000
 #define LEN  6144
 #define TOT  5000
+#define MAX_THREADS 100
+
+// Struttura per il monitoraggio esterno
+typedef struct {
+    volatile int active;
+    char ser[16];
+    char ip[16];
+    volatile unsigned long step;
+} ThreadMonitor;
 
 static char **bin;
+ThreadMonitor monitor[MAX_THREADS];
+pthread_mutex_t mon_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+// Gestore del segnale per stampare lo stato (kill -USR1 PID)
+void signal_print_status(int sig) {
+    int i;
+    printf("\n--- STATO THREAD ATTIVI ---\n");
+    printf("%-3s | %-12s | %-15s | %-10s\n", "IDX", "SERIALE", "IP CLIENT", "STEP");
+    pthread_mutex_lock(&mon_mutex);
+    for(i = 0; i < MAX_THREADS; i++) {
+        if(monitor[i].active) {
+            printf("%03d | %-12s | %-15s | %lu\n", i, monitor[i].ser, monitor[i].ip, monitor[i].step);
+        }
+    }
+    pthread_mutex_unlock(&mon_mutex);
+    printf("---------------------------\n\n");
+}
 
 static void *client(void *p) {
-  int fd, one, got, r, sent, eseq, tot, ln, a0, a1, a2, interval_ms, s, e, base_end, mm;
+  int fd, one, got, r, sent, eseq, tot, ln, a0, a1, a2, interval_ms, s, e, base_end, mm, my_idx;
   int start_seq[10000], end_seq[10000], base_seq[100];
   char *buf;
   char v[30][30];
@@ -49,6 +76,7 @@ static void *client(void *p) {
   interval_ms = 1000;
   fd = *(int *)p;
   free(p);
+  my_idx = -1;
 
   one = 1;
   setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, (char *)&one, sizeof(one));
@@ -62,10 +90,24 @@ static void *client(void *p) {
   snprintf(v[1], sizeof(v[1]), "%u.%u.%u.%u",
            (uint8_t)aux[12], (uint8_t)aux[13], (uint8_t)aux[14], (uint8_t)aux[15]);
 
+  // Registrazione nel monitor
+  pthread_mutex_lock(&mon_mutex);
+  for(r = 0; r < MAX_THREADS; r++) {
+      if(!monitor[r].active) {
+          monitor[r].active = 1;
+          strncpy(monitor[r].ser, v[0], 15);
+          strncpy(monitor[r].ip, v[1], 15);
+          monitor[r].step = 0;
+          my_idx = r;
+          break;
+      }
+  }
+  pthread_mutex_unlock(&mon_mutex);
+
   snprintf(aux, sizeof(aux), "/home/www/display/pgr/%s.mat", v[0]);
   fp = fopen(aux, "rt");
-  if (fp == 0) { close(fd); return 0; }
-  if (fgets(v[3], (int)sizeof(v[3]), fp) == 0) { fclose(fp); close(fd); return 0; }
+  if (fp == 0) goto cleanup;
+  if (fgets(v[3], (int)sizeof(v[3]), fp) == 0) { fclose(fp); goto cleanup; }
   fclose(fp);
 
   r = (int)strlen(v[3]);
@@ -73,7 +115,7 @@ static void *client(void *p) {
 
   snprintf(aux, sizeof(aux), "/home/www/display/pgr/%s.seq", v[3]);
   fp = fopen(aux, "rt");
-  if (fp == 0) { close(fd); return 0; }
+  if (fp == 0) goto cleanup;
 
   base_end = -1;
   tot = 0;
@@ -120,11 +162,14 @@ static void *client(void *p) {
   snprintf(binfile, sizeof(binfile), "/run/display/%s.bin", v[0]);
 
   for (step = 0;;) {
+    // Aggiornamento step nel monitor (veloce, senza mutex)
+    if(my_idx != -1) monitor[my_idx].step = step;
+
     gettimeofday(&tv, 0);
     now = tv.tv_sec * 1000UL + tv.tv_usec / 1000UL;
     if (now < t) { usleep(1000); continue; }
 
-    if (tot <= 0) { close(fd); return 0; }
+    if (tot <= 0) goto cleanup;
 
     ln = (int)(step % (unsigned long)tot);
     s = start_seq[ln];
@@ -147,7 +192,7 @@ static void *client(void *p) {
 
     if (seq[s][0] == '[') {
       fp = fopen(desfile, "wt");
-      if (fp == 0) { close(fd); return 0; }
+      if (fp == 0) goto cleanup;
 
       clock_gettime(CLOCK_REALTIME, &ts);
       localtime_r(&ts.tv_sec, &tmv);
@@ -213,7 +258,7 @@ static void *client(void *p) {
       system(cmd);
 
       fp = fopen(binfile, "rb");
-      if (fp == 0) { close(fd); return 0; }
+      if (fp == 0) goto cleanup;
       fread(&xx, 1, 1, fp);
       fread(bin[TOT - 1], 1, LEN, fp);
       fclose(fp);
@@ -221,18 +266,24 @@ static void *client(void *p) {
       buf = bin[TOT - 1];
     }
 
-    if (buf == 0) { close(fd); return 0; }
+    if (buf == 0) goto cleanup;
 
     for (sent = 0; sent < LEN; sent += r) {
       r = (int)send(fd, buf + sent, LEN - sent, 0);
-      if (r <= 0) { close(fd); return 0; }
+      if (r <= 0) goto cleanup;
     }
 
     step++;
     t += (unsigned long)interval_ms;
   }
 
-  /* not reached */
+cleanup:
+  if(my_idx != -1) {
+      pthread_mutex_lock(&mon_mutex);
+      monitor[my_idx].active = 0;
+      pthread_mutex_unlock(&mon_mutex);
+  }
+  close(fd);
   return 0;
 }
 
@@ -244,8 +295,11 @@ int main(void) {
   char aux[100];
   char x;
 
-  /* IMPORTANT: prevent SIGPIPE from killing the whole process when a client disconnects */
   signal(SIGPIPE, SIG_IGN);
+  // Registra il comando kill -USR1 per la stampa
+  signal(SIGUSR1, signal_print_status);
+
+  memset(monitor, 0, sizeof(monitor));
 
   bin = (char **)malloc(TOT * sizeof(char *));
   if (bin == 0) return 1;
@@ -288,10 +342,11 @@ int main(void) {
     *pc = c;
 
     prc = pthread_create(&th, 0, client, pc);
-    if (prc != 0) { close(c); free(pc); continue; }
-
-    pthread_detach(th);
+    if (prc != 0) {
+        free(pc);
+        close(c);
+    } else {
+        pthread_detach(th);
+    }
   }
-
-  return 0;
 }

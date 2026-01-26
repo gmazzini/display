@@ -41,41 +41,47 @@ pthread_mutex_t mon_mutex = PTHREAD_MUTEX_INITIALIZER;
 #define MONITOR_PWD "segreto123"
 
 void *whois_interface(void *arg) {
-  int server_fd, client_fd;
+  int server_fd, client_fd, opt, n, i, len;
   struct sockaddr_in addr;
-  int opt = 1;
-  char cmd_buf[128], resp[512];
+  char cmd_buf[256];
+  char resp[1024];
+  char *pwd;
+  char *cmd;
+  time_t ora;
 
+  opt = 1;
   server_fd = socket(AF_INET, SOCK_STREAM, 0);
   setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
   addr.sin_family = AF_INET;
   addr.sin_addr.s_addr = INADDR_ANY;
-  addr.sin_port = htons(43); // Porta standard WHOIS (richiede sudo) o 5001
+  addr.sin_port = htons(5001);
   if (bind(server_fd, (struct sockaddr *)&addr, sizeof(addr)) < 0) return NULL;
   listen(server_fd, 5);
 
   for (;;) {
     client_fd = accept(server_fd, NULL, NULL);
     if (client_fd < 0) continue;
+
     memset(cmd_buf, 0, sizeof(cmd_buf));
-    int n = recv(client_fd, cmd_buf, sizeof(cmd_buf) - 1, 0);
+    n = (int)recv(client_fd, cmd_buf, sizeof(cmd_buf) - 1, 0);
+    
     if (n > 0) {
       cmd_buf[strcspn(cmd_buf, "\r\n")] = 0;
       
-      // Split password e comando (formato: "password comando")
-      char *pwd = strtok(cmd_buf, " ");
-      char *cmd = strtok(NULL, " ");
+      pwd = strtok(cmd_buf, " ");
+      cmd = strtok(NULL, " ");
 
       if (pwd && strcmp(pwd, MONITOR_PWD) == 0 && cmd) {
         if (strcmp(cmd, "status") == 0) {
-          time_t ora = time(NULL);
-          int len = snprintf(resp, sizeof(resp), "--- SNAPSHOT: %s%-3s | %-12s | %-15s | %-10s\n", ctime(&ora), "IDX", "SERIALE", "IP CLIENT", "STEP");
-          send(client_fd, resp, len, 0);
+          ora = time(NULL);
+          len = snprintf(resp, sizeof(resp), "SNAPSHOT: %s%-3s | %-12s | %-15s | %-10s\n", ctime(&ora), "IDX", "SERIALE", "IP CLIENT", "STEP");
+          send(client_fd, resp, (size_t)len, 0);
+
           pthread_mutex_lock(&mon_mutex);
-          for (int i = 0; i < MAX_THREADS; i++) {
+          for (i = 0; i < MAX_THREADS; i++) {
             if (monitor[i].active) {
               len = snprintf(resp, sizeof(resp), "%03d | %-12s | %-15s | %lu\n", i, monitor[i].ser, monitor[i].ip, (unsigned long)monitor[i].step);
-              send(client_fd, resp, len, 0);
+              send(client_fd, resp, (size_t)len, 0);
             }
           }
           pthread_mutex_unlock(&mon_mutex);
@@ -85,7 +91,8 @@ void *whois_interface(void *arg) {
           close(client_fd);
           exit(0);
         }
-      } else {
+      } 
+      else {
         send(client_fd, "Invalid credentials or command.\n", 32, 0);
       }
     }

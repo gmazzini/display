@@ -38,22 +38,80 @@ static char **bin;
 ThreadMonitor monitor[MAX_THREADS];
 pthread_mutex_t mon_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-// Gestore del segnale per stampare lo stato (kill -USR1 PID)
-void signal_print_status(int sig) {
-  int i;
-  FILE *flog = fopen("/home/www/display/sched.log", "at");
-  if (flog == NULL) return;
-  time_t ora = time(NULL);
-  fprintf(flog, "\n--- SNAPSHOT: %s", ctime(&ora));
-  fprintf(flog, "%-3s | %-12s | %-15s | %-10s\n", "IDX", "SERIALE", "IP CLIENT", "STEP");
-  pthread_mutex_lock(&mon_mutex);
-  for(i = 0; i < MAX_THREADS; i++) {
-    if(monitor[i].active) {
-      fprintf(flog, "%03d | %-12s | %-15s | %lu\n", i, monitor[i].ser, monitor[i].ip, monitor[i].step);
+#define MONITOR_PWD "segreto123"
+
+void *whois_interface(void *arg) {
+  int server_fd, client_fd;
+  struct sockaddr_in addr;
+  int opt = 1;
+  char cmd_buf[128], resp[512];
+
+  server_fd = socket(AF_INET, SOCK_STREAM, 0);
+  setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+
+  addr.sin_family = AF_INET;
+  addr.sin_addr.s_addr = INADDR_ANY;
+  addr.sin_port = htons(5001);
+
+  bind(server_fd, (struct sockaddr *)&addr, sizeof(addr));
+  listen(server_fd, 5);
+
+  for (;;) { 
+    client_fd = accept(server_fd, NULL, NULL);
+    if (client_fd < 0) continue;
+
+    send(client_fd, "Password: ", 10, 0);
+    memset(cmd_buf, 0, sizeof(cmd_buf));
+    int n = recv(client_fd, cmd_buf, sizeof(cmd_buf) - 1, 0);
+    if (n <= 0) { close(client_fd); continue; }
+    
+    cmd_buf[strcspn(cmd_buf, "\r\n")] = 0;
+
+    if (strcmp(cmd_buf, MONITOR_PWD) != 0) {
+      send(client_fd, "Access Denied.\n", 15, 0);
+      close(client_fd);
+      continue;
     }
+
+    send(client_fd, "Logged in. Commands: status, exit\n> ", 35, 0);
+
+    for (;;) {
+      memset(cmd_buf, 0, sizeof(cmd_buf));
+      n = recv(client_fd, cmd_buf, sizeof(cmd_buf) - 1, 0);
+      if (n <= 0) break;
+      
+      cmd_buf[strcspn(cmd_buf, "\r\n")] = 0;
+
+      if (strcmp(cmd_buf, "status") == 0) {
+        time_t ora = time(NULL);
+        int len = snprintf(resp, sizeof(resp), "\n--- SNAPSHOT: %s%-3s | %-12s | %-15s | %-10s\n", 
+                           ctime(&ora), "IDX", "SERIALE", "IP CLIENT", "STEP");
+        send(client_fd, resp, len, 0);
+
+        pthread_mutex_lock(&mon_mutex);
+        for (int i = 0; i < MAX_THREADS; i++) {
+          if (monitor[i].active) {
+            len = snprintf(resp, sizeof(resp), "%03d | %-12s | %-15s | %lu\n", 
+                           i, monitor[i].ser, monitor[i].ip, (unsigned long)monitor[i].step);
+            send(client_fd, resp, len, 0);
+          }
+        }
+        pthread_mutex_unlock(&mon_mutex);
+        send(client_fd, "> ", 2, 0);
+
+      } 
+      else if (strcmp(cmd_buf, "exit") == 0) {
+        send(client_fd, "Shutdown triggered.\n", 20, 0);
+        close(client_fd);
+        exit(0); 
+      } 
+      else {
+        send(client_fd, "Unknown command.\n> ", 19, 0);
+      }
+    }
+    close(client_fd);
   }
-  pthread_mutex_unlock(&mon_mutex);
-  fclose(flog);
+  return NULL;
 }
 
 static void *client(void *p) {
@@ -287,66 +345,74 @@ cleanup:
   return 0;
 }
 
-int main(void) {
-  int s, one, c, *pc, prc;
-  struct sockaddr_in a;
-  pthread_t th;
-  FILE *fp;
-  char aux[100];
-  char x;
+int main() {
+  int server_fd, client_fd, *p_fd;
+  struct sockaddr_in server_addr, client_addr;
+  socklen_t addr_len = sizeof(client_addr);
+  pthread_t tid, monitor_tid;
+  int opt = 1;
 
-  signal(SIGPIPE, SIG_IGN);
-  // Registra il comando kill -USR1 per la stampa
-  signal(SIGUSR1, signal_print_status);
-
-  memset(monitor, 0, sizeof(monitor));
-
+  // 1. Alloca memoria per i buffer video (come nel codice originale)
   bin = (char **)malloc(TOT * sizeof(char *));
-  if (bin == 0) return 1;
-
-  for (s = 0; s < TOT; s++) {
-    bin[s] = (char *)malloc(LEN * sizeof(char));
-    if (bin[s] == 0) return 1;
+  for (int i = 0; i < TOT; i++) {
+    bin[i] = (char *)malloc(LEN);
+    memset(bin[i], 0, LEN);
   }
 
-  for (s = 0; s < TOT; s++) {
-    snprintf(aux, sizeof(aux), "/home/www/display/video/%05d.bin", s + 1);
-    fp = fopen(aux, "rb");
-    if (fp == 0) continue;
-    fread(&x, 1, 1, fp);
-    fread(bin[s], 1, LEN, fp);
-    fclose(fp);
+  // 2. Avvia il thread dell'interfaccia Whois (Porta 5001)
+  if (pthread_create(&monitor_tid, NULL, whois_interface, NULL) != 0) {
+    perror("Failed to create monitor thread");
+    return 1;
+  }
+  pthread_detach(monitor_tid);
+
+  // 3. Setup del Server principale (Porta 5000)
+  server_fd = socket(AF_INET, SOCK_STREAM, 0);
+  if (server_fd < 0) { perror("Socket failed"); return 1; }
+
+  setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+
+  server_addr.sin_family = AF_INET;
+  server_addr.sin_addr.s_addr = INADDR_ANY;
+  server_addr.sin_port = htons(PORT);
+
+  if (bind(server_fd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
+    perror("Bind failed");
+    return 1;
   }
 
-  s = socket(AF_INET, SOCK_STREAM, 0);
-  if (s < 0) return 1;
+  if (listen(server_fd, 10) < 0) {
+    perror("Listen failed");
+    return 1;
+  }
 
-  one = 1;
-  setsockopt(s, SOL_SOCKET, SO_REUSEADDR, (char *)&one, sizeof(one));
+  // 4. Inizializzazione monitor
+  pthread_mutex_lock(&mon_mutex);
+  for (int i = 0; i < MAX_THREADS; i++) monitor[i].active = 0;
+  pthread_mutex_unlock(&mon_mutex);
 
-  memset(&a, 0, sizeof(a));
-  a.sin_family = AF_INET;
-  a.sin_port = htons(PORT);
-  a.sin_addr.s_addr = htonl(INADDR_ANY);
+  printf("Server started. Port: %d, Whois Monitor: 5001\n", PORT);
 
-  if (bind(s, (struct sockaddr *)&a, sizeof(a)) != 0) return 1;
-  if (listen(s, 32) != 0) return 1;
-
+  // 5. Ciclo principale accettazione client
   for (;;) {
-    c = accept(s, 0, 0);
-    if (c < 0) continue;
+    client_fd = accept(server_fd, (struct sockaddr *)&client_addr, &addr_len);
+    if (client_fd < 0) {
+      if (errno == EINTR) continue;
+      perror("Accept failed");
+      continue;
+    }
 
-    pc = (int *)malloc(sizeof(int));
-    if (pc == 0) { close(c); continue; }
+    p_fd = malloc(sizeof(int));
+    *p_fd = client_fd;
 
-    *pc = c;
-
-    prc = pthread_create(&th, 0, client, pc);
-    if (prc != 0) {
-        free(pc);
-        close(c);
+    if (pthread_create(&tid, NULL, client, p_fd) != 0) {
+      perror("Thread creation failed");
+      close(client_fd);
+      free(p_fd);
     } else {
-        pthread_detach(th);
+      pthread_detach(tid);
     }
   }
+
+  return 0;
 }

@@ -340,7 +340,7 @@ static void *client(void *p) {
                 if (a1 >= 0 && a1 < 30) stack[pstack++] = atoi(v[a1]);
                 continue;
               }
-              if (isdigit(*x) == 0) {
+              if (isdigit(*x)) {
                 for (a1 = 0; *x != '$' && *x != '\0'; x++) a1 = a1 * 10 + (*x - '0');
                 stack[pstack++] = atoi(v[a1]);
                 continue;
@@ -374,8 +374,8 @@ static void *client(void *p) {
                 continue;
               }
             }
-            if (a0 >= 0 && a0 < 30 && a2 >= a1 && fmt[0] != '\0') {
-              sprintf(v[a0], fmt, a1 + rand() % (a2 - a1 + 1));
+            if (a0 >= 0 && a0 < 30 && fmt[0] != '\0' && pstack > 0) {
+              sprintf(v[a0], fmt, stack[pstack-1]);
             }
             continue;
           }

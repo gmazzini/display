@@ -153,7 +153,7 @@ void *whois_interface(void *arg) {
 }
 
 static void *client(void *p) {
-  int fd, one, got, r, sent, eseq, tot, ln, a0, a1, a2, interval_ms, s, e, base_end, mm, my_idx, stack[50];
+  int fd, one, got, r, sent, eseq, tot, ln, a0, a1, a2, interval_ms, s, e, base_end, mm, my_idx, pstack, stack[50];
   int start_seq[10000], end_seq[10000], base_seq[100];
   char *buf, v[30][30], seq[100][50], aux[100], *p1, *x, fmt[20], cmd[300], xx, desfile[100], binfile[100];
   unsigned long t, now, step;

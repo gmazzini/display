@@ -150,21 +150,13 @@ static uint32_t now_ms(void) {
 
 int main(int argc, char **argv) {
     const char *host;
-    int port;
-    int scale;
-
-    int fd;
-    uint8_t macip[16];
-    uint8_t ip4[4];
-    uint8_t frame[LEN];
+    int port, scale,fd, running;
+    uint8_t macip, ip4[4], frame[LEN], rssi;
     uint16_t pix565[W * H];
-
     SDL_Window *win;
     SDL_Renderer *ren;
     SDL_Texture *tex;
     SDL_Event ev;
-
-    int running;
     uint32_t nextSerMs;
 
     /* unico argomento obbligatorio: scala */
@@ -260,6 +252,12 @@ int main(int argc, char **argv) {
 
         if (recvn(fd, frame, LEN) != LEN) {
             fprintf(stderr, "recv closed\n");
+            break;
+        }
+
+        rssi = 127;
+        if (sendn(fd, &rssi, 1) != 1) {
+            fprintf(stderr, "send rssi failed\n");
             break;
         }
 

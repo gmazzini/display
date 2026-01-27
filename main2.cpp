@@ -194,7 +194,6 @@ static void netPump(unsigned long budget_us) {
     unsigned long pump_t0, oo;
     int avail, v, localBudget, need, r, t;
     unsigned char *p, *L;
-    int t;
     int8_t rssi;
 
     pump_t0 = micros();

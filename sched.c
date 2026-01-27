@@ -37,6 +37,7 @@ typedef struct {
   char ip[16];
   volatile unsigned long step;
   int fd;
+  int8_t rssi;
 } ThreadMonitor;
 
 static char **bin;
@@ -163,6 +164,7 @@ static void *client(void *p) {
   struct timespec ts;
   struct tm tmv;
   uint64_t seed;
+  int8_t rssi;
 
   interval_ms = 1000;
   fd = *(int *)p;
@@ -189,6 +191,7 @@ static void *client(void *p) {
           strncpy(monitor[r].ser, v[0], 15);
           strncpy(monitor[r].ip, v[1], 15);
           monitor[r].step = 0;
+          monitor[r].rssi = 0;
           my_idx = r;
           break;
       }
@@ -419,7 +422,8 @@ static void *client(void *p) {
       }
     }
     pthread_rwlock_unlock(&bin_rwlock);
-
+    r = (int)recv(fd, &rssi, 1, MSG_DONTWAIT);
+    if (r == 1 && my_idx != -1) monitor[my_idx].rssi = rssi;
     step++;
     t += (unsigned long)interval_ms;
   }

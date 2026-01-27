@@ -102,12 +102,12 @@ void *whois_interface(void *arg) {
           len = sprintf(resp, "STARTUP: %s", ctime(&server_startup_time));
           send(client_fd, resp, (size_t)len, 0);
           ora = time(NULL);
-          len = sprintf(resp, "SNAPSHOT: %s%-3s | %-12s | %-15s | %-10s\n", ctime(&ora), "IDX", "SERIALE", "IP CLIENT", "STEP");
+          len = sprintf(resp, "SNAPSHOT: %s%-3s | %-12s | %-15s | %-10s | %-5s\n", ctime(&ora), "IDX", "SERIALE", "IP CLIENT", "STEP", "RSSI");
           send(client_fd, resp, (size_t)len, 0);
           pthread_mutex_lock(&mon_mutex);
           for (i = 0; i < MAX_THREADS; i++) {
             if (monitor[i].active) {
-              len = sprintf(resp, "%03d | %-12s | %-15s | %lu\n", i, monitor[i].ser, monitor[i].ip, (unsigned long)monitor[i].step);
+              len = sprintf(resp, "%03d | %-12s | %-15s | %lu | %4d\n", i, monitor[i].ser, monitor[i].ip, (unsigned long)monitor[i].step, (int)monitor[i].rssi);
               send(client_fd, resp, (size_t)len, 0);
             }
           }

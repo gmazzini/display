@@ -151,13 +151,13 @@ static uint32_t now_ms(void) {
 int main(int argc, char **argv) {
     const char *host;
     int port, scale,fd, running;
-    uint8_t macip[16], ip4[4], frame[LEN], rssi;
+    uint8_t macip[16], ip4[4], frame[LEN];
+    int8_t rssi;
     uint16_t pix565[W * H];
     SDL_Window *win;
     SDL_Renderer *ren;
     SDL_Texture *tex;
     SDL_Event ev;
-    uint32_t nextSerMs;
 
     /* unico argomento obbligatorio: scala */
     if (argc != 2) {
@@ -230,24 +230,11 @@ int main(int argc, char **argv) {
     }
 
     running = 1;
-    nextSerMs = now_ms() + 30000U;
 
     while (running) {
         while (SDL_PollEvent(&ev)) {
             if (ev.type == SDL_QUIT) running = 0;
             if (ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_ESCAPE) running = 0;
-        }
-
-        /* keepalive SER ogni 30s, come ESP */
-        if ((int32_t)(now_ms() - nextSerMs) >= 0) {
-            get_local_ip4_from_socket(fd, ip4);
-            macip[12] = ip4[0];
-            macip[13] = ip4[1];
-            macip[14] = ip4[2];
-            macip[15] = ip4[3];
-
-            if (sendn(fd, macip, 16) != 16) break;
-            nextSerMs = now_ms() + 30000U;
         }
 
         if (recvn(fd, frame, LEN) != LEN) {

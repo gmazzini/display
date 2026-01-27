@@ -107,7 +107,7 @@ void *whois_interface(void *arg) {
           pthread_mutex_lock(&mon_mutex);
           for (i = 0; i < MAX_THREADS; i++) {
             if (monitor[i].active) {
-              len = sprintf(resp, "%03d | %-12s | %-15s | %lu | %4d\n", i, monitor[i].ser, monitor[i].ip, (unsigned long)monitor[i].step, (int)monitor[i].rssi);
+              len = sprintf(resp, "%03d | %-12s | %-15s | %10lu | %5d\n", i, monitor[i].ser, monitor[i].ip, (unsigned long)monitor[i].step, (int)monitor[i].rssi);
               send(client_fd, resp, (size_t)len, 0);
             }
           }

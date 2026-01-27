@@ -1,4 +1,4 @@
-// Display on ESP32S3 Rel 20260125 by GM Copyright 2023-26
+// Display on ESP32S3 Rel 20260127 by GM Copyright 2023-26
 
 #include <Arduino.h>
 #include <WiFi.h>
@@ -138,7 +138,6 @@ static volatile int forceNetRestart = 0;
 
 static unsigned long netT0 = 0;
 static unsigned long backoffMs = 500;
-static unsigned long nextSerMs = 0;
 static unsigned long lastFrameMs = 0;
 
 static int payloadPos = 0;
@@ -265,7 +264,6 @@ static void netPump(unsigned long budget_us) {
                 return;
             }
 
-            nextSerMs = millis() + 30000UL;
             payloadPos = 0;
             netT0 = millis();
             netState = NET_RECV;
@@ -276,17 +274,6 @@ static void netPump(unsigned long budget_us) {
                 netFailHard();
                 netT0 = millis();
                 return;
-            }
-
-            /* keepalive applicativo SER */
-            if ((long)(millis() - nextSerMs) >= 0) {
-                macip_update_ip();
-                if (client.write((const unsigned char *)macip, 16) != 16) {
-                    netFailHard();
-                    netT0 = millis();
-                    return;
-                }
-                nextSerMs = millis() + 30000UL;
             }
 
             need = 6144 - payloadPos;

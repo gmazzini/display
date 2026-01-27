@@ -151,7 +151,7 @@ static uint32_t now_ms(void) {
 int main(int argc, char **argv) {
     const char *host;
     int port, scale,fd, running;
-    uint8_t macip, ip4[4], frame[LEN], rssi;
+    uint8_t macip[16], ip4[4], frame[LEN], rssi;
     uint16_t pix565[W * H];
     SDL_Window *win;
     SDL_Renderer *ren;

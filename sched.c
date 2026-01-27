@@ -22,6 +22,7 @@
 #include <errno.h>
 #include <stdint.h>
 #include <time.h>
+#include <ctype.h>
 #include "/home/tools/sched_passwd.h"
 
 #define PORT 5000

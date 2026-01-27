@@ -422,8 +422,13 @@ static void *client(void *p) {
       }
     }
     pthread_rwlock_unlock(&bin_rwlock);
-    r = (int)recv(fd, &rssi, 1, MSG_DONTWAIT);
-    if (r == 1 && my_idx != -1) monitor[my_idx].rssi = rssi;
+
+    for (;;) {
+      r = (int)recv(fd, &rssi, 1, MSG_DONTWAIT);
+      if (r != 1) break;
+      if (my_idx != -1) monitor[my_idx].rssi = rssi;
+    }
+    
     step++;
     t += (unsigned long)interval_ms;
   }

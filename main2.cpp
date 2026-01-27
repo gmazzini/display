@@ -191,18 +191,11 @@ static void macip_update_ip(void) {
 }
 
 static void netPump(unsigned long budget_us) {
-    unsigned long pump_t0;
-    int avail;
-    int v;
-    int localBudget;
-    int need;
-    int r;
-
-    /* decode locals */
-    unsigned long oo;
-    unsigned char *p;
-    unsigned char *L;
+    unsigned long pump_t0, oo;
+    int avail, v, localBudget, need, r, t;
+    unsigned char *p, *L;
     int t;
+    int8_t rssi;
 
     pump_t0 = micros();
 
@@ -367,6 +360,8 @@ static void netPump(unsigned long budget_us) {
 
             lastNetOk = millis();
             lastFrameMs = lastNetOk;
+            rssi = (int8_t)WiFi.RSSI();
+            client.write((const uint8_t *)&rssi, 1);
 
             /* pronti per frame successivo (connessione resta aperta) */
             payloadPos = 0;

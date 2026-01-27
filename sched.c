@@ -3,6 +3,7 @@
 // [<to> --> section with write3 render ending with <to>
 //   ! <stay> -->> set intevals of staying in ms for the section
 //   @ <num> R <fmt> <from> <to> --> random generator
+//   @ <num> C <fmt> {<statement>} --> formula in RPN
 //   any "des" description processed by write3 with @<num>$ variables
 //   reserved @0$ serial, @1$ IP (TBD), @2$ step, @3$ seq, @4$ hh, @5$ mm, @6$ ss
 // whois -h display.mazzini.org -p 5001 <passwd> <status>|<clear n>|<load from to>|<exit>
@@ -152,18 +153,9 @@ void *whois_interface(void *arg) {
 }
 
 static void *client(void *p) {
-  int fd, one, got, r, sent, eseq, tot, ln, a0, a1, a2, interval_ms, s, e, base_end, mm, my_idx;
+  int fd, one, got, r, sent, eseq, tot, ln, a0, a1, a2, interval_ms, s, e, base_end, mm, my_idx, stack[50];
   int start_seq[10000], end_seq[10000], base_seq[100];
-  char *buf;
-  char v[30][30];
-  char seq[100][50];
-  char aux[100];
-  char *p1, *x;
-  char fmt[20];
-  char cmd[300];
-  char xx;
-  char desfile[100];
-  char binfile[100];
+  char *buf, v[30][30], seq[100][50], aux[100], *p1, *x, fmt[20], cmd[300], xx, desfile[100], binfile[100];
   unsigned long t, now, step;
   struct timeval tv;
   FILE *fp;
@@ -318,10 +310,7 @@ static void *client(void *p) {
               strncpy(fmt, p1, (size_t)(x - p1));
               fmt[x - p1] = '\0';
             } 
-            else {
-              fmt[0] = '\0';
-            }
-
+            else fmt[0] = '\0';
             for (; *x == ' '; x++) {}
             for (a1 = 0; *x != ' ' && *x != '\0'; x++) a1 = a1 * 10 + (*x - '0');
             for (; *x == ' '; x++) {}
@@ -332,6 +321,64 @@ static void *client(void *p) {
             }
             continue;
           }
+
+          if (*x == 'C') {
+            for (x++; *x == ' '; x++) {}
+            p1 = x;
+            for (; *x != ' ' && *x != '\0'; x++) {}
+            if (x > p1) {
+              strncpy(fmt, p1, (size_t)(x - p1));
+              fmt[x - p1] = '\0';
+            } 
+            else fmt[0] = '\0';
+
+            for (pstack=0;*x != '\0'; x++) {
+              for (; *x == ' '; x++) {}
+              if (*x == '@') {
+                for (a1 = 0, x++; *x != '$' && *x != '\0'; x++) a1 = a1 * 10 + (*x - '0');
+                if (a1 >= 0 && a1 < 30) stack[pstack++] = atoi(v[a1]);
+                continue;
+              }
+              if (isdigit(*x) == 0) {
+                for (a1 = 0; *x != '$' && *x != '\0'; x++) a1 = a1 * 10 + (*x - '0');
+                stack[pstack++] = atoi(v[a1]);
+                continue;
+              }
+              if (*x == '+') {
+                if (pstack >= 2) {
+                  stack[pstack-2] = stack[pstack-2] + stack[pstack-1];
+                  pstack--;
+                }
+                continue;
+              }
+              if (*x == '-') {
+                if (pstack >= 2) {
+                  stack[pstack-2] = stack[pstack-2] - stack[pstack-1];
+                  pstack--;
+                }
+                continue;
+              }
+              if (*x == '/') {
+                if (pstack >= 2) {
+                  stack[pstack-2] = stack[pstack-2] / stack[pstack-1];
+                  pstack--;
+                }
+                continue;
+              }
+              if (*x == '*') {
+                if (pstack >= 2) {
+                  stack[pstack-2] = stack[pstack-2] * stack[pstack-1];
+                  pstack--;
+                }
+                continue;
+              }
+            }
+            if (a0 >= 0 && a0 < 30 && a2 >= a1 && fmt[0] != '\0') {
+              sprintf(v[a0], fmt, a1 + rand() % (a2 - a1 + 1));
+            }
+            continue;
+          }
+
           continue;
         }
 

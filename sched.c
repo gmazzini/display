@@ -5,6 +5,7 @@
 //   @ <num> R <fmt> <from> <to> --> random generator
 //   any "des" description processed by write3 with @<num>$ variables
 //   reserved @0$ serial, @1$ IP (TBD), @2$ step, @3$ seq, @4$ hh, @5$ mm, @6$ ss
+// whois -h display.mazzini.org -p 5001 <passwd> <status>|<clear n>|<load from to>|<exit>
 
 #include <stdio.h>
 #include <string.h>
@@ -37,6 +38,7 @@ typedef struct {
 } ThreadMonitor;
 
 static char **bin;
+static time_t server_startup_time = 0;
 ThreadMonitor monitor[MAX_THREADS];
 pthread_mutex_t mon_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_rwlock_t bin_rwlock = PTHREAD_RWLOCK_INITIALIZER;
@@ -94,6 +96,8 @@ void *whois_interface(void *arg) {
 
       if (pwd && strcmp(pwd, MONITOR_PWD) == 0 && cmd) {
         if (strcmp(cmd, "status") == 0) {
+          len = sprintf(resp, "STARTUP: %s", ctime(&server_startup_time));
+          send(client_fd, resp, (size_t)len, 0);
           ora = time(NULL);
           len = sprintf(resp, "SNAPSHOT: %s%-3s | %-12s | %-15s | %-10s\n", ctime(&ora), "IDX", "SERIALE", "IP CLIENT", "STEP");
           send(client_fd, resp, (size_t)len, 0);
@@ -371,7 +375,6 @@ static void *client(void *p) {
     step++;
     t += (unsigned long)interval_ms;
   }
-
 cleanup:
   if(my_idx != -1) {
       pthread_mutex_lock(&mon_mutex);
@@ -390,6 +393,7 @@ int main() {
   int opt = 1;
 
   signal(SIGPIPE, SIG_IGN);
+  server_startup_time = time(NULL);
 
   // Alloca memoria per i buffer video (come nel codice originale)
   bin = (char **)malloc(TOT * sizeof(char *));

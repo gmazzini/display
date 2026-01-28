@@ -1,7 +1,8 @@
 <pre>
-  Running control: whois -h <host name> -p 5001 "<passwd> <cmd>"
+  Running control: whois -h <host> -p 5001 "<passwd> <cmd>"
     status
-    clean n
+    clear n
+    load from to
     exit
             
   Push: server pushes updates to the client (currently in use)

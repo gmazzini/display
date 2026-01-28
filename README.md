@@ -1,5 +1,5 @@
 <pre>
-  Running control: whois -h <host> -p 5001 "<passwd> <cmd>"
+  Running control: whois -h <host> -p 5001 "passwd cmd"
     status
     clear n
     load from to

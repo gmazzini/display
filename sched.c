@@ -35,6 +35,7 @@ typedef struct {
   volatile int active;
   char ser[16];
   char ip[16];
+  uint16_t port;
   volatile unsigned long step;
   int fd;
   int8_t rssi;
@@ -102,12 +103,12 @@ void *whois_interface(void *arg) {
           len = sprintf(resp, "STARTUP: %s", ctime(&server_startup_time));
           send(client_fd, resp, (size_t)len, 0);
           ora = time(NULL);
-          len = sprintf(resp, "SNAPSHOT: %s%-3s | %-12s | %-15s | %-10s | %-5s\n", ctime(&ora), "IDX", "SERIALE", "IP CLIENT", "STEP", "RSSI");
+          len = sprintf(resp, "SNAPSHOT: %s%-3s | %-12s | %-15s:%-5d | %10s | %5s\n", ctime(&ora), "IDX", "SERIALE", "IP:PORT CLIENT", "STEP", "RSSI");
           send(client_fd, resp, (size_t)len, 0);
           pthread_mutex_lock(&mon_mutex);
           for (i = 0; i < MAX_THREADS; i++) {
             if (monitor[i].active) {
-              len = sprintf(resp, "%03d | %-12s | %-15s | %10lu | %5d\n", i, monitor[i].ser, monitor[i].ip, (unsigned long)monitor[i].step, (int)monitor[i].rssi);
+              len = sprintf(resp, "%03d | %-12s | %-15s:%-5d | %10lu | %5d\n", i, monitor[i].ser, monitor[i].ip, monitor[i].port, (unsigned long)monitor[i].step, (int)monitor[i].rssi);
               send(client_fd, resp, (size_t)len, 0);
             }
           }
@@ -155,7 +156,7 @@ void *whois_interface(void *arg) {
 }
 
 static void *client(void *p) {
-  int fd, one, got, r, sent, eseq, tot, ln, a0, a1, a2, interval_ms, s, e, base_end, mm, my_idx, pstack, stack[50];
+  int fd, one, got, r, sent, eseq, tot, ln, a0, a1, a2, interval_ms, s, e, base_end, mm, my_idx, pstack, stack[50], peer_ip[16];
   int start_seq[10000], end_seq[10000], base_seq[100];
   char *buf, v[30][30], seq[100][50], aux[100], *p1, *x, fmt[20], cmd[300], xx, desfile[100], binfile[100];
   unsigned long t, now, step;
@@ -165,14 +166,22 @@ static void *client(void *p) {
   struct tm tmv;
   uint64_t seed;
   int8_t rssi;
-
+  uint16_t peer_port;
+  struct sockaddr_in peer;
+  socklen_t peer_len = sizeof(peer);
+  
+ 
   interval_ms = 1000;
   fd = *(int *)p;
   free(p);
   my_idx = -1;
-
   one = 1;
   setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, (char *)&one, sizeof(one));
+
+  if (getpeername(fd, (struct sockaddr *)&peer, &peer_len) == 0) {
+    inet_ntop(AF_INET, &peer.sin_addr, peer_ip, sizeof(peer_ip));
+    peer_port = ntohs(peer.sin_port);
+  }
 
   for (got = 0; got < 16; got += r) {
     r = (int)recv(fd, aux + got, 16 - got, 0);
@@ -188,8 +197,9 @@ static void *client(void *p) {
       if(!monitor[r].active) {
           monitor[r].active = 1;
           monitor[r].fd = fd;
-          strncpy(monitor[r].ser, v[0], 15);
-          strncpy(monitor[r].ip, v[1], 15);
+          strncpy(monitor[r].ser, v[0], 15); monitor[r].ser[15] = 0;
+          strncpy(monitor[r].ip, v[1], 15); monitor[r].ip[15] = 0;
+          monitor[r].port = peer_port;
           monitor[r].step = 0;
           monitor[r].rssi = 0;
           my_idx = r;

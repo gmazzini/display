@@ -103,7 +103,7 @@ void *whois_interface(void *arg) {
           len = sprintf(resp, "STARTUP: %s", ctime(&server_startup_time));
           send(client_fd, resp, (size_t)len, 0);
           ora = time(NULL);
-          len = sprintf(resp, "SNAPSHOT: %s%-3s | %-12s | %-21s | %10s | %5s\n", ctime(&ora), "IDX", "SERIALE", "IP:PORT CLIENT", "STEP", "RSSI");
+          len = sprintf(resp, "SNAPSHOT: %s%-3s | %-12s | %-15s:%-5s | %10s | %5s\n", ctime(&ora), "IDX", "SERIALE", "CLIENT  IP", "PORT", "STEP", "RSSI");
           send(client_fd, resp, (size_t)len, 0);
           pthread_mutex_lock(&mon_mutex);
           for (i = 0; i < MAX_THREADS; i++) {

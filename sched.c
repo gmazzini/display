@@ -75,7 +75,7 @@ int load_bin_range(int from, int to) {
 void *whois_interface(void *arg) {
   int server_fd, client_fd, opt, n, i, len, target_idx, from, to, nloaded;
   struct sockaddr_in addr;
-  char cmd_buf[256], resp[1024], *pwd, *cmd, *arg_val, *arg_val2;
+  char cmd_buf[256], resp[1024], aux[100], *pwd, *cmd, *arg_val, *arg_val2;
   time_t ora;
 
   opt = 1;
@@ -106,12 +106,14 @@ void *whois_interface(void *arg) {
           len = sprintf(resp, "STARTUP: %s", ctime(&server_startup_time));
           send(client_fd, resp, (size_t)len, 0);
           ora = time(NULL);
-          len = sprintf(resp, "SNAPSHOT: %s%-3s | %-12s | %-15s:%-5s | %10s | %5s\n", ctime(&ora), "IDX", "SERIALE", "CLIENT  IP", "PORT", "STEP", "RSSI");
+          len = sprintf(resp, "SNAPSHOT: %s%-3s | %12s | %-15s:%-5s | %12s | %5s\n", ctime(&ora), "IDX", "SERIALE", "CLIENT  IP", "PORT", "STEP", "RSSI");
           send(client_fd, resp, (size_t)len, 0);
           pthread_mutex_lock(&mon_mutex);
           for (i = 0; i < MAX_THREADS; i++) {
             if (mythr[i].active) {
-              len = sprintf(resp, "%03d | %-12s | %-15s:%-5d | %10lu | %5d\n", i, mythr[i].ser, mythr[i].ip, mythr[i].port, (unsigned long)mythr[i].step, (int)mythr[i].rssi);
+              if (strlen(mythr[i].seq) == 12) strcpy(aux,mythr[i].seq);
+              else sprintf(aux, "%12lu", mythr[i].step);
+              len = sprintf(resp, "%03d | %12s | %-15s:%-5d | %12s | %5d\n", i, mythr[i].ser, mythr[i].ip, mythr[i].port, aux, (int)mythr[i].rssi);
               send(client_fd, resp, (size_t)len, 0);
             }
           }
@@ -193,7 +195,7 @@ static void *client(void *p) {
   snprintf(v[0], sizeof(v[0]), "%.12s", aux);
   snprintf(v[1], sizeof(v[1]), "%u.%u.%u.%u", (uint8_t)aux[12], (uint8_t)aux[13], (uint8_t)aux[14], (uint8_t)aux[15]);
 
-  // Registrazione nel monitor
+  // Elementi the thread per monitor e mirror
   pthread_mutex_lock(&mon_mutex);
   for(r = 0; r < MAX_THREADS; r++) {
     if(!mythr[r].active) {

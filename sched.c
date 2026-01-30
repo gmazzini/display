@@ -230,7 +230,7 @@ static void *client(void *p) {
     for (mir_idx = 0; mir_idx < MAX_THREADS; mir_idx++) {
       if (mythr[mir_idx].active && strncmp(mythr[mir_idx].ser, v[3], 12) == 0) break;
     }
-    if (mir_idx < MAX_THREADS) mythr[r].mir = mir_idx;
+    if (mir_idx < MAX_THREADS) mythr[my_idx].mir = mir_idx;
     pthread_mutex_unlock(&mon_mutex);
     if (mir_idx == MAX_THREADS) goto cleanup;
 

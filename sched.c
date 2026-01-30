@@ -158,10 +158,10 @@ void *whois_interface(void *arg) {
 }
 
 static void *client(void *p) {
-  int fd, one, got, r, sent, eseq, tot, ln, a0, a1, a2, interval_ms, s, e, base_end, mm, my_idx, pstack, stack[50];
+  int fd, one, got, r, sent, eseq, tot, ln, a0, a1, a2, interval_ms, s, e, base_end, mm, my_idx, mir_idx, pstack, stack[50];
   int start_seq[10000], end_seq[10000], base_seq[100];
-  char *buf, v[30][30], seq[100][50], aux[100], *p1, *x, fmt[20], cmd[300], xx, desfile[100], binfile[100], peer_ip[16];
-  unsigned long t, now, step;
+  char *buf, v[30][30], seq[100][50], aux[100], *p1, *x, fmt[20], cmd[300], xx, desfile[100], binfile[100], peer_ip[16], mir_buf[LEN];
+  unsigned long t, now, step, mir_last;
   struct timeval tv;
   FILE *fp;
   struct timespec ts;
@@ -203,6 +203,7 @@ static void *client(void *p) {
       mythr[r].port = peer_port;
       mythr[r].step = 0;
       mythr[r].rssi = 0;
+      mythr[r].t = 0;
       my_idx = r;
       break;
     }
@@ -219,7 +220,31 @@ static void *client(void *p) {
 
   // mirroring
   if (r == 12) {
+    mir_last = ULONG_MAX;
+    pthread_mutex_lock(&mon_mutex);
+    for (mir_idx = 0; mir_idx < MAX_THREADS; mir_idx++) {
+      if (mythr[mir_idx].active && strncmp(mythr[mir_idx].ser, v[3], 12) == 0) break;
+    }
+    pthread_mutex_unlock(&mon_mutex);
+    if (mir_idx == MAX_THREADS) goto cleanup;
+
+    for (;;) {
+      pthread_mutex_lock(&mon_mutex);
+      if (!mythr[mir_idx].active) { pthread_mutex_unlock(&mon_mutex); goto cleanup; }
+      t = mythr[mir_idx].t;
+      if (t != 0 && t != mir_last) memcpy(mir_buf, mythr[mir_idx].bin, LEN);
+      pthread_mutex_unlock(&mon_mutex);
+      if (t == 0 || t == mir_last) { usleep(1000); continue; }
+      for (sent = 0; sent < LEN; sent += r) {
+        r = (int)send(fd, mir_buf + sent, LEN - sent, 0);
+        if (r <= 0) goto cleanup;
+      }
+      mir_last = t;
+    }
   }
+
+
+
 
   sprintf(aux, "/home/www/display/pgr/%s.seq", v[3]);
   fp = fopen(aux, "rt");
@@ -436,6 +461,10 @@ static void *client(void *p) {
       }
     }
     pthread_rwlock_unlock(&bin_rwlock);
+    pthread_mutex_lock(&mon_mutex);
+    memcpy(mythr[my_idx].bin, buf, LEN);
+    mythr[my_idx].t = now;
+    pthread_mutex_unlock(&mon_mutex);
 
     for (;;) {
       r = (int)recv(fd, &rssi, 1, MSG_DONTWAIT);

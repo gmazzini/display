@@ -220,7 +220,7 @@ static void *client(void *p) {
   if (r > 0 && v[3][r - 1] == '\n') v[3][r - 1] = '\0';
 
   // mirroring
-  if (r == 12) {
+  if (strlen(v[3]) == 12) {
     mir_last = ULONG_MAX;
     pthread_mutex_lock(&mon_mutex);
     for (mir_idx = 0; mir_idx < MAX_THREADS; mir_idx++) {
@@ -243,9 +243,6 @@ static void *client(void *p) {
       mir_last = t;
     }
   }
-
-
-
 
   sprintf(aux, "/home/www/display/pgr/%s.seq", v[3]);
   fp = fopen(aux, "rt");

@@ -30,20 +30,22 @@
 #define TOT  5000
 #define MAX_THREADS 100
 
-// Struttura per il monitoraggio esterno
-typedef struct {
+// Struttura per i thread
+struct myThread {
   volatile int active;
-  char ser[16];
+  char ser[13];
   char ip[16];
   uint16_t port;
   volatile unsigned long step;
   int fd;
   int8_t rssi;
-} ThreadMonitor;
+  unsigned long t;
+  char bin[LEN];
+};
 
+struct myThread mythr[MAX_THREADS];
 static char **bin;
 static time_t server_startup_time = 0;
-ThreadMonitor monitor[MAX_THREADS];
 pthread_mutex_t mon_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_rwlock_t bin_rwlock = PTHREAD_RWLOCK_INITIALIZER;
 
@@ -107,8 +109,8 @@ void *whois_interface(void *arg) {
           send(client_fd, resp, (size_t)len, 0);
           pthread_mutex_lock(&mon_mutex);
           for (i = 0; i < MAX_THREADS; i++) {
-            if (monitor[i].active) {
-              len = sprintf(resp, "%03d | %-12s | %-15s:%-5d | %10lu | %5d\n", i, monitor[i].ser, monitor[i].ip, monitor[i].port, (unsigned long)monitor[i].step, (int)monitor[i].rssi);
+            if (mythr[i].active) {
+              len = sprintf(resp, "%03d | %-12s | %-15s:%-5d | %10lu | %5d\n", i, mythr[i].ser, mythr[i].ip, mythr[i].port, (unsigned long)mythr[i].step, (int)mythr[i].rssi);
               send(client_fd, resp, (size_t)len, 0);
             }
           }
@@ -119,9 +121,9 @@ void *whois_interface(void *arg) {
           target_idx = atoi(arg_val);
           if (target_idx >= 0 && target_idx < MAX_THREADS) {
             pthread_mutex_lock(&mon_mutex);
-            if (monitor[target_idx].active) {
-              shutdown(monitor[target_idx].fd, SHUT_RDWR);
-              close(monitor[target_idx].fd);
+            if (mythr[target_idx].active) {
+              shutdown(mythr[target_idx].fd, SHUT_RDWR);
+              close(mythr[target_idx].fd);
               sprintf(resp, "OK: Thread %d down.\n", target_idx);
             }
             else {
@@ -169,7 +171,6 @@ static void *client(void *p) {
   uint16_t peer_port;
   struct sockaddr_in peer;
   socklen_t peer_len = sizeof(peer);
-  
  
   interval_ms = 1000;
   fd = *(int *)p;
@@ -194,17 +195,17 @@ static void *client(void *p) {
   // Registrazione nel monitor
   pthread_mutex_lock(&mon_mutex);
   for(r = 0; r < MAX_THREADS; r++) {
-      if(!monitor[r].active) {
-          monitor[r].active = 1;
-          monitor[r].fd = fd;
-          strncpy(monitor[r].ser, v[0], 15); monitor[r].ser[15] = 0;
-          strncpy(monitor[r].ip, v[1], 15); monitor[r].ip[15] = 0;
-          monitor[r].port = peer_port;
-          monitor[r].step = 0;
-          monitor[r].rssi = 0;
-          my_idx = r;
-          break;
-      }
+    if(!mythr[r].active) {
+      mythr[r].active = 1;
+      mythr[r].fd = fd;
+      strncpy(mythr[r].ser, v[0], 12); mythr[r].ser[12] = 0;
+      strncpy(mythr[r].ip, v[1], 15); mythr[r].ip[15] = 0;
+      mythr[r].port = peer_port;
+      mythr[r].step = 0;
+      mythr[r].rssi = 0;
+      my_idx = r;
+      break;
+    }
   }
   pthread_mutex_unlock(&mon_mutex);
 
@@ -213,9 +214,12 @@ static void *client(void *p) {
   if (fp == 0) goto cleanup;
   if (fgets(v[3], (int)sizeof(v[3]), fp) == 0) { fclose(fp); goto cleanup; }
   fclose(fp);
-
   r = (int)strlen(v[3]);
   if (r > 0 && v[3][r - 1] == '\n') v[3][r - 1] = '\0';
+
+  // mirroring
+  if (r == 12) {
+  }
 
   sprintf(aux, "/home/www/display/pgr/%s.seq", v[3]);
   fp = fopen(aux, "rt");
@@ -264,7 +268,7 @@ static void *client(void *p) {
 
   for (step = 0;;) {
     // Aggiornamento step nel monitor (veloce, senza mutex)
-    if(my_idx != -1) monitor[my_idx].step = step;
+    if(my_idx != -1) mythr[my_idx].step = step;
 
     gettimeofday(&tv, 0);
     now = tv.tv_sec * 1000UL + tv.tv_usec / 1000UL;
@@ -436,7 +440,7 @@ static void *client(void *p) {
     for (;;) {
       r = (int)recv(fd, &rssi, 1, MSG_DONTWAIT);
       if (r != 1) break;
-      if (my_idx != -1) monitor[my_idx].rssi = rssi;
+      if (my_idx != -1) mythr[my_idx].rssi = rssi;
     }
     
     step++;
@@ -445,7 +449,7 @@ static void *client(void *p) {
 cleanup:
   if(my_idx != -1) {
       pthread_mutex_lock(&mon_mutex);
-      monitor[my_idx].active = 0;
+      mythr[my_idx].active = 0;
       pthread_mutex_unlock(&mon_mutex);
   }
   close(fd);
@@ -497,7 +501,7 @@ int main() {
 
   // Inizializzazione monitor
   pthread_mutex_lock(&mon_mutex);
-  for (int i = 0; i < MAX_THREADS; i++) monitor[i].active = 0;
+  for (int i = 0; i < MAX_THREADS; i++) mythr[i].active = 0;
   pthread_mutex_unlock(&mon_mutex);
 
   printf("Server started. Port: %d, Whois Monitor: 5001\n", PORT);

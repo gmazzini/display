@@ -40,6 +40,7 @@ struct myThread {
   volatile unsigned long step;
   int fd;
   int8_t rssi;
+  int mir;
   unsigned long t;
   char bin[LEN];
 };
@@ -111,8 +112,8 @@ void *whois_interface(void *arg) {
           pthread_mutex_lock(&mon_mutex);
           for (i = 0; i < MAX_THREADS; i++) {
             if (mythr[i].active) {
-              if (strlen(mythr[i].seq) == 12) strcpy(aux,mythr[i].seq);
-              else sprintf(aux, "%12lu", mythr[i].step);
+              if (strlen(mythr[i].mir) == -1) sprintf(aux, "%12lu", mythr[i].step);
+              else strcpy(aux,mythr[mythr[i].mir].ser);
               len = sprintf(resp, "%03d | %12s | %-15s:%-5d | %12s | %5d\n", i, mythr[i].ser, mythr[i].ip, mythr[i].port, aux, (int)mythr[i].rssi);
               send(client_fd, resp, (size_t)len, 0);
             }
@@ -206,6 +207,7 @@ static void *client(void *p) {
       mythr[r].port = peer_port;
       mythr[r].step = 0;
       mythr[r].rssi = 0;
+      mythr[r].mir = -1;
       mythr[r].t = 0;
       my_idx = r;
       break;
@@ -228,6 +230,7 @@ static void *client(void *p) {
     for (mir_idx = 0; mir_idx < MAX_THREADS; mir_idx++) {
       if (mythr[mir_idx].active && strncmp(mythr[mir_idx].ser, v[3], 12) == 0) break;
     }
+    if (mir_idx < MAX_THREADS) mythr[r].mir = mir_idx;
     pthread_mutex_unlock(&mon_mutex);
     if (mir_idx == MAX_THREADS) goto cleanup;
 

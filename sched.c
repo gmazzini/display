@@ -112,7 +112,7 @@ void *whois_interface(void *arg) {
           pthread_mutex_lock(&mon_mutex);
           for (i = 0; i < MAX_THREADS; i++) {
             if (mythr[i].active) {
-              if (strlen(mythr[i].mir) == -1) sprintf(aux, "%12lu", mythr[i].step);
+              if (mythr[i].mir == -1) sprintf(aux, "%12lu", mythr[i].step);
               else strcpy(aux,mythr[mythr[i].mir].ser);
               len = sprintf(resp, "%03d | %12s | %-15s:%-5d | %12s | %5d\n", i, mythr[i].ser, mythr[i].ip, mythr[i].port, aux, (int)mythr[i].rssi);
               send(client_fd, resp, (size_t)len, 0);

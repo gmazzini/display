@@ -231,7 +231,10 @@ static void *client(void *p) {
 
     for (;;) {
       pthread_mutex_lock(&mon_mutex);
-      if (!mythr[mir_idx].active) { pthread_mutex_unlock(&mon_mutex); goto cleanup; }
+      if (!mythr[mir_idx].active || strncmp(mythr[mir_idx].ser, v[3], 12) != 0) { 
+        pthread_mutex_unlock(&mon_mutex); 
+        goto cleanup; 
+      }
       t = mythr[mir_idx].t;
       if (t != 0 && t != mir_last) memcpy(mir_buf, mythr[mir_idx].bin, LEN);
       pthread_mutex_unlock(&mon_mutex);
@@ -239,6 +242,11 @@ static void *client(void *p) {
       for (sent = 0; sent < LEN; sent += r) {
         r = (int)send(fd, mir_buf + sent, LEN - sent, 0);
         if (r <= 0) goto cleanup;
+      }
+      for (;;) {
+        r = (int)recv(fd, &rssi, 1, MSG_DONTWAIT);
+        if (r != 1) break;
+        if (my_idx != -1) mythr[my_idx].rssi = rssi;
       }
       mir_last = t;
     }

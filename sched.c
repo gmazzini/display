@@ -5,7 +5,7 @@
 //   @ <num> R <fmt> <from> <to> --> random generator
 //   @ <num> C <fmt> {<statement>} --> formula in RPN
 //   any "des" description processed by write3 with @<num>$ variables
-//   reserved @0$ serial, @1$ IP, @2$ step, @3$ seq, @4$ hh, @5$ mm, @6$ ss, @7$ epoch
+//   reserved @0$ serial, @1$ IP, @2$ step, @3$ seq, @4$ hh, @5$ mm, @6$ ss, @7$ DEPOCH
 //
 // whois -h display.mazzini.org -p 5001 <passwd> <status>|<clear n>|<load from to>|<exit>
 //
@@ -20,7 +20,9 @@
 //   this server process. If a display reconnects with the same serial, even
 //   from a different IP or TCP port, the new session resumes from the last
 //   known step instead of restarting from zero.
-//   epoch is the Unix timestamp of the last logical relaunch/reconnection.
+//   epoch is stored internally as the Unix timestamp of the last logical
+//   relaunch/reconnection.
+//   DEPOCH is printed/exported as seconds elapsed since that epoch.
 
 #include <stdio.h>
 #include <string.h>
@@ -269,6 +271,7 @@ void *whois_interface(void *arg) {
   struct sockaddr_in addr;
   char cmd_buf[256], resp[1024], aux[100], *pwd, *cmd, *arg_val, *arg_val2;
   time_t ora;
+  long depoch;
 
   (void)arg;
 
@@ -321,7 +324,7 @@ void *whois_interface(void *arg) {
                         "CLIENT  IP",
                         "PORT",
                         "STEP",
-                        "EPOCH",
+                        "DEPOCH",
                         "RSSI");
           send_all(client_fd, resp, (size_t)len);
 
@@ -338,6 +341,11 @@ void *whois_interface(void *arg) {
                 strcpy(aux, "INVALID-MIR");
               }
 
+              depoch = 0;
+              if (mythr[i].epoch > 0 && ora >= mythr[i].epoch) {
+                depoch = (long)(ora - mythr[i].epoch);
+              }
+
               len = sprintf(resp,
                             "%03d | %12s | %-15s:%-5u | %12s | %12ld | %5d\n",
                             i,
@@ -345,7 +353,7 @@ void *whois_interface(void *arg) {
                             mythr[i].ip,
                             (unsigned)mythr[i].port,
                             aux,
-                            (long)mythr[i].epoch,
+                            depoch,
                             (int)mythr[i].rssi);
               send_all(client_fd, resp, (size_t)len);
             }
@@ -417,6 +425,7 @@ static void *client(void *p) {
   struct tm tmv;
   uint64_t seed, my_gen;
   time_t my_epoch;
+  long depoch;
   int8_t rssi;
   uint16_t peer_port;
   struct sockaddr_in peer;
@@ -428,6 +437,7 @@ static void *client(void *p) {
   my_idx = -1;
   my_gen = 0;
   my_epoch = 0;
+  depoch = 0;
   interval_ms = 1000;
   peer_port = 0;
   state_idx = -1;
@@ -744,7 +754,12 @@ static void *client(void *p) {
       sprintf(v[5], "%02d", tmv.tm_min);
       sprintf(v[6], "%02d", tmv.tm_sec);
       sprintf(v[2], "%lu", step);
-      sprintf(v[7], "%ld", (long)my_epoch);
+
+      depoch = 0;
+      if (my_epoch > 0 && ts.tv_sec >= my_epoch) {
+        depoch = (long)(ts.tv_sec - my_epoch);
+      }
+      sprintf(v[7], "%ld", depoch);
 
       for (r = s + 1; r <= e; r++) {
         if (seq[r][0] == '!') {

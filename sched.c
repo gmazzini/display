@@ -8,7 +8,7 @@
  *   any "des" description processed by write3 with @<num>$ variables
  *   reserved @0$ serial, @1$ IP, @2$ step, @3$ seq, @4$ hh, @5$ mm, @6$ ss, @7$ DEPOCH
  *
- * whois -h display.mazzini.org -p 5001 <passwd> <status>|<clear n>|<load from to>|<exit>
+ * whois -h display.mazzini.org -p 5001 <passwd> <status>|<clear n>|<set idx step>|<load from to>|<exit>
  *
  * Session policy:
  *   One physical display serial may have only one active TCP session.
@@ -69,6 +69,8 @@ struct myThread {
   char ip[16];
   unsigned short port;
   volatile unsigned long step;
+  volatile int force_step_pending;
+  unsigned long force_step;
   time_t epoch;
   int fd;
   signed char rssi;
@@ -186,6 +188,8 @@ static void shutdown_session_locked(int idx, const char *reason) {
    * monitor updates are protected by the generation check.
    */
   mythr[idx].active = 0;
+  mythr[idx].force_step_pending = 0;
+  mythr[idx].force_step = 0;
   mythr[idx].mir = -1;
   mythr[idx].t = 0;
 }
@@ -252,6 +256,31 @@ static void update_step_if_current(int idx, unsigned long gen, unsigned long ste
   pthread_mutex_unlock(&mon_mutex);
 }
 
+static int take_forced_step_if_current(int idx, unsigned long gen, unsigned long *step_out) {
+  int si, changed;
+
+  changed = 0;
+
+  pthread_mutex_lock(&mon_mutex);
+
+  if (session_is_current_locked(idx, gen) && mythr[idx].force_step_pending) {
+    *step_out = mythr[idx].force_step;
+    mythr[idx].step = *step_out;
+    mythr[idx].force_step_pending = 0;
+
+    si = state_get_or_create_locked(mythr[idx].ser);
+    if (si >= 0) {
+      mystate[si].step = *step_out;
+    }
+
+    changed = 1;
+  }
+
+  pthread_mutex_unlock(&mon_mutex);
+
+  return changed;
+}
+
 static void update_rssi_if_current(int idx, unsigned long gen, signed char rssi) {
   pthread_mutex_lock(&mon_mutex);
   if (session_is_current_locked(idx, gen)) {
@@ -298,13 +327,14 @@ int load_bin_range(int from, int to) {
 
 void *whois_interface(void *arg) {
   int server_fd, client_fd, opt, n, i, len;
-  int target_idx, from, to, nloaded;
+  int target_idx, from, to, nloaded, si;
   struct sockaddr_in addr;
   struct timeval rcv_to, snd_to;
   char cmd_buf[256], resp[1024], aux[100];
-  char *pwd, *cmd, *arg_val, *arg_val2;
+  char *pwd, *cmd, *arg_val, *arg_val2, *endp;
   time_t ora;
   long depoch;
+  unsigned long set_step;
 
   (void)arg;
 
@@ -413,6 +443,66 @@ void *whois_interface(void *arg) {
             }
             else {
               sprintf(resp, "ERR: Thread %d inactive.\n", target_idx);
+            }
+
+            pthread_mutex_unlock(&mon_mutex);
+            send_all(client_fd, resp, strlen(resp));
+          }
+          else {
+            sprintf(resp, "ERR: Thread %d invalid.\n", target_idx);
+            send_all(client_fd, resp, strlen(resp));
+          }
+        }
+
+        else if (strcmp(cmd, "set") == 0 && arg_val && arg_val2) {
+          target_idx = atoi(arg_val);
+
+          errno = 0;
+          endp = NULL;
+          set_step = strtoul(arg_val2, &endp, 10);
+
+          if (target_idx < 0 || target_idx >= MAX_THREADS) {
+            sprintf(resp, "ERR: Thread %d invalid.\n", target_idx);
+            send_all(client_fd, resp, strlen(resp));
+          }
+          else if (endp == arg_val2 || *endp != '\0' || errno == ERANGE) {
+            sprintf(resp, "ERR: Invalid step value: %s\n", arg_val2);
+            send_all(client_fd, resp, strlen(resp));
+          }
+          else {
+            pthread_mutex_lock(&mon_mutex);
+
+            if (!mythr[target_idx].active) {
+              sprintf(resp, "ERR: Thread %d inactive.\n", target_idx);
+            }
+            else if (mythr[target_idx].mir != -1) {
+              if (mythr[target_idx].mir >= 0 && mythr[target_idx].mir < MAX_THREADS) {
+                sprintf(resp,
+                        "ERR: Thread %d is mirror of %s. Step not changed.\n",
+                        target_idx,
+                        mythr[mythr[target_idx].mir].ser);
+              }
+              else {
+                sprintf(resp,
+                        "ERR: Thread %d is mirror. Step not changed.\n",
+                        target_idx);
+              }
+            }
+            else {
+              mythr[target_idx].step = set_step;
+              mythr[target_idx].force_step = set_step;
+              mythr[target_idx].force_step_pending = 1;
+
+              si = state_get_or_create_locked(mythr[target_idx].ser);
+              if (si >= 0) {
+                mystate[si].step = set_step;
+              }
+
+              sprintf(resp,
+                      "OK: Thread %d serial=%s step set to %lu.\n",
+                      target_idx,
+                      mythr[target_idx].ser,
+                      set_step);
             }
 
             pthread_mutex_unlock(&mon_mutex);
@@ -574,6 +664,8 @@ static void *client(void *p) {
 
       mythr[r].port = peer_port;
       mythr[r].step = resume_step;
+      mythr[r].force_step_pending = 0;
+      mythr[r].force_step = 0;
       mythr[r].epoch = my_epoch;
       mythr[r].rssi = 0;
       mythr[r].mir = -1;
@@ -742,6 +834,7 @@ static void *client(void *p) {
   sprintf(binfile, "/run/display/%s.bin", v[0]);
 
   for (step = resume_step;;) {
+    take_forced_step_if_current(my_idx, my_gen, &step);
     update_step_if_current(my_idx, my_gen, step);
 
     pthread_mutex_lock(&mon_mutex);
@@ -1043,6 +1136,8 @@ cleanup:
     if (session_is_current_locked(my_idx, my_gen)) {
       mythr[my_idx].active = 0;
       mythr[my_idx].fd = -1;
+      mythr[my_idx].force_step_pending = 0;
+      mythr[my_idx].force_step = 0;
       mythr[my_idx].mir = -1;
       mythr[my_idx].t = 0;
 
@@ -1133,6 +1228,8 @@ int main() {
     mythr[i].ip[0] = 0;
     mythr[i].port = 0;
     mythr[i].step = 0;
+    mythr[i].force_step_pending = 0;
+    mythr[i].force_step = 0;
     mythr[i].epoch = 0;
     mythr[i].fd = -1;
     mythr[i].rssi = 0;

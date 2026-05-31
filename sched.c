@@ -1,28 +1,36 @@
-// (<to> --> section with direct render ending with <to>
-//   V <base> -->> Video reproduction set frame at position step+base
-// [<to> --> section with write3 render ending with <to>
-//   ! <stay> -->> set intervals of staying in ms for the section
-//   @ <num> R <fmt> <from> <to> --> random generator
-//   @ <num> C <fmt> {<statement>} --> formula in RPN
-//   any "des" description processed by write3 with @<num>$ variables
-//   reserved @0$ serial, @1$ IP, @2$ step, @3$ seq, @4$ hh, @5$ mm, @6$ ss, @7$ DEPOCH
-//
-// whois -h display.mazzini.org -p 5001 <passwd> <status>|<clear n>|<load from to>|<exit>
-//
-// Session policy:
-//   One physical display serial may have only one active TCP session.
-//   If a new connection announces an already active serial, the newest
-//   connection wins and all older sessions for that serial are shut down.
-//
-// Logical state policy:
-//   The physical TCP session is not the logical display state.
-//   The display serial owns a monotonic step counter for the lifetime of
-//   this server process. If a display reconnects with the same serial, even
-//   from a different IP or TCP port, the new session resumes from the last
-//   known step instead of restarting from zero.
-//   epoch is stored internally as the Unix timestamp of the last logical
-//   relaunch/reconnection.
-//   DEPOCH is printed/exported as seconds elapsed since that epoch.
+/*
+ * (<to> --> section with direct render ending with <to>
+ *   V <base> -->> Video reproduction set frame at position step+base
+ * [<to> --> section with write3 render ending with <to>
+ *   ! <stay> -->> set intervals of staying in ms for the section
+ *   @ <num> R <fmt> <from> <to> --> random generator
+ *   @ <num> C <fmt> {<statement>} --> formula in RPN
+ *   any "des" description processed by write3 with @<num>$ variables
+ *   reserved @0$ serial, @1$ IP, @2$ step, @3$ seq, @4$ hh, @5$ mm, @6$ ss, @7$ DEPOCH
+ *
+ * whois -h display.mazzini.org -p 5001 <passwd> <status>|<clear n>|<load from to>|<exit>
+ *
+ * Session policy:
+ *   One physical display serial may have only one active TCP session.
+ *   If a new connection announces an already active serial, the newest
+ *   connection wins and all older sessions for that serial are shut down.
+ *
+ * Logical state policy:
+ *   The physical TCP session is not the logical display state.
+ *   The display serial owns a monotonic step counter for the lifetime of
+ *   this server process. If a display reconnects with the same serial, even
+ *   from a different IP or TCP port, the new session resumes from the last
+ *   known step instead of restarting from zero.
+ *
+ *   epoch is stored internally as the Unix timestamp of the last logical
+ *   relaunch/reconnection.
+ *
+ *   DEPOCH is printed/exported as seconds elapsed since that epoch.
+ *
+ * Whois robustness:
+ *   The monitor connection has recv/send timeouts. This prevents one stale
+ *   or half-open connection on port 5001 from blocking the whois thread.
+ */
 
 #include <stdio.h>
 #include <string.h>
@@ -36,7 +44,6 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <errno.h>
-#include <stdint.h>
 #include <time.h>
 #include <ctype.h>
 #include <limits.h>
@@ -53,18 +60,21 @@
 #define RPN_STACK_MAX 50
 #define MAX_STATES    (MAX_THREADS * 4)
 
+#define WHOIS_RECV_TIMEOUT_SEC 3
+#define WHOIS_SEND_TIMEOUT_SEC 3
+
 struct myThread {
   volatile int active;
   char ser[13];
   char ip[16];
-  uint16_t port;
+  unsigned short port;
   volatile unsigned long step;
   time_t epoch;
   int fd;
-  int8_t rssi;
+  signed char rssi;
   int mir;
   unsigned long t;
-  uint64_t gen;
+  unsigned long gen;
   char bin[LEN];
 };
 
@@ -86,17 +96,27 @@ static time_t server_startup_time = 0;
  * It prevents an old thread from clearing a monitor slot that has
  * already been reused by a newer session.
  */
-static uint64_t session_gen = 0;
+static unsigned long session_gen = 0;
 
 pthread_mutex_t mon_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_rwlock_t bin_rwlock = PTHREAD_RWLOCK_INITIALIZER;
 
+static long elapsed_since_epoch(time_t now, time_t epoch) {
+  if (epoch <= 0) return 0;
+  if (now < epoch) return 0;
+  return (long)(now - epoch);
+}
+
 static int send_all(int fd, const void *buf, size_t len) {
-  const char *p = (const char *)buf;
-  size_t sent = 0;
+  const char *p;
+  size_t sent;
+  ssize_t r;
+
+  p = (const char *)buf;
+  sent = 0;
 
   while (sent < len) {
-    ssize_t r = send(fd, p + sent, len - sent, 0);
+    r = send(fd, p + sent, len - sent, 0);
     if (r <= 0) {
       if (r < 0 && errno == EINTR) continue;
       return -1;
@@ -108,11 +128,15 @@ static int send_all(int fd, const void *buf, size_t len) {
 }
 
 static int read_full(int fd, void *buf, size_t len) {
-  char *p = (char *)buf;
-  size_t got = 0;
+  char *p;
+  size_t got;
+  ssize_t r;
+
+  p = (char *)buf;
+  got = 0;
 
   while (got < len) {
-    ssize_t r = recv(fd, p + got, len - got, 0);
+    r = recv(fd, p + got, len - got, 0);
     if (r <= 0) {
       if (r < 0 && errno == EINTR) continue;
       return -1;
@@ -129,19 +153,25 @@ static int read_full(int fd, void *buf, size_t len) {
  * This avoids double-close and file-descriptor reuse hazards.
  */
 static void shutdown_session_locked(int idx, const char *reason) {
+  time_t now;
+  long depoch;
+
   if (idx < 0 || idx >= MAX_THREADS) return;
   if (!mythr[idx].active) return;
 
-  printf("Session shutdown: reason=%s idx=%d serial=%s peer=%s:%u step=%lu epoch=%ld rssi=%d gen=%llu\n",
+  now = time(NULL);
+  depoch = elapsed_since_epoch(now, mythr[idx].epoch);
+
+  printf("Session shutdown: reason=%s idx=%d serial=%s peer=%s:%u step=%lu depoch=%ld rssi=%d gen=%lu\n",
          reason ? reason : "unknown",
          idx,
          mythr[idx].ser,
          mythr[idx].ip,
          (unsigned)mythr[idx].port,
          mythr[idx].step,
-         (long)mythr[idx].epoch,
+         depoch,
          (int)mythr[idx].rssi,
-         (unsigned long long)mythr[idx].gen);
+         mythr[idx].gen);
   fflush(stdout);
 
   if (mythr[idx].fd >= 0) {
@@ -163,7 +193,7 @@ static void shutdown_session_locked(int idx, const char *reason) {
 /*
  * This helper must be called with mon_mutex held.
  */
-static int session_is_current_locked(int idx, uint64_t gen) {
+static int session_is_current_locked(int idx, unsigned long gen) {
   if (idx < 0 || idx >= MAX_THREADS) return 0;
   return mythr[idx].active && mythr[idx].gen == gen;
 }
@@ -205,7 +235,7 @@ static int state_get_or_create_locked(const char *ser) {
   return -1;
 }
 
-static void update_step_if_current(int idx, uint64_t gen, unsigned long step) {
+static void update_step_if_current(int idx, unsigned long gen, unsigned long step) {
   int si;
 
   pthread_mutex_lock(&mon_mutex);
@@ -222,7 +252,7 @@ static void update_step_if_current(int idx, uint64_t gen, unsigned long step) {
   pthread_mutex_unlock(&mon_mutex);
 }
 
-static void update_rssi_if_current(int idx, uint64_t gen, int8_t rssi) {
+static void update_rssi_if_current(int idx, unsigned long gen, signed char rssi) {
   pthread_mutex_lock(&mon_mutex);
   if (session_is_current_locked(idx, gen)) {
     mythr[idx].rssi = rssi;
@@ -230,7 +260,7 @@ static void update_rssi_if_current(int idx, uint64_t gen, int8_t rssi) {
   pthread_mutex_unlock(&mon_mutex);
 }
 
-static void update_frame_if_current(int idx, uint64_t gen, const char *frame, unsigned long t) {
+static void update_frame_if_current(int idx, unsigned long gen, const char *frame, unsigned long t) {
   pthread_mutex_lock(&mon_mutex);
   if (session_is_current_locked(idx, gen)) {
     memcpy(mythr[idx].bin, frame, LEN);
@@ -267,9 +297,12 @@ int load_bin_range(int from, int to) {
 }
 
 void *whois_interface(void *arg) {
-  int server_fd, client_fd, opt, n, i, len, target_idx, from, to, nloaded;
+  int server_fd, client_fd, opt, n, i, len;
+  int target_idx, from, to, nloaded;
   struct sockaddr_in addr;
-  char cmd_buf[256], resp[1024], aux[100], *pwd, *cmd, *arg_val, *arg_val2;
+  struct timeval rcv_to, snd_to;
+  char cmd_buf[256], resp[1024], aux[100];
+  char *pwd, *cmd, *arg_val, *arg_val2;
   time_t ora;
   long depoch;
 
@@ -295,9 +328,17 @@ void *whois_interface(void *arg) {
     return NULL;
   }
 
+  rcv_to.tv_sec = WHOIS_RECV_TIMEOUT_SEC;
+  rcv_to.tv_usec = 0;
+  snd_to.tv_sec = WHOIS_SEND_TIMEOUT_SEC;
+  snd_to.tv_usec = 0;
+
   for (;;) {
     client_fd = accept(server_fd, NULL, NULL);
     if (client_fd < 0) continue;
+
+    setsockopt(client_fd, SOL_SOCKET, SO_RCVTIMEO, &rcv_to, sizeof(rcv_to));
+    setsockopt(client_fd, SOL_SOCKET, SO_SNDTIMEO, &snd_to, sizeof(snd_to));
 
     memset(cmd_buf, 0, sizeof(cmd_buf));
     n = (int)recv(client_fd, cmd_buf, sizeof(cmd_buf) - 1, 0);
@@ -329,6 +370,7 @@ void *whois_interface(void *arg) {
           send_all(client_fd, resp, (size_t)len);
 
           pthread_mutex_lock(&mon_mutex);
+
           for (i = 0; i < MAX_THREADS; i++) {
             if (mythr[i].active) {
               if (mythr[i].mir == -1) {
@@ -341,10 +383,7 @@ void *whois_interface(void *arg) {
                 strcpy(aux, "INVALID-MIR");
               }
 
-              depoch = 0;
-              if (mythr[i].epoch > 0 && ora >= mythr[i].epoch) {
-                depoch = (long)(ora - mythr[i].epoch);
-              }
+              depoch = elapsed_since_epoch(ora, mythr[i].epoch);
 
               len = sprintf(resp,
                             "%03d | %12s | %-15s:%-5u | %12s | %12ld | %5d\n",
@@ -358,6 +397,7 @@ void *whois_interface(void *arg) {
               send_all(client_fd, resp, (size_t)len);
             }
           }
+
           pthread_mutex_unlock(&mon_mutex);
         }
 
@@ -411,25 +451,26 @@ void *whois_interface(void *arg) {
 
 static void *client(void *p) {
   int fd, one, r, sent, eseq, tot, ln, a0, a1, a2;
-  int interval_ms, s, e, base_end, mm, my_idx, mir_idx, pstack, stack[RPN_STACK_MAX];
-  int state_idx;
-  int start_seq[MAX_STEPS], end_seq[MAX_STEPS], base_seq[MAX_SEQ_LINES];
+  int interval_ms, s, e, base_end, mm, my_idx, mir_idx, pstack, state_idx;
+  int stack[RPN_STACK_MAX], start_seq[MAX_STEPS], end_seq[MAX_STEPS], base_seq[MAX_SEQ_LINES];
   char *buf;
-  char v[30][30], seq[MAX_SEQ_LINES][50], aux[100], *p1, *x;
-  char fmt[20], cmd[300], xx, desfile[100], binfile[100];
-  char peer_ip[16], mir_buf[LEN];
+  char v[30][30], seq[MAX_SEQ_LINES][50], aux[100], fmt[20], cmd[300];
+  char xx, desfile[100], binfile[100], peer_ip[16], mir_buf[LEN];
+  char *p1, *x;
+  unsigned char ip0, ip1, ip2, ip3;
   unsigned long t, now, step, resume_step, mir_last;
   struct timeval tv;
   FILE *fp;
   struct timespec ts;
   struct tm tmv;
-  uint64_t seed, my_gen;
+  unsigned long seed, my_gen;
   time_t my_epoch;
   long depoch;
-  int8_t rssi;
-  uint16_t peer_port;
+  signed char rssi;
+  unsigned short peer_port;
   struct sockaddr_in peer;
-  socklen_t peer_len = sizeof(peer);
+  socklen_t peer_len;
+  size_t flen;
 
   fd = *(int *)p;
   free(p);
@@ -442,6 +483,7 @@ static void *client(void *p) {
   peer_port = 0;
   state_idx = -1;
   resume_step = 0;
+  peer_len = sizeof(peer);
   strcpy(peer_ip, "0.0.0.0");
 
   one = 1;
@@ -449,7 +491,7 @@ static void *client(void *p) {
 
   if (getpeername(fd, (struct sockaddr *)&peer, &peer_len) == 0) {
     inet_ntop(AF_INET, &peer.sin_addr, peer_ip, sizeof(peer_ip));
-    peer_port = ntohs(peer.sin_port);
+    peer_port = (unsigned short)ntohs(peer.sin_port);
   }
 
   /*
@@ -462,29 +504,28 @@ static void *client(void *p) {
     return 0;
   }
 
-  snprintf(v[0], sizeof(v[0]), "%.12s", aux);
-  snprintf(v[1], sizeof(v[1]),
-           "%u.%u.%u.%u",
-           (uint8_t)aux[12],
-           (uint8_t)aux[13],
-           (uint8_t)aux[14],
-           (uint8_t)aux[15]);
+  memcpy(v[0], aux, 12);
+  v[0][12] = 0;
+
+  ip0 = (unsigned char)aux[12];
+  ip1 = (unsigned char)aux[13];
+  ip2 = (unsigned char)aux[14];
+  ip3 = (unsigned char)aux[15];
+
+  sprintf(v[1], "%u.%u.%u.%u",
+          (unsigned)ip0,
+          (unsigned)ip1,
+          (unsigned)ip2,
+          (unsigned)ip3);
 
   /*
    * Register this connection in the monitor.
    *
-   * Policy:
-   *   A serial can have only one active physical session.
-   *   The newest connection wins.
+   * A serial can have only one active physical session.
+   * The newest connection wins.
    *
-   * Logical state:
-   *   step is owned by the serial, not by the socket.
-   *   epoch is the Unix timestamp of the latest relaunch/reconnection.
-   *
-   * Important:
-   *   Older sessions are only shutdown() here. They are not close()d here.
-   *   The owner thread will eventually observe send/recv failure and close
-   *   its own fd. This avoids double-close and fd-reuse races.
+   * step is owned by the serial, not by the socket.
+   * epoch is the Unix timestamp of the latest relaunch/reconnection.
    */
   pthread_mutex_lock(&mon_mutex);
 
@@ -540,15 +581,14 @@ static void *client(void *p) {
 
       my_idx = r;
 
-      printf("New session: idx=%d serial=%s device_ip=%s peer=%s:%u step=%lu epoch=%ld gen=%llu\n",
+      printf("New session: idx=%d serial=%s device_ip=%s peer=%s:%u step=%lu depoch=0 gen=%lu\n",
              my_idx,
              mythr[r].ser,
              mythr[r].ip,
              peer_ip,
              (unsigned)peer_port,
              mythr[r].step,
-             (long)mythr[r].epoch,
-             (unsigned long long)my_gen);
+             my_gen);
       fflush(stdout);
 
       break;
@@ -659,7 +699,8 @@ static void *client(void *p) {
     if (r > 0 && seq[eseq][r - 1] == '\n') seq[eseq][r - 1] = '\0';
 
     if (seq[eseq][0] == '(' || seq[eseq][0] == '[') {
-      for (x = seq[eseq] + 1; *x == ' '; x++) {}
+      for (x = seq[eseq] + 1; *x == ' '; x++) {
+      }
 
       for (a0 = 0; *x != ' ' && *x != '\0'; x++) {
         if (!isdigit((unsigned char)*x)) break;
@@ -669,7 +710,9 @@ static void *client(void *p) {
       base_seq[eseq] = tot;
 
       if (base_end >= 0) {
-        for (r = base_end; r < tot; r++) end_seq[r] = eseq - 1;
+        for (r = base_end; r < tot; r++) {
+          end_seq[r] = eseq - 1;
+        }
       }
 
       base_end = tot;
@@ -681,7 +724,9 @@ static void *client(void *p) {
   }
 
   if (base_end >= 0) {
-    for (r = base_end; r < tot; r++) end_seq[r] = eseq - 1;
+    for (r = base_end; r < tot; r++) {
+      end_seq[r] = eseq - 1;
+    }
   }
 
   fclose(fp);
@@ -690,7 +735,7 @@ static void *client(void *p) {
   t = tv.tv_sec * 1000UL + tv.tv_usec / 1000UL;
 
   clock_gettime(CLOCK_REALTIME, &ts);
-  seed = (uint64_t)ts.tv_sec ^ (uint64_t)ts.tv_nsec ^ (uint64_t)getpid() ^ my_gen;
+  seed = (unsigned long)ts.tv_sec ^ (unsigned long)ts.tv_nsec ^ (unsigned long)getpid() ^ my_gen;
   srand((unsigned)seed);
 
   sprintf(desfile, "/run/display/%s.des", v[0]);
@@ -725,7 +770,8 @@ static void *client(void *p) {
     if (seq[s][0] == '(') {
       for (r = s + 1; r <= e; r++) {
         if (seq[r][0] == 'V') {
-          for (x = seq[r] + 1; *x == ' '; x++) {}
+          for (x = seq[r] + 1; *x == ' '; x++) {
+          }
 
           for (a0 = 0; *x != ' ' && *x != '\0'; x++) {
             if (!isdigit((unsigned char)*x)) break;
@@ -755,15 +801,13 @@ static void *client(void *p) {
       sprintf(v[6], "%02d", tmv.tm_sec);
       sprintf(v[2], "%lu", step);
 
-      depoch = 0;
-      if (my_epoch > 0 && ts.tv_sec >= my_epoch) {
-        depoch = (long)(ts.tv_sec - my_epoch);
-      }
+      depoch = elapsed_since_epoch(ts.tv_sec, my_epoch);
       sprintf(v[7], "%ld", depoch);
 
       for (r = s + 1; r <= e; r++) {
         if (seq[r][0] == '!') {
-          for (x = seq[r] + 1; *x == ' '; x++) {}
+          for (x = seq[r] + 1; *x == ' '; x++) {
+          }
 
           for (a0 = 0; *x != ' ' && *x != '\0'; x++) {
             if (!isdigit((unsigned char)*x)) break;
@@ -775,23 +819,27 @@ static void *client(void *p) {
         }
 
         if (seq[r][0] == '@') {
-          for (x = seq[r] + 1; *x == ' '; x++) {}
+          for (x = seq[r] + 1; *x == ' '; x++) {
+          }
 
           for (a0 = 0; *x != ' ' && *x != '\0'; x++) {
             if (!isdigit((unsigned char)*x)) break;
             a0 = a0 * 10 + (*x - '0');
           }
 
-          for (; *x == ' '; x++) {}
+          for (; *x == ' '; x++) {
+          }
 
           if (*x == 'R') {
-            for (x++; *x == ' '; x++) {}
+            for (x++; *x == ' '; x++) {
+            }
 
             p1 = x;
-            for (; *x != ' ' && *x != '\0'; x++) {}
+            for (; *x != ' ' && *x != '\0'; x++) {
+            }
 
             if (x > p1) {
-              size_t flen = (size_t)(x - p1);
+              flen = (size_t)(x - p1);
               if (flen >= sizeof(fmt)) flen = sizeof(fmt) - 1;
               strncpy(fmt, p1, flen);
               fmt[flen] = '\0';
@@ -800,14 +848,16 @@ static void *client(void *p) {
               fmt[0] = '\0';
             }
 
-            for (; *x == ' '; x++) {}
+            for (; *x == ' '; x++) {
+            }
 
             for (a1 = 0; *x != ' ' && *x != '\0'; x++) {
               if (!isdigit((unsigned char)*x)) break;
               a1 = a1 * 10 + (*x - '0');
             }
 
-            for (; *x == ' '; x++) {}
+            for (; *x == ' '; x++) {
+            }
 
             for (a2 = 0; *x != ' ' && *x != '\0'; x++) {
               if (!isdigit((unsigned char)*x)) break;
@@ -822,13 +872,15 @@ static void *client(void *p) {
           }
 
           if (*x == 'C') {
-            for (x++; *x == ' '; x++) {}
+            for (x++; *x == ' '; x++) {
+            }
 
             p1 = x;
-            for (; *x != ' ' && *x != '\0'; x++) {}
+            for (; *x != ' ' && *x != '\0'; x++) {
+            }
 
             if (x > p1) {
-              size_t flen = (size_t)(x - p1);
+              flen = (size_t)(x - p1);
               if (flen >= sizeof(fmt)) flen = sizeof(fmt) - 1;
               strncpy(fmt, p1, flen);
               fmt[flen] = '\0';
@@ -840,7 +892,8 @@ static void *client(void *p) {
             pstack = 0;
 
             for (; *x != '\0'; x++) {
-              for (; *x == ' '; x++) {}
+              for (; *x == ' '; x++) {
+              }
 
               if (*x == '\0') break;
 
@@ -993,12 +1046,14 @@ cleanup:
       mythr[my_idx].mir = -1;
       mythr[my_idx].t = 0;
 
-      printf("Session ended: idx=%d serial=%s step=%lu epoch=%ld gen=%llu\n",
+      depoch = elapsed_since_epoch(time(NULL), mythr[my_idx].epoch);
+
+      printf("Session ended: idx=%d serial=%s step=%lu depoch=%ld gen=%lu\n",
              my_idx,
              mythr[my_idx].ser,
              mythr[my_idx].step,
-             (long)mythr[my_idx].epoch,
-             (unsigned long long)my_gen);
+             depoch,
+             my_gen);
       fflush(stdout);
     }
 
@@ -1011,10 +1066,13 @@ cleanup:
 
 int main() {
   int server_fd, client_fd, *p_fd;
+  int opt, i;
   struct sockaddr_in server_addr, client_addr;
-  socklen_t addr_len = sizeof(client_addr);
+  socklen_t addr_len;
   pthread_t tid, monitor_tid;
-  int opt = 1;
+
+  opt = 1;
+  addr_len = sizeof(client_addr);
 
   signal(SIGPIPE, SIG_IGN);
   server_startup_time = time(NULL);
@@ -1025,7 +1083,7 @@ int main() {
     return 1;
   }
 
-  for (int i = 0; i < TOT; i++) {
+  for (i = 0; i < TOT; i++) {
     bin[i] = (char *)malloc(LEN);
     if (bin[i] == NULL) {
       perror("malloc bin frame");
@@ -1069,7 +1127,7 @@ int main() {
 
   pthread_mutex_lock(&mon_mutex);
 
-  for (int i = 0; i < MAX_THREADS; i++) {
+  for (i = 0; i < MAX_THREADS; i++) {
     mythr[i].active = 0;
     mythr[i].ser[0] = 0;
     mythr[i].ip[0] = 0;
@@ -1083,7 +1141,7 @@ int main() {
     mythr[i].gen = 0;
   }
 
-  for (int i = 0; i < MAX_STATES; i++) {
+  for (i = 0; i < MAX_STATES; i++) {
     mystate[i].used = 0;
     mystate[i].ser[0] = 0;
     mystate[i].step = 0;
@@ -1103,7 +1161,7 @@ int main() {
       continue;
     }
 
-    p_fd = malloc(sizeof(int));
+    p_fd = (int *)malloc(sizeof(int));
     if (p_fd == NULL) {
       perror("malloc client fd");
       close(client_fd);

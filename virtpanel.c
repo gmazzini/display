@@ -1,10 +1,11 @@
-// virtual implementation
-// gcc -O3 display/virtpanel.c -o virtpanel $(sdl2-config --cflags --libs)
+/* virtual implementation */
+/* gcc -O3 display/virtpanel.c -o virtpanel $(sdl2-config --cflags --libs) */
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
 #include <errno.h>
+#include <time.h>
 
 #include <unistd.h>
 #include <netdb.h>
@@ -15,7 +16,6 @@
 
 #include <SDL.h>
 
-#define MAC "AABBCCDDEEFF"
 #define HOST_DEFAULT "display.mazzini.org"
 #define PORT_DEFAULT 5000
 
@@ -92,7 +92,38 @@ static int connect_tcp_dns(const char *host, int port) {
     return -1;
 }
 
-/* prende l'IPv4 locale usata dalla connessione TCP (come "WiFi.localIP()" lato ESP) */
+static void random_bytes(unsigned char *buf, int n) {
+    int i;
+    unsigned int seed;
+
+    seed = (unsigned int)time(NULL);
+    seed ^= (unsigned int)getpid();
+
+    srand(seed);
+
+    for (i = 0; i < n; i++) {
+        buf[i] = (unsigned char)(rand() & 0xFF);
+    }
+}
+
+static void make_private_mac_ascii(uint8_t macip[16]) {
+    static const char hex[] = "0123456789ABCDEF";
+    unsigned char rnd[5];
+    int i, p;
+
+    random_bytes(rnd, 5);
+
+    macip[0] = '0';
+    macip[1] = '2';
+
+    p = 2;
+    for (i = 0; i < 5; i++) {
+        macip[p++] = (uint8_t)hex[(rnd[i] >> 4) & 0x0F];
+        macip[p++] = (uint8_t)hex[rnd[i] & 0x0F];
+    }
+}
+
+/* prende l'IPv4 locale usata dalla connessione TCP, come WiFi.localIP() lato ESP */
 static void get_local_ip4_from_socket(int fd, uint8_t out_ip[4]) {
     struct sockaddr_storage ss;
     socklen_t slen;
@@ -108,13 +139,16 @@ static void get_local_ip4_from_socket(int fd, uint8_t out_ip[4]) {
 
     sin = (struct sockaddr_in *)&ss;
     memcpy(out_ip, &sin->sin_addr.s_addr, 4);
-    /* sin_addr.s_addr è in network order; per bytes va benissimo così */
+
+    /* sin_addr.s_addr è in network order; per bytes va bene così */
 }
 
-/* Il frame 6144 è: R[2048] G[2048] B[2048], nibble-packed (2 pixel per byte), 4-bit -> <<4 */
+/* Il frame 6144 è: R[2048] G[2048] B[2048], nibble-packed, 2 pixel per byte, 4-bit -> <<4 */
 static void decode_frame_to_rgb565(const uint8_t *f, uint16_t *out565) {
     int i, j, z;
     int rbase, gbase, bbase;
+    uint8_t r, g, b;
+    uint16_t pix;
 
     rbase = 0;
     gbase = 2048;
@@ -123,9 +157,6 @@ static void decode_frame_to_rgb565(const uint8_t *f, uint16_t *out565) {
     z = 0;
     for (j = 0; j < H; j++) {
         for (i = 0; i < W; i++) {
-            uint8_t r, g, b;
-            uint16_t pix;
-
             if ((i & 1) == 0) {
                 r = f[z + rbase] & 0xF0;
                 g = f[z + gbase] & 0xF0;
@@ -137,7 +168,6 @@ static void decode_frame_to_rgb565(const uint8_t *f, uint16_t *out565) {
                 z++;
             }
 
-            /* RGB565 */
             pix = (uint16_t)(((r >> 3) << 11) | ((g >> 2) << 5) | (b >> 3));
             *out565++ = pix;
         }
@@ -150,7 +180,7 @@ static uint32_t now_ms(void) {
 
 int main(int argc, char **argv) {
     const char *host;
-    int port, scale,fd, running;
+    int port, scale, fd, running;
     uint8_t macip[16], ip4[4], frame[LEN];
     int8_t rssi;
     uint16_t pix565[W * H];
@@ -159,7 +189,6 @@ int main(int argc, char **argv) {
     SDL_Texture *tex;
     SDL_Event ev;
 
-    /* unico argomento obbligatorio: scala */
     if (argc != 2) {
         fprintf(stderr, "Usage: %s <scale>\n", argv[0]);
         fprintf(stderr, "Example: %s 10\n", argv[0]);
@@ -168,10 +197,11 @@ int main(int argc, char **argv) {
 
     scale = atoi(argv[1]);
 
-    host = HOST_DEFAULT;   /* display.mazzini.org */
-    port = PORT_DEFAULT;   /* 5000 */
+    host = HOST_DEFAULT;
+    port = PORT_DEFAULT;
+
     memset(macip, 0, sizeof(macip));
-    memcpy(macip, MAC, 12);
+    make_private_mac_ascii(macip);
 
     fd = connect_tcp_dns(host, port);
     if (fd < 0) {

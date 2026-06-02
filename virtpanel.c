@@ -5,7 +5,6 @@
 #include <stdint.h>
 #include <string.h>
 #include <errno.h>
-#include <time.h>
 
 #include <unistd.h>
 #include <netdb.h>
@@ -92,35 +91,40 @@ static int connect_tcp_dns(const char *host, int port) {
     return -1;
 }
 
-static void random_bytes(unsigned char *buf, int n) {
-    int i;
-    unsigned int seed;
-
-    seed = (unsigned int)time(NULL);
-    seed ^= (unsigned int)getpid();
-
-    srand(seed);
-
-    for (i = 0; i < n; i++) {
-        buf[i] = (unsigned char)(rand() & 0xFF);
-    }
+static int hex_value(int c) {
+    if (c >= '0' && c <= '9') return c - '0';
+    if (c >= 'a' && c <= 'f') return c - 'a' + 10;
+    if (c >= 'A' && c <= 'F') return c - 'A' + 10;
+    return -1;
 }
 
-static void make_private_mac_ascii(uint8_t macip[16]) {
+static int parse_code_hex(const char *s, char out[2]) {
     static const char hex[] = "0123456789ABCDEF";
-    unsigned char rnd[5];
-    int i, p;
+    int hi, lo;
 
-    random_bytes(rnd, 5);
-
-    macip[0] = '0';
-    macip[1] = '2';
-
-    p = 2;
-    for (i = 0; i < 5; i++) {
-        macip[p++] = (uint8_t)hex[(rnd[i] >> 4) & 0x0F];
-        macip[p++] = (uint8_t)hex[rnd[i] & 0x0F];
+    if (s == NULL) {
+        out[0] = '0';
+        out[1] = '1';
+        return 0;
     }
+
+    if (strlen(s) != 2) return -1;
+
+    hi = hex_value((unsigned char)s[0]);
+    lo = hex_value((unsigned char)s[1]);
+
+    if (hi < 0 || lo < 0) return -1;
+
+    out[0] = hex[hi];
+    out[1] = hex[lo];
+
+    return 0;
+}
+
+static void make_panel_mac_ascii(uint8_t macip[16], const char code[2]) {
+    memcpy(macip, "0202020202", 10);
+    macip[10] = (uint8_t)code[0];
+    macip[11] = (uint8_t)code[1];
 }
 
 /* prende l'IPv4 locale usata dalla connessione TCP, come WiFi.localIP() lato ESP */
@@ -180,6 +184,7 @@ static uint32_t now_ms(void) {
 
 int main(int argc, char **argv) {
     const char *host;
+    char code[2];
     int port, scale, fd, running;
     uint8_t macip[16], ip4[4], frame[LEN];
     int8_t rssi;
@@ -189,9 +194,15 @@ int main(int argc, char **argv) {
     SDL_Texture *tex;
     SDL_Event ev;
 
-    if (argc != 2) {
-        fprintf(stderr, "Usage: %s <scale>\n", argv[0]);
+    if (argc != 2 && argc != 3) {
+        fprintf(stderr, "Usage: %s <scale> [code]\n", argv[0]);
         fprintf(stderr, "Example: %s 10\n", argv[0]);
+        fprintf(stderr, "Example: %s 10 07\n", argv[0]);
+        return 1;
+    }
+
+    if (parse_code_hex(argc == 3 ? argv[2] : NULL, code) != 0) {
+        fprintf(stderr, "invalid code: use exactly two HEX digits, for example 01, 07, FF\n");
         return 1;
     }
 
@@ -201,7 +212,7 @@ int main(int argc, char **argv) {
     port = PORT_DEFAULT;
 
     memset(macip, 0, sizeof(macip));
-    make_private_mac_ascii(macip);
+    make_panel_mac_ascii(macip, code);
 
     fd = connect_tcp_dns(host, port);
     if (fd < 0) {

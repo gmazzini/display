@@ -7,7 +7,7 @@
     exit
             
   Push: server pushes updates to the client (currently in use)
-    main2.cpp (display)
+    main3.cpp (display)
     sched.c (server)
     virtpanel.c (emulator)
 

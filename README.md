@@ -12,7 +12,6 @@
     virtpanel.c (emulator)
 
   Pull: client requests data from the server (deprecated, replaced by the push version)
-    main.cpp (display)
     display.c (server)
     giulia.c
     giulia.html

@@ -1,4 +1,4 @@
-// Gianluca Mazzini @2026- Version 1.25
+// Gianluca Mazzini @2026- Version 1.26
 // RGB888 display daemon with integrated renderer and video engine.
 
 #include <stdio.h>
@@ -37,7 +37,7 @@
 #define PGR_DIR BASE_DIR "/tmpdata/pgr"
 #define FONT_DIR BASE_DIR "/font"
 
-#define DISPLAYD_VERSION "1.25"
+#define DISPLAYD_VERSION "1.26"
 
 #define WIDTH 64
 #define HEIGHT 64
@@ -1368,6 +1368,8 @@ static int render_text(const char *text, size_t len, unsigned char *frame) {
   return 0;
 }
 
+static int control_client(int argc, char **argv);
+
 static void cgi_error(const char *status, const char *message) {
   printf("Status: %s\r\n", status);
   printf("Content-Type: text/plain; charset=utf-8\r\n");
@@ -1401,6 +1403,16 @@ static void cgi_editor(void) {
   fwrite(html, 1, sizeof(html) - 1, stdout);
 }
 
+static void cgi_status(void) {
+  char *argv[1];
+
+  argv[0] = "status";
+  printf("Content-Type: text/plain; charset=utf-8\r\n");
+  printf("Cache-Control: no-store\r\n\r\n");
+  fflush(stdout);
+  control_client(1, argv);
+}
+
 static int cgi_main(void) {
   const char *method, *length_text;
   unsigned char frame[FRAME_LEN];
@@ -1410,7 +1422,9 @@ static int cgi_main(void) {
 
   method = getenv("REQUEST_METHOD");
   if (method == 0 || strcmp(method, "GET") == 0) {
-    cgi_editor();
+    if (method != 0 && getenv("QUERY_STRING") != 0 &&
+        strcmp(getenv("QUERY_STRING"), "action=status") == 0) cgi_status();
+    else cgi_editor();
     return 0;
   }
 

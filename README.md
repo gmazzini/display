@@ -5,7 +5,7 @@ Network-controlled 64x64 HUB75 display system.
 ## Current components
 
 - `device.c` - ESP32-S3 firmware, Version 4.50, using ESP-IDF.
-- `displayd.c` - RGB888 server, renderer, scheduler and CGI editor, Version 1.25.
+- `displayd.c` - RGB888 server, renderer, scheduler and CGI editor, Version 1.26.
 - `virtpanel.c` - SDL2 virtual panel, Version 2.02.
 - `Makefile` - firmware, server and virtual-panel build targets.
 - `font/` - TrueType/OpenType fonts used directly by `displayd`.
@@ -298,7 +298,7 @@ TEXT -2 0 FFFFFFFF 00000000 Poppins-Regular:16 Hello
 
 UNTIL 21
 WAIT 5000
-TEXT -2 0 FF0000FF 00000000 Lora:18 SALEMI
+TEXT -2 0 FF0000FF 00000000 Lora:18 HELLO
 ```
 
 Steps `0..20` use the first frame every 2000 ms; step `21` uses the second frame for 5000 ms, then the program starts again from step 0.
@@ -399,6 +399,14 @@ The editor is exposed as:
 ```text
 https://music.mazzini.org/displayd
 ```
+
+The same CGI endpoint also exposes the live daemon status:
+
+```text
+https://music.mazzini.org/displayd?action=status
+```
+
+A `GET` with `action=status` returns `text/plain` with `Cache-Control: no-store` and the same content as `./displayd status`. The CGI forwards the `status` command through the existing Unix control socket; no additional daemon or TCP port is used.
 
 ## Virtual panel
 
